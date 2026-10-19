@@ -1,0 +1,10 @@
+Check,Count
+Raw rows,235795
+Missing cells,0
+Exact duplicate rows removed,0
+Conflicting URL rows excluded,0
+Same-label URL repeats removed,425
+Unparseable hosts excluded,0
+Unique eligible URLs,235370
+Mixed-label hosts excluded from tests,54
+One URL per host for tests,220023

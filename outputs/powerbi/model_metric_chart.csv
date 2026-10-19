@@ -1,0 +1,13 @@
+Model,Metric,Score
+Majority baseline,Accuracy,0.575933379003254
+Logistic regression,Accuracy,0.9972383969857852
+Majority baseline,BalancedAccuracy,0.5
+Logistic regression,BalancedAccuracy,0.9971166270789432
+Majority baseline,Precision,0.0
+Logistic regression,Precision,0.9971705739692805
+Majority baseline,Recall,0.0
+Logistic regression,Recall,0.9963148064011308
+Majority baseline,F1,0.0
+Logistic regression,F1,0.9967425065023611
+Majority baseline,FalsePositiveRate,0.0
+Logistic regression,FalsePositiveRate,0.002081552243244248

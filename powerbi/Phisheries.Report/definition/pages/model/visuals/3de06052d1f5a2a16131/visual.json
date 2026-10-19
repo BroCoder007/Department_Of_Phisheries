@@ -1,0 +1,103 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.1.0/schema.json",
+  "name": "3de06052d1f5a2a16131",
+  "position": {
+    "x": 820,
+    "y": 145,
+    "width": 430,
+    "height": 420,
+    "z": 0,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "clusteredBarChart",
+    "drillFilterOtherVisuals": true,
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ModelConfusion"
+                    }
+                  },
+                  "Property": "Actual"
+                }
+              },
+              "queryRef": "ModelConfusion.Actual",
+              "nativeQueryRef": "Actual"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ModelConfusion"
+                    }
+                  },
+                  "Property": "Test URL Count"
+                }
+              },
+              "queryRef": "ModelConfusion.Test URL Count",
+              "nativeQueryRef": "Test URL Count"
+            }
+          ]
+        },
+        "Series": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ModelConfusion"
+                    }
+                  },
+                  "Property": "Predicted"
+                }
+              },
+              "queryRef": "ModelConfusion.Predicted",
+              "nativeQueryRef": "Predicted"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Test predictions by recorded class'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "13D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

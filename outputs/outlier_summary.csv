@@ -1,0 +1,7 @@
+Feature,Q1,Q3,IQR,FlaggedRows
+URLLength,23.0,34.0,11.0,22362
+DomainLength,16.0,24.0,8.0,13372
+NoOfSubDomain,1.0,1.0,0.0,57228
+NoOfImage,0.0,29.0,29.0,18362
+NoOfCSS,0.0,8.0,8.0,17906
+NoOfJS,0.0,15.0,15.0,11852

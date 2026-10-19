@@ -1,0 +1,81 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.1.0/schema.json",
+  "name": "bc0a27f70a8723c0c19d",
+  "position": {
+    "x": 28,
+    "y": 415,
+    "width": 300,
+    "height": 415,
+    "z": 0,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "drillFilterOtherVisuals": true,
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "IndicatorDecisions"
+                    }
+                  },
+                  "Property": "Feature"
+                }
+              },
+              "queryRef": "IndicatorDecisions.Feature",
+              "nativeQueryRef": "Feature"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "IndicatorDecisions"
+                    }
+                  },
+                  "Property": "DashboardUse"
+                }
+              },
+              "queryRef": "IndicatorDecisions.DashboardUse",
+              "nativeQueryRef": "DashboardUse"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Context for review; see evidence for differences'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "13D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

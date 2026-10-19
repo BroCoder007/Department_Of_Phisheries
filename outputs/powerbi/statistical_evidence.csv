@@ -1,0 +1,16 @@
+Question,Feature,Scope,Test,Statistic,PValue,PValueDisplay,Estimate,EstimateUnits,Decision
+1,URLLength,One URL per eligible hostname,Welch two-sample t-test,79.09953462920966,0.0,below numerical precision,12.725203196616874,characters: phishing minus legitimate,Reject H0
+2,DomainLength,One URL per eligible hostname,Welch two-sample t-test,137.33999788571913,0.0,below numerical precision,5.865393511892549,characters: phishing minus legitimate,Reject H0
+3,NoOfSubDomain,One URL per eligible hostname,Welch two-sample t-test,21.480034470783227,3.7847807929433286e-102,3.78e-102,0.06051038496235139,subdomains: phishing minus legitimate,Reject H0
+4,IsHTTPS,One URL per eligible hostname,Chi-square independence,95027.60233041267,0.0,below numerical precision,-55.37564386872704,presence percentage points: phishing minus legitimate,Reject H0
+5,HasFavicon,One URL per eligible hostname,Chi-square independence,53167.237563959774,0.0,below numerical precision,-48.91638802417733,presence percentage points: phishing minus legitimate,Reject H0
+6,HasSocialNet,One URL per eligible hostname,Chi-square independence,130270.48925671139,0.0,below numerical precision,-78.95683247728871,presence percentage points: phishing minus legitimate,Reject H0
+7,HasExternalFormSubmit,One URL per eligible hostname,Chi-square independence,5913.7410292595305,0.0,below numerical precision,-7.074163237340164,presence percentage points: phishing minus legitimate,Reject H0
+8,Bank,One URL per eligible hostname,Chi-square independence,7702.665744513961,0.0,below numerical precision,-12.970106975721297,presence percentage points: phishing minus legitimate,Reject H0
+9,Pay,One URL per eligible hostname,Chi-square independence,27797.060768017112,0.0,below numerical precision,-31.485110781138737,presence percentage points: phishing minus legitimate,Reject H0
+10,Crypto,One URL per eligible hostname,Chi-square independence,1992.6790310747297,0.0,below numerical precision,-3.034389443569469,presence percentage points: phishing minus legitimate,Reject H0
+11,TLDGroup,One URL per eligible hostname,Chi-square independence,30468.06757884282,0.0,below numerical precision,30468.06757884282,chi-square statistic; no single mean difference,Reject H0
+12,URL-title versus domain-title score,Two scores on each phishing host,Paired t-test,48.238746960017544,0.0,below numerical precision,2.6282058489140416,score points: URL-title minus domain-title,Reject H0
+13,NoOfImage,"1,500 randomly sampled hosts per recorded class",Permutation test,-25.0,0.0005,0.0005,-25.0,median count: phishing minus legitimate,Reject H0
+14,NoOfJS,"1,500 randomly sampled hosts per recorded class",Permutation test,-13.5,0.0005,0.0005,-13.5,median count: phishing minus legitimate,Reject H0
+15,Rule B versus Rule A,Both rules applied to the same eligible hosts,Paired t-test,-12.614050164142352,1.8189407243195056e-36,1.82e-36,-0.07226517227744372,accuracy percentage points: B minus A,Reject H0

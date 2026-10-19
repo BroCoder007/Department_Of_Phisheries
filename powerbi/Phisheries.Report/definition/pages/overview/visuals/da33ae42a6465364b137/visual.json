@@ -1,0 +1,117 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.1.0/schema.json",
+  "name": "da33ae42a6465364b137",
+  "position": {
+    "x": 450,
+    "y": 145,
+    "width": 800,
+    "height": 380,
+    "z": 0,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "clusteredBarChart",
+    "drillFilterOtherVisuals": true,
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "TldSummary"
+                    }
+                  },
+                  "Property": "TLD"
+                }
+              },
+              "queryRef": "TldSummary.TLD",
+              "nativeQueryRef": "TLD"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "TldSummary"
+                    }
+                  },
+                  "Property": "Benchmark Phishing Rate"
+                }
+              },
+              "queryRef": "TldSummary.Benchmark Phishing Rate",
+              "nativeQueryRef": "Benchmark Phishing Rate"
+            }
+          ]
+        },
+        "Tooltips": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "TldSummary"
+                    }
+                  },
+                  "Property": "Hosts"
+                }
+              },
+              "queryRef": "TldSummary.Hosts",
+              "nativeQueryRef": "Hosts"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "TldSummary"
+                    }
+                  },
+                  "Property": "Phishing"
+                }
+              },
+              "queryRef": "TldSummary.Phishing",
+              "nativeQueryRef": "Phishing"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Phishing fraction within each sampled TLD group'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "13D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

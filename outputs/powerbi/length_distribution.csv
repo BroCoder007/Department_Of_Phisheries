@@ -1,0 +1,9 @@
+Class,LengthGroup,Websites
+Legitimate,1: Up to 30,110318
+Legitimate,2: 31 to 60,24532
+Legitimate,3: 61 to 100,0
+Legitimate,4: Over 100,0
+Phishing,1: Up to 30,41951
+Phishing,2: 31 to 60,42725
+Phishing,3: 61 to 100,11002
+Phishing,4: Over 100,4842

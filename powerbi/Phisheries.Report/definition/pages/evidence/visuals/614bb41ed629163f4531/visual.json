@@ -1,0 +1,123 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.1.0/schema.json",
+  "name": "614bb41ed629163f4531",
+  "position": {
+    "x": 275,
+    "y": 650,
+    "width": 975,
+    "height": 180,
+    "z": 0,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "drillFilterOtherVisuals": true,
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Rules"
+                    }
+                  },
+                  "Property": "Rule"
+                }
+              },
+              "queryRef": "Rules.Rule",
+              "nativeQueryRef": "Rule"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Rules"
+                    }
+                  },
+                  "Property": "CaughtPhishing"
+                }
+              },
+              "queryRef": "Rules.CaughtPhishing",
+              "nativeQueryRef": "CaughtPhishing"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Rules"
+                    }
+                  },
+                  "Property": "FlaggedLegitimate"
+                }
+              },
+              "queryRef": "Rules.FlaggedLegitimate",
+              "nativeQueryRef": "FlaggedLegitimate"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Rules"
+                    }
+                  },
+                  "Property": "Recall"
+                }
+              },
+              "queryRef": "Rules.Recall",
+              "nativeQueryRef": "Recall"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Rules"
+                    }
+                  },
+                  "Property": "FalsePositiveRate"
+                }
+              },
+              "queryRef": "Rules.FalsePositiveRate",
+              "nativeQueryRef": "FalsePositiveRate"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Rule error counts and within-class rates'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "13D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

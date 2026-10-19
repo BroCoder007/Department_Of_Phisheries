@@ -1,0 +1,103 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.1.0/schema.json",
+  "name": "9d64c5de69a9877c4b43",
+  "position": {
+    "x": 28,
+    "y": 460,
+    "width": 390,
+    "height": 370,
+    "z": 0,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "clusteredBarChart",
+    "drillFilterOtherVisuals": true,
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "LengthDistribution"
+                    }
+                  },
+                  "Property": "LengthGroup"
+                }
+              },
+              "queryRef": "LengthDistribution.LengthGroup",
+              "nativeQueryRef": "LengthGroup"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "LengthDistribution"
+                    }
+                  },
+                  "Property": "Length Group URL Count"
+                }
+              },
+              "queryRef": "LengthDistribution.Length Group URL Count",
+              "nativeQueryRef": "Length Group URL Count"
+            }
+          ]
+        },
+        "Series": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "LengthDistribution"
+                    }
+                  },
+                  "Property": "Class"
+                }
+              },
+              "queryRef": "LengthDistribution.Class",
+              "nativeQueryRef": "Class"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'URL-length groups'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "13D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

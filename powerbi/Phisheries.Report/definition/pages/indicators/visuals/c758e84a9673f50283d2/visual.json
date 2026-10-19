@@ -1,0 +1,135 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.1.0/schema.json",
+  "name": "c758e84a9673f50283d2",
+  "position": {
+    "x": 350,
+    "y": 145,
+    "width": 900,
+    "height": 420,
+    "z": 0,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "clusteredBarChart",
+    "drillFilterOtherVisuals": true,
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FeatureRates"
+                    }
+                  },
+                  "Property": "Feature"
+                }
+              },
+              "queryRef": "FeatureRates.Feature",
+              "nativeQueryRef": "Feature"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FeatureRates"
+                    }
+                  },
+                  "Property": "Presence Rate"
+                }
+              },
+              "queryRef": "FeatureRates.Presence Rate",
+              "nativeQueryRef": "Presence Rate"
+            }
+          ]
+        },
+        "Series": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FeatureRates"
+                    }
+                  },
+                  "Property": "Class"
+                }
+              },
+              "queryRef": "FeatureRates.Class",
+              "nativeQueryRef": "Class"
+            }
+          ]
+        },
+        "Tooltips": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FeatureRates"
+                    }
+                  },
+                  "Property": "Hosts"
+                }
+              },
+              "queryRef": "FeatureRates.Hosts",
+              "nativeQueryRef": "Hosts"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "FeatureRates"
+                    }
+                  },
+                  "Property": "Present"
+                }
+              },
+              "queryRef": "FeatureRates.Present",
+              "nativeQueryRef": "Present"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Feature present within each class'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "13D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

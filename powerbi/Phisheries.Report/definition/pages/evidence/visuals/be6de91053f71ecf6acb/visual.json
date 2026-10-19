@@ -1,0 +1,179 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.1.0/schema.json",
+  "name": "be6de91053f71ecf6acb",
+  "position": {
+    "x": 275,
+    "y": 145,
+    "width": 975,
+    "height": 470,
+    "z": 0,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "drillFilterOtherVisuals": true,
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Evidence"
+                    }
+                  },
+                  "Property": "Question"
+                }
+              },
+              "queryRef": "Evidence.Question",
+              "nativeQueryRef": "Question"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Evidence"
+                    }
+                  },
+                  "Property": "Feature"
+                }
+              },
+              "queryRef": "Evidence.Feature",
+              "nativeQueryRef": "Feature"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Evidence"
+                    }
+                  },
+                  "Property": "Scope"
+                }
+              },
+              "queryRef": "Evidence.Scope",
+              "nativeQueryRef": "Scope"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Evidence"
+                    }
+                  },
+                  "Property": "Test"
+                }
+              },
+              "queryRef": "Evidence.Test",
+              "nativeQueryRef": "Test"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Evidence"
+                    }
+                  },
+                  "Property": "Statistic"
+                }
+              },
+              "queryRef": "Evidence.Statistic",
+              "nativeQueryRef": "Statistic"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Evidence"
+                    }
+                  },
+                  "Property": "Estimate"
+                }
+              },
+              "queryRef": "Evidence.Estimate",
+              "nativeQueryRef": "Estimate"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Evidence"
+                    }
+                  },
+                  "Property": "EstimateUnits"
+                }
+              },
+              "queryRef": "Evidence.EstimateUnits",
+              "nativeQueryRef": "EstimateUnits"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Evidence"
+                    }
+                  },
+                  "Property": "PValueDisplay"
+                }
+              },
+              "queryRef": "Evidence.PValueDisplay",
+              "nativeQueryRef": "PValueDisplay"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Evidence"
+                    }
+                  },
+                  "Property": "Decision"
+                }
+              },
+              "queryRef": "Evidence.Decision",
+              "nativeQueryRef": "Decision"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Course test results and raw p-values — scroll for all fields'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "13D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

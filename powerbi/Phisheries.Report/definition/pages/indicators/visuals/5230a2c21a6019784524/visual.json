@@ -1,0 +1,103 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.1.0/schema.json",
+  "name": "5230a2c21a6019784524",
+  "position": {
+    "x": 350,
+    "y": 590,
+    "width": 900,
+    "height": 240,
+    "z": 0,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "clusteredBarChart",
+    "drillFilterOtherVisuals": true,
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "RuleChart"
+                    }
+                  },
+                  "Property": "Rule"
+                }
+              },
+              "queryRef": "RuleChart.Rule",
+              "nativeQueryRef": "Rule"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "RuleChart"
+                    }
+                  },
+                  "Property": "Displayed Rate"
+                }
+              },
+              "queryRef": "RuleChart.Displayed Rate",
+              "nativeQueryRef": "Displayed Rate"
+            }
+          ]
+        },
+        "Series": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "RuleChart"
+                    }
+                  },
+                  "Property": "Metric"
+                }
+              },
+              "queryRef": "RuleChart.Metric",
+              "nativeQueryRef": "Metric"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Rule A and B: recall and false-positive rates'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "13D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

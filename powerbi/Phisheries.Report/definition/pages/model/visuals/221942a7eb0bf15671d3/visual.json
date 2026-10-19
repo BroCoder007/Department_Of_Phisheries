@@ -1,0 +1,109 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.1.0/schema.json",
+  "name": "221942a7eb0bf15671d3",
+  "position": {
+    "x": 28,
+    "y": 610,
+    "width": 760,
+    "height": 220,
+    "z": 0,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "drillFilterOtherVisuals": true,
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ModelPartitions"
+                    }
+                  },
+                  "Property": "Partition"
+                }
+              },
+              "queryRef": "ModelPartitions.Partition",
+              "nativeQueryRef": "Partition"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ModelPartitions"
+                    }
+                  },
+                  "Property": "URLs"
+                }
+              },
+              "queryRef": "ModelPartitions.URLs",
+              "nativeQueryRef": "URLs"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ModelPartitions"
+                    }
+                  },
+                  "Property": "Hosts"
+                }
+              },
+              "queryRef": "ModelPartitions.Hosts",
+              "nativeQueryRef": "Hosts"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ModelPartitions"
+                    }
+                  },
+                  "Property": "PhishingShare"
+                }
+              },
+              "queryRef": "ModelPartitions.PhishingShare",
+              "nativeQueryRef": "PhishingShare"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Model partitions — no exact host crosses a partition'"
+                }
+              }
+            },
+            "fontSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "13D"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

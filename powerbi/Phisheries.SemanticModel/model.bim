@@ -1,0 +1,692 @@
+{
+  "name": "Phisheries",
+  "compatibilityLevel": 1601,
+  "model": {
+    "culture": "en-US",
+    "sourceQueryCulture": "en-US",
+    "defaultPowerBIDataSourceVersion": "powerBI_V3",
+    "dataAccessOptions": {
+      "legacyRedirects": true,
+      "returnErrorValuesAsNull": true
+    },
+    "expressions": [
+      {
+        "name": "DataFolder",
+        "kind": "m",
+        "expression": "\"D:\\FODS PROJECT\\outputs\\powerbi\" meta [IsParameterQuery=true, Type=\"Text\", IsParameterQueryRequired=true]"
+      },
+      {
+        "name": "UseBackend",
+        "kind": "m",
+        "expression": "false meta [IsParameterQuery=true, Type=\"Logical\", IsParameterQueryRequired=true]"
+      }
+    ],
+    "tables": [
+      {
+        "name": "ClassSummary",
+        "columns": [
+          {
+            "name": "Class",
+            "dataType": "string",
+            "sourceColumn": "Class",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Websites",
+            "dataType": "int64",
+            "sourceColumn": "Websites",
+            "summarizeBy": "none",
+            "formatString": "#,0"
+          },
+          {
+            "name": "Share",
+            "dataType": "double",
+            "sourceColumn": "Share",
+            "summarizeBy": "none",
+            "formatString": "0.0%"
+          }
+        ],
+        "description": "Notebook export class_summary.csv. See the notebook for the sample and unit of analysis.",
+        "partitions": [
+          {
+            "name": "ClassSummary",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    SourceBinary = if UseBackend then Web.Contents(\"http://127.0.0.1:8765\", [RelativePath=\"data/class_summary.csv\"]) else File.Contents(DataFolder & \"\\class_summary.csv\"),",
+                "    Source = Csv.Document(SourceBinary, [Delimiter=\",\", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),",
+                "    Headers = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    Selected = Table.SelectColumns(Headers, {\"Class\", \"Websites\", \"Share\"}),",
+                "    Typed = Table.TransformColumnTypes(Selected, {{\"Class\", type text}, {\"Websites\", Int64.Type}, {\"Share\", type number}}, \"en-US\")",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ],
+        "measures": [
+          {
+            "name": "Unique URL Count",
+            "expression": "SUM('ClassSummary'[Websites])",
+            "formatString": "#,0"
+          }
+        ]
+      },
+      {
+        "name": "QualitySummary",
+        "columns": [
+          {
+            "name": "Check",
+            "dataType": "string",
+            "sourceColumn": "Check",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Count",
+            "dataType": "int64",
+            "sourceColumn": "Count",
+            "summarizeBy": "none",
+            "formatString": "#,0"
+          }
+        ],
+        "description": "Notebook export quality_summary.csv. See the notebook for the sample and unit of analysis.",
+        "partitions": [
+          {
+            "name": "QualitySummary",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    SourceBinary = if UseBackend then Web.Contents(\"http://127.0.0.1:8765\", [RelativePath=\"data/quality_summary.csv\"]) else File.Contents(DataFolder & \"\\quality_summary.csv\"),",
+                "    Source = Csv.Document(SourceBinary, [Delimiter=\",\", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),",
+                "    Headers = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    Selected = Table.SelectColumns(Headers, {\"Check\", \"Count\"}),",
+                "    Typed = Table.TransformColumnTypes(Selected, {{\"Check\", type text}, {\"Count\", Int64.Type}}, \"en-US\")",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "TldSummary",
+        "columns": [
+          {
+            "name": "TLD",
+            "dataType": "string",
+            "sourceColumn": "TLD",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Hosts",
+            "dataType": "int64",
+            "sourceColumn": "Hosts",
+            "summarizeBy": "none",
+            "formatString": "#,0"
+          },
+          {
+            "name": "Phishing",
+            "dataType": "int64",
+            "sourceColumn": "Phishing",
+            "summarizeBy": "none",
+            "formatString": "#,0"
+          },
+          {
+            "name": "PhishingRate",
+            "dataType": "double",
+            "sourceColumn": "PhishingRate",
+            "summarizeBy": "none",
+            "formatString": "0.0%"
+          }
+        ],
+        "description": "Notebook export tld_summary.csv. See the notebook for the sample and unit of analysis.",
+        "partitions": [
+          {
+            "name": "TldSummary",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    SourceBinary = if UseBackend then Web.Contents(\"http://127.0.0.1:8765\", [RelativePath=\"data/tld_summary.csv\"]) else File.Contents(DataFolder & \"\\tld_summary.csv\"),",
+                "    Source = Csv.Document(SourceBinary, [Delimiter=\",\", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),",
+                "    Headers = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    Selected = Table.SelectColumns(Headers, {\"TLD\", \"Hosts\", \"Phishing\", \"PhishingRate\"}),",
+                "    Typed = Table.TransformColumnTypes(Selected, {{\"TLD\", type text}, {\"Hosts\", Int64.Type}, {\"Phishing\", Int64.Type}, {\"PhishingRate\", type number}}, \"en-US\")",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ],
+        "measures": [
+          {
+            "name": "Benchmark Phishing Rate",
+            "expression": "DIVIDE(SUM('TldSummary'[Phishing]), SUM('TldSummary'[Hosts]))",
+            "formatString": "0.0%"
+          },
+          {
+            "name": "Host Count",
+            "expression": "SUM('TldSummary'[Hosts])",
+            "formatString": "#,0"
+          }
+        ]
+      },
+      {
+        "name": "LengthDistribution",
+        "columns": [
+          {
+            "name": "Class",
+            "dataType": "string",
+            "sourceColumn": "Class",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "LengthGroup",
+            "dataType": "string",
+            "sourceColumn": "LengthGroup",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Websites",
+            "dataType": "int64",
+            "sourceColumn": "Websites",
+            "summarizeBy": "none",
+            "formatString": "#,0"
+          }
+        ],
+        "description": "Notebook export length_distribution.csv. See the notebook for the sample and unit of analysis.",
+        "partitions": [
+          {
+            "name": "LengthDistribution",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    SourceBinary = if UseBackend then Web.Contents(\"http://127.0.0.1:8765\", [RelativePath=\"data/length_distribution.csv\"]) else File.Contents(DataFolder & \"\\length_distribution.csv\"),",
+                "    Source = Csv.Document(SourceBinary, [Delimiter=\",\", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),",
+                "    Headers = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    Selected = Table.SelectColumns(Headers, {\"Class\", \"LengthGroup\", \"Websites\"}),",
+                "    Typed = Table.TransformColumnTypes(Selected, {{\"Class\", type text}, {\"LengthGroup\", type text}, {\"Websites\", Int64.Type}}, \"en-US\")",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ],
+        "measures": [
+          {
+            "name": "Length Group URL Count",
+            "expression": "SUM('LengthDistribution'[Websites])",
+            "formatString": "#,0"
+          }
+        ]
+      },
+      {
+        "name": "FeatureRates",
+        "columns": [
+          {
+            "name": "Class",
+            "dataType": "string",
+            "sourceColumn": "Class",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Feature",
+            "dataType": "string",
+            "sourceColumn": "Feature",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Present",
+            "dataType": "int64",
+            "sourceColumn": "Present",
+            "summarizeBy": "none",
+            "formatString": "#,0"
+          },
+          {
+            "name": "Hosts",
+            "dataType": "int64",
+            "sourceColumn": "Hosts",
+            "summarizeBy": "none",
+            "formatString": "#,0"
+          },
+          {
+            "name": "Rate",
+            "dataType": "double",
+            "sourceColumn": "Rate",
+            "summarizeBy": "none",
+            "formatString": "0.0%"
+          }
+        ],
+        "description": "Notebook export feature_rates.csv. See the notebook for the sample and unit of analysis.",
+        "partitions": [
+          {
+            "name": "FeatureRates",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    SourceBinary = if UseBackend then Web.Contents(\"http://127.0.0.1:8765\", [RelativePath=\"data/feature_rates.csv\"]) else File.Contents(DataFolder & \"\\feature_rates.csv\"),",
+                "    Source = Csv.Document(SourceBinary, [Delimiter=\",\", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),",
+                "    Headers = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    Selected = Table.SelectColumns(Headers, {\"Class\", \"Feature\", \"Present\", \"Hosts\", \"Rate\"}),",
+                "    Typed = Table.TransformColumnTypes(Selected, {{\"Class\", type text}, {\"Feature\", type text}, {\"Present\", Int64.Type}, {\"Hosts\", Int64.Type}, {\"Rate\", type number}}, \"en-US\")",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ],
+        "measures": [
+          {
+            "name": "Presence Rate",
+            "expression": "IF(HASONEVALUE('FeatureRates'[Feature]), DIVIDE(SUM('FeatureRates'[Present]), SUM('FeatureRates'[Hosts])), BLANK())",
+            "formatString": "0.0%"
+          }
+        ]
+      },
+      {
+        "name": "Rules",
+        "columns": [
+          {
+            "name": "Rule",
+            "dataType": "string",
+            "sourceColumn": "Rule",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "CaughtPhishing",
+            "dataType": "int64",
+            "sourceColumn": "CaughtPhishing",
+            "summarizeBy": "none",
+            "formatString": "#,0"
+          },
+          {
+            "name": "FlaggedLegitimate",
+            "dataType": "int64",
+            "sourceColumn": "FlaggedLegitimate",
+            "summarizeBy": "none",
+            "formatString": "#,0"
+          },
+          {
+            "name": "Recall",
+            "dataType": "double",
+            "sourceColumn": "Recall",
+            "summarizeBy": "none",
+            "formatString": "0.0%"
+          },
+          {
+            "name": "FalsePositiveRate",
+            "dataType": "double",
+            "sourceColumn": "FalsePositiveRate",
+            "summarizeBy": "none",
+            "formatString": "0.0%"
+          }
+        ],
+        "description": "Notebook export rule_summary.csv. See the notebook for the sample and unit of analysis.",
+        "partitions": [
+          {
+            "name": "Rules",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    SourceBinary = if UseBackend then Web.Contents(\"http://127.0.0.1:8765\", [RelativePath=\"data/rule_summary.csv\"]) else File.Contents(DataFolder & \"\\rule_summary.csv\"),",
+                "    Source = Csv.Document(SourceBinary, [Delimiter=\",\", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),",
+                "    Headers = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    Selected = Table.SelectColumns(Headers, {\"Rule\", \"CaughtPhishing\", \"FlaggedLegitimate\", \"Recall\", \"FalsePositiveRate\"}),",
+                "    Typed = Table.TransformColumnTypes(Selected, {{\"Rule\", type text}, {\"CaughtPhishing\", Int64.Type}, {\"FlaggedLegitimate\", Int64.Type}, {\"Recall\", type number}, {\"FalsePositiveRate\", type number}}, \"en-US\")",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "RuleChart",
+        "columns": [
+          {
+            "name": "Rule",
+            "dataType": "string",
+            "sourceColumn": "Rule",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Metric",
+            "dataType": "string",
+            "sourceColumn": "Metric",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Rate",
+            "dataType": "double",
+            "sourceColumn": "Rate",
+            "summarizeBy": "none",
+            "formatString": "0.0%"
+          }
+        ],
+        "description": "Notebook export rule_chart.csv. See the notebook for the sample and unit of analysis.",
+        "partitions": [
+          {
+            "name": "RuleChart",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    SourceBinary = if UseBackend then Web.Contents(\"http://127.0.0.1:8765\", [RelativePath=\"data/rule_chart.csv\"]) else File.Contents(DataFolder & \"\\rule_chart.csv\"),",
+                "    Source = Csv.Document(SourceBinary, [Delimiter=\",\", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),",
+                "    Headers = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    Selected = Table.SelectColumns(Headers, {\"Rule\", \"Metric\", \"Rate\"}),",
+                "    Typed = Table.TransformColumnTypes(Selected, {{\"Rule\", type text}, {\"Metric\", type text}, {\"Rate\", type number}}, \"en-US\")",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ],
+        "measures": [
+          {
+            "name": "Displayed Rate",
+            "expression": "IF(HASONEVALUE('RuleChart'[Rule]) && HASONEVALUE('RuleChart'[Metric]), MAX('RuleChart'[Rate]), BLANK())",
+            "formatString": "0.0%"
+          }
+        ]
+      },
+      {
+        "name": "Evidence",
+        "columns": [
+          {
+            "name": "Question",
+            "dataType": "int64",
+            "sourceColumn": "Question",
+            "summarizeBy": "none",
+            "formatString": "#,0"
+          },
+          {
+            "name": "Feature",
+            "dataType": "string",
+            "sourceColumn": "Feature",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Scope",
+            "dataType": "string",
+            "sourceColumn": "Scope",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Test",
+            "dataType": "string",
+            "sourceColumn": "Test",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Statistic",
+            "dataType": "double",
+            "sourceColumn": "Statistic",
+            "summarizeBy": "none",
+            "formatString": "0.000"
+          },
+          {
+            "name": "Estimate",
+            "dataType": "double",
+            "sourceColumn": "Estimate",
+            "summarizeBy": "none",
+            "formatString": "0.000"
+          },
+          {
+            "name": "EstimateUnits",
+            "dataType": "string",
+            "sourceColumn": "EstimateUnits",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "PValueDisplay",
+            "dataType": "string",
+            "sourceColumn": "PValueDisplay",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Decision",
+            "dataType": "string",
+            "sourceColumn": "Decision",
+            "summarizeBy": "none"
+          }
+        ],
+        "description": "Notebook export statistical_evidence.csv. See the notebook for the sample and unit of analysis.",
+        "partitions": [
+          {
+            "name": "Evidence",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    SourceBinary = if UseBackend then Web.Contents(\"http://127.0.0.1:8765\", [RelativePath=\"data/statistical_evidence.csv\"]) else File.Contents(DataFolder & \"\\statistical_evidence.csv\"),",
+                "    Source = Csv.Document(SourceBinary, [Delimiter=\",\", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),",
+                "    Headers = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    Selected = Table.SelectColumns(Headers, {\"Question\", \"Feature\", \"Scope\", \"Test\", \"Statistic\", \"Estimate\", \"EstimateUnits\", \"PValueDisplay\", \"Decision\"}),",
+                "    Typed = Table.TransformColumnTypes(Selected, {{\"Question\", Int64.Type}, {\"Feature\", type text}, {\"Scope\", type text}, {\"Test\", type text}, {\"Statistic\", type number}, {\"Estimate\", type number}, {\"EstimateUnits\", type text}, {\"PValueDisplay\", type text}, {\"Decision\", type text}}, \"en-US\")",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "IndicatorDecisions",
+        "columns": [
+          {
+            "name": "Feature",
+            "dataType": "string",
+            "sourceColumn": "Feature",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "DashboardUse",
+            "dataType": "string",
+            "sourceColumn": "DashboardUse",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "ProvenanceNote",
+            "dataType": "string",
+            "sourceColumn": "ProvenanceNote",
+            "summarizeBy": "none"
+          }
+        ],
+        "description": "Notebook export indicator_decisions.csv. See the notebook for the sample and unit of analysis.",
+        "partitions": [
+          {
+            "name": "IndicatorDecisions",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    SourceBinary = if UseBackend then Web.Contents(\"http://127.0.0.1:8765\", [RelativePath=\"data/indicator_decisions.csv\"]) else File.Contents(DataFolder & \"\\indicator_decisions.csv\"),",
+                "    Source = Csv.Document(SourceBinary, [Delimiter=\",\", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),",
+                "    Headers = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    Selected = Table.SelectColumns(Headers, {\"Feature\", \"DashboardUse\", \"ProvenanceNote\"}),",
+                "    Typed = Table.TransformColumnTypes(Selected, {{\"Feature\", type text}, {\"DashboardUse\", type text}, {\"ProvenanceNote\", type text}}, \"en-US\")",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "ModelMetricChart",
+        "columns": [
+          {
+            "name": "Model",
+            "dataType": "string",
+            "sourceColumn": "Model",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Metric",
+            "dataType": "string",
+            "sourceColumn": "Metric",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Score",
+            "dataType": "double",
+            "sourceColumn": "Score",
+            "summarizeBy": "none",
+            "formatString": "0.0%"
+          }
+        ],
+        "description": "Notebook export model_metric_chart.csv. See the notebook for the sample and unit of analysis.",
+        "partitions": [
+          {
+            "name": "ModelMetricChart",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    SourceBinary = if UseBackend then Web.Contents(\"http://127.0.0.1:8765\", [RelativePath=\"data/model_metric_chart.csv\"]) else File.Contents(DataFolder & \"\\model_metric_chart.csv\"),",
+                "    Source = Csv.Document(SourceBinary, [Delimiter=\",\", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),",
+                "    Headers = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    Selected = Table.SelectColumns(Headers, {\"Model\", \"Metric\", \"Score\"}),",
+                "    Typed = Table.TransformColumnTypes(Selected, {{\"Model\", type text}, {\"Metric\", type text}, {\"Score\", type number}}, \"en-US\")",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ],
+        "measures": [
+          {
+            "name": "Metric Value",
+            "expression": "IF(HASONEVALUE('ModelMetricChart'[Model]) && HASONEVALUE('ModelMetricChart'[Metric]), MAX('ModelMetricChart'[Score]), BLANK())",
+            "formatString": "0.0%"
+          }
+        ]
+      },
+      {
+        "name": "ModelConfusion",
+        "columns": [
+          {
+            "name": "Actual",
+            "dataType": "string",
+            "sourceColumn": "Actual",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Predicted",
+            "dataType": "string",
+            "sourceColumn": "Predicted",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Websites",
+            "dataType": "int64",
+            "sourceColumn": "Websites",
+            "summarizeBy": "none",
+            "formatString": "#,0"
+          }
+        ],
+        "description": "Notebook export model_confusion.csv. See the notebook for the sample and unit of analysis.",
+        "partitions": [
+          {
+            "name": "ModelConfusion",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    SourceBinary = if UseBackend then Web.Contents(\"http://127.0.0.1:8765\", [RelativePath=\"data/model_confusion.csv\"]) else File.Contents(DataFolder & \"\\model_confusion.csv\"),",
+                "    Source = Csv.Document(SourceBinary, [Delimiter=\",\", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),",
+                "    Headers = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    Selected = Table.SelectColumns(Headers, {\"Actual\", \"Predicted\", \"Websites\"}),",
+                "    Typed = Table.TransformColumnTypes(Selected, {{\"Actual\", type text}, {\"Predicted\", type text}, {\"Websites\", Int64.Type}}, \"en-US\")",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ],
+        "measures": [
+          {
+            "name": "Test URL Count",
+            "expression": "SUM('ModelConfusion'[Websites])",
+            "formatString": "#,0"
+          }
+        ]
+      },
+      {
+        "name": "ModelPartitions",
+        "columns": [
+          {
+            "name": "Partition",
+            "dataType": "string",
+            "sourceColumn": "Partition",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "URLs",
+            "dataType": "int64",
+            "sourceColumn": "URLs",
+            "summarizeBy": "none",
+            "formatString": "#,0"
+          },
+          {
+            "name": "Hosts",
+            "dataType": "int64",
+            "sourceColumn": "Hosts",
+            "summarizeBy": "none",
+            "formatString": "#,0"
+          },
+          {
+            "name": "PhishingShare",
+            "dataType": "double",
+            "sourceColumn": "PhishingShare",
+            "summarizeBy": "none",
+            "formatString": "0.0%"
+          }
+        ],
+        "description": "Notebook export model_partitions.csv. See the notebook for the sample and unit of analysis.",
+        "partitions": [
+          {
+            "name": "ModelPartitions",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    SourceBinary = if UseBackend then Web.Contents(\"http://127.0.0.1:8765\", [RelativePath=\"data/model_partitions.csv\"]) else File.Contents(DataFolder & \"\\model_partitions.csv\"),",
+                "    Source = Csv.Document(SourceBinary, [Delimiter=\",\", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),",
+                "    Headers = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    Selected = Table.SelectColumns(Headers, {\"Partition\", \"URLs\", \"Hosts\", \"PhishingShare\"}),",
+                "    Typed = Table.TransformColumnTypes(Selected, {{\"Partition\", type text}, {\"URLs\", Int64.Type}, {\"Hosts\", Int64.Type}, {\"PhishingShare\", type number}}, \"en-US\")",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "annotations": [
+      {
+        "name": "PBI_QueryOrder",
+        "value": "[\"DataFolder\", \"UseBackend\", \"ClassSummary\", \"QualitySummary\", \"TldSummary\", \"LengthDistribution\", \"FeatureRates\", \"Rules\", \"RuleChart\", \"Evidence\", \"IndicatorDecisions\", \"ModelMetricChart\", \"ModelConfusion\", \"ModelPartitions\"]"
+      }
+    ]
+  }
+}

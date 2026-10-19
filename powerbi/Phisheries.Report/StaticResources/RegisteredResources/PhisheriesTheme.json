@@ -1,0 +1,25 @@
+{
+  "name": "PhisheriesTheme",
+  "dataColors": [
+    "#16877C",
+    "#C44E52",
+    "#364C70",
+    "#D7A53B",
+    "#8C6BB1"
+  ],
+  "background": "#FFFFFF",
+  "foreground": "#223548",
+  "tableAccent": "#16877C",
+  "textClasses": {
+    "title": {
+      "fontFace": "Segoe UI",
+      "fontSize": 14,
+      "color": "#223548"
+    },
+    "label": {
+      "fontFace": "Segoe UI",
+      "fontSize": 11,
+      "color": "#223548"
+    }
+  }
+}

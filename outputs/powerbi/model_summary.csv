@@ -1,0 +1,3 @@
+Model,Accuracy,BalancedAccuracy,Precision,Recall,F1,FalsePositiveRate,TruePositive,FalsePositive,TrueNegative,FalseNegative
+Majority baseline,0.575933379003254,0.5,0.0,0.0,0.0,0.0,0,0,26903,19809
+Logistic regression,0.9972383969857852,0.9971166270789432,0.9971705739692805,0.9963148064011308,0.9967425065023611,0.002081552243244248,19736,56,26847,73
