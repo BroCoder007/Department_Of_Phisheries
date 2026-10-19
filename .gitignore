@@ -4,3 +4,5 @@ __pycache__/
 .venv/
 **/.pbi/localSettings.json
 **/.pbi/cache.abf
+data/*.sqlite3*
+dist/

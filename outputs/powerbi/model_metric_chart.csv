@@ -1,13 +1,31 @@
 Model,Metric,Score
-Majority baseline,Accuracy,0.575933379003254
-Logistic regression,Accuracy,0.9972383969857852
+Majority baseline,Accuracy,0.5759
+Gaussian Naive Bayes,Accuracy,0.9677
+Decision Tree (max_depth=5),Accuracy,0.9842
+Logistic regression,Accuracy,0.9972
+Decision Tree (full),Accuracy,0.9974
 Majority baseline,BalancedAccuracy,0.5
-Logistic regression,BalancedAccuracy,0.9971166270789432
+Gaussian Naive Bayes,BalancedAccuracy,0.9623
+Decision Tree (max_depth=5),BalancedAccuracy,0.9849
+Logistic regression,BalancedAccuracy,0.9971
+Decision Tree (full),BalancedAccuracy,0.9973
 Majority baseline,Precision,0.0
-Logistic regression,Precision,0.9971705739692805
+Gaussian Naive Bayes,Precision,0.9965
+Decision Tree (max_depth=5),Precision,0.9741
+Logistic regression,Precision,0.9972
+Decision Tree (full),Precision,0.997
 Majority baseline,Recall,0.0
-Logistic regression,Recall,0.9963148064011308
+Gaussian Naive Bayes,Recall,0.927
+Decision Tree (max_depth=5),Recall,0.9891
+Logistic regression,Recall,0.9963
+Decision Tree (full),Recall,0.9968
 Majority baseline,F1,0.0
-Logistic regression,F1,0.9967425065023611
+Gaussian Naive Bayes,F1,0.9605
+Decision Tree (max_depth=5),F1,0.9815
+Logistic regression,F1,0.9967
+Decision Tree (full),F1,0.9969
 Majority baseline,FalsePositiveRate,0.0
-Logistic regression,FalsePositiveRate,0.002081552243244248
+Gaussian Naive Bayes,FalsePositiveRate,0.0024
+Decision Tree (max_depth=5),FalsePositiveRate,0.0194
+Logistic regression,FalsePositiveRate,0.0021
+Decision Tree (full),FalsePositiveRate,0.0022

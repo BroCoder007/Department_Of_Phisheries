@@ -1,0 +1,1542 @@
+{
+  "analysis": [
+    {
+      "cell": 1,
+      "stdout": "",
+      "tables": []
+    },
+    {
+      "cell": 2,
+      "stdout": "",
+      "tables": []
+    },
+    {
+      "cell": 3,
+      "stdout": "",
+      "tables": []
+    },
+    {
+      "cell": 5,
+      "stdout": "Loaded 235,795 rows and 56 columns.\nSource label: 0 = phishing, 1 = legitimate.\n",
+      "tables": [
+        [
+          {
+            "FILENAME": "521848.txt",
+            "URLLength": 31,
+            "Domain": "www.southbankmosaics.com",
+            "DomainLength": 24,
+            "IsDomainIP": 0,
+            "TLD": "com",
+            "URLSimilarityIndex": 100.0,
+            "CharContinuationRate": 1.0,
+            "TLDLegitimateProb": 0.5229071,
+            "URLCharProb": 0.061933179,
+            "TLDLength": 3,
+            "NoOfSubDomain": 1,
+            "HasObfuscation": 0,
+            "NoOfObfuscatedChar": 0,
+            "ObfuscationRatio": 0.0,
+            "NoOfLettersInURL": 18,
+            "LetterRatioInURL": 0.581,
+            "NoOfDegitsInURL": 0,
+            "DegitRatioInURL": 0.0,
+            "NoOfEqualsInURL": 0,
+            "NoOfQMarkInURL": 0,
+            "NoOfAmpersandInURL": 0,
+            "NoOfOtherSpecialCharsInURL": 1,
+            "SpacialCharRatioInURL": 0.032,
+            "IsHTTPS": 1,
+            "LineOfCode": 558,
+            "LargestLineLength": 9381,
+            "HasTitle": 1,
+            "DomainTitleMatchScore": 0.0,
+            "URLTitleMatchScore": 0.0,
+            "HasFavicon": 0,
+            "Robots": 1,
+            "IsResponsive": 1,
+            "NoOfURLRedirect": 0,
+            "NoOfSelfRedirect": 0,
+            "HasDescription": 0,
+            "NoOfPopup": 0,
+            "NoOfiFrame": 1,
+            "HasExternalFormSubmit": 0,
+            "HasSocialNet": 0,
+            "HasSubmitButton": 1,
+            "HasHiddenFields": 1,
+            "HasPasswordField": 0,
+            "Bank": 1,
+            "Pay": 0,
+            "Crypto": 0,
+            "HasCopyrightInfo": 1,
+            "NoOfImage": 34,
+            "NoOfCSS": 20,
+            "NoOfJS": 28,
+            "NoOfSelfRef": 119,
+            "NoOfEmptyRef": 0,
+            "NoOfExternalRef": 124,
+            "label": 1
+          },
+          {
+            "FILENAME": "31372.txt",
+            "URLLength": 23,
+            "Domain": "www.uni-mainz.de",
+            "DomainLength": 16,
+            "IsDomainIP": 0,
+            "TLD": "de",
+            "URLSimilarityIndex": 100.0,
+            "CharContinuationRate": 0.666666667,
+            "TLDLegitimateProb": 0.0326503,
+            "URLCharProb": 0.050207214,
+            "TLDLength": 2,
+            "NoOfSubDomain": 1,
+            "HasObfuscation": 0,
+            "NoOfObfuscatedChar": 0,
+            "ObfuscationRatio": 0.0,
+            "NoOfLettersInURL": 9,
+            "LetterRatioInURL": 0.391,
+            "NoOfDegitsInURL": 0,
+            "DegitRatioInURL": 0.0,
+            "NoOfEqualsInURL": 0,
+            "NoOfQMarkInURL": 0,
+            "NoOfAmpersandInURL": 0,
+            "NoOfOtherSpecialCharsInURL": 2,
+            "SpacialCharRatioInURL": 0.087,
+            "IsHTTPS": 1,
+            "LineOfCode": 618,
+            "LargestLineLength": 9381,
+            "HasTitle": 1,
+            "DomainTitleMatchScore": 55.55555556,
+            "URLTitleMatchScore": 55.55555556,
+            "HasFavicon": 1,
+            "Robots": 1,
+            "IsResponsive": 0,
+            "NoOfURLRedirect": 0,
+            "NoOfSelfRedirect": 0,
+            "HasDescription": 0,
+            "NoOfPopup": 0,
+            "NoOfiFrame": 0,
+            "HasExternalFormSubmit": 0,
+            "HasSocialNet": 1,
+            "HasSubmitButton": 1,
+            "HasHiddenFields": 0,
+            "HasPasswordField": 0,
+            "Bank": 0,
+            "Pay": 0,
+            "Crypto": 0,
+            "HasCopyrightInfo": 1,
+            "NoOfImage": 50,
+            "NoOfCSS": 9,
+            "NoOfJS": 8,
+            "NoOfSelfRef": 39,
+            "NoOfEmptyRef": 0,
+            "NoOfExternalRef": 217,
+            "label": 1
+          },
+          {
+            "FILENAME": "597387.txt",
+            "URLLength": 29,
+            "Domain": "www.voicefmradio.co.uk",
+            "DomainLength": 22,
+            "IsDomainIP": 0,
+            "TLD": "uk",
+            "URLSimilarityIndex": 100.0,
+            "CharContinuationRate": 0.866666667,
+            "TLDLegitimateProb": 0.028555,
+            "URLCharProb": 0.06412872,
+            "TLDLength": 2,
+            "NoOfSubDomain": 2,
+            "HasObfuscation": 0,
+            "NoOfObfuscatedChar": 0,
+            "ObfuscationRatio": 0.0,
+            "NoOfLettersInURL": 15,
+            "LetterRatioInURL": 0.517,
+            "NoOfDegitsInURL": 0,
+            "DegitRatioInURL": 0.0,
+            "NoOfEqualsInURL": 0,
+            "NoOfQMarkInURL": 0,
+            "NoOfAmpersandInURL": 0,
+            "NoOfOtherSpecialCharsInURL": 2,
+            "SpacialCharRatioInURL": 0.069,
+            "IsHTTPS": 1,
+            "LineOfCode": 467,
+            "LargestLineLength": 682,
+            "HasTitle": 1,
+            "DomainTitleMatchScore": 46.66666667,
+            "URLTitleMatchScore": 46.66666667,
+            "HasFavicon": 0,
+            "Robots": 1,
+            "IsResponsive": 1,
+            "NoOfURLRedirect": 0,
+            "NoOfSelfRedirect": 0,
+            "HasDescription": 1,
+            "NoOfPopup": 0,
+            "NoOfiFrame": 0,
+            "HasExternalFormSubmit": 0,
+            "HasSocialNet": 0,
+            "HasSubmitButton": 1,
+            "HasHiddenFields": 1,
+            "HasPasswordField": 0,
+            "Bank": 0,
+            "Pay": 0,
+            "Crypto": 0,
+            "HasCopyrightInfo": 1,
+            "NoOfImage": 10,
+            "NoOfCSS": 2,
+            "NoOfJS": 7,
+            "NoOfSelfRef": 42,
+            "NoOfEmptyRef": 2,
+            "NoOfExternalRef": 5,
+            "label": 1
+          },
+          {
+            "FILENAME": "554095.txt",
+            "URLLength": 26,
+            "Domain": "www.sfnmjournal.com",
+            "DomainLength": 19,
+            "IsDomainIP": 0,
+            "TLD": "com",
+            "URLSimilarityIndex": 100.0,
+            "CharContinuationRate": 1.0,
+            "TLDLegitimateProb": 0.5229071,
+            "URLCharProb": 0.057605756,
+            "TLDLength": 3,
+            "NoOfSubDomain": 1,
+            "HasObfuscation": 0,
+            "NoOfObfuscatedChar": 0,
+            "ObfuscationRatio": 0.0,
+            "NoOfLettersInURL": 13,
+            "LetterRatioInURL": 0.5,
+            "NoOfDegitsInURL": 0,
+            "DegitRatioInURL": 0.0,
+            "NoOfEqualsInURL": 0,
+            "NoOfQMarkInURL": 0,
+            "NoOfAmpersandInURL": 0,
+            "NoOfOtherSpecialCharsInURL": 1,
+            "SpacialCharRatioInURL": 0.038,
+            "IsHTTPS": 1,
+            "LineOfCode": 6356,
+            "LargestLineLength": 26824,
+            "HasTitle": 1,
+            "DomainTitleMatchScore": 0.0,
+            "URLTitleMatchScore": 0.0,
+            "HasFavicon": 0,
+            "Robots": 1,
+            "IsResponsive": 1,
+            "NoOfURLRedirect": 0,
+            "NoOfSelfRedirect": 0,
+            "HasDescription": 0,
+            "NoOfPopup": 1,
+            "NoOfiFrame": 12,
+            "HasExternalFormSubmit": 0,
+            "HasSocialNet": 1,
+            "HasSubmitButton": 1,
+            "HasHiddenFields": 1,
+            "HasPasswordField": 0,
+            "Bank": 0,
+            "Pay": 1,
+            "Crypto": 1,
+            "HasCopyrightInfo": 1,
+            "NoOfImage": 3,
+            "NoOfCSS": 27,
+            "NoOfJS": 15,
+            "NoOfSelfRef": 22,
+            "NoOfEmptyRef": 1,
+            "NoOfExternalRef": 31,
+            "label": 1
+          },
+          {
+            "FILENAME": "151578.txt",
+            "URLLength": 33,
+            "Domain": "www.rewildingargentina.org",
+            "DomainLength": 26,
+            "IsDomainIP": 0,
+            "TLD": "org",
+            "URLSimilarityIndex": 100.0,
+            "CharContinuationRate": 1.0,
+            "TLDLegitimateProb": 0.0799628,
+            "URLCharProb": 0.059441389,
+            "TLDLength": 3,
+            "NoOfSubDomain": 1,
+            "HasObfuscation": 0,
+            "NoOfObfuscatedChar": 0,
+            "ObfuscationRatio": 0.0,
+            "NoOfLettersInURL": 20,
+            "LetterRatioInURL": 0.606,
+            "NoOfDegitsInURL": 0,
+            "DegitRatioInURL": 0.0,
+            "NoOfEqualsInURL": 0,
+            "NoOfQMarkInURL": 0,
+            "NoOfAmpersandInURL": 0,
+            "NoOfOtherSpecialCharsInURL": 1,
+            "SpacialCharRatioInURL": 0.03,
+            "IsHTTPS": 1,
+            "LineOfCode": 6089,
+            "LargestLineLength": 28404,
+            "HasTitle": 1,
+            "DomainTitleMatchScore": 100.0,
+            "URLTitleMatchScore": 100.0,
+            "HasFavicon": 0,
+            "Robots": 1,
+            "IsResponsive": 1,
+            "NoOfURLRedirect": 1,
+            "NoOfSelfRedirect": 1,
+            "HasDescription": 1,
+            "NoOfPopup": 0,
+            "NoOfiFrame": 2,
+            "HasExternalFormSubmit": 0,
+            "HasSocialNet": 1,
+            "HasSubmitButton": 1,
+            "HasHiddenFields": 1,
+            "HasPasswordField": 0,
+            "Bank": 1,
+            "Pay": 1,
+            "Crypto": 0,
+            "HasCopyrightInfo": 1,
+            "NoOfImage": 244,
+            "NoOfCSS": 15,
+            "NoOfJS": 34,
+            "NoOfSelfRef": 72,
+            "NoOfEmptyRef": 1,
+            "NoOfExternalRef": 85,
+            "label": 1
+          }
+        ],
+        [
+          {
+            "Feature": "FILENAME",
+            "DataType": "object",
+            "MissingValues": 0,
+            "UniqueValues": 235795
+          },
+          {
+            "Feature": "URL",
+            "DataType": "object",
+            "MissingValues": 0,
+            "UniqueValues": 235370
+          },
+          {
+            "Feature": "URLLength",
+            "DataType": "int64",
+            "MissingValues": 0,
+            "UniqueValues": 482
+          },
+          {
+            "Feature": "Domain",
+            "DataType": "object",
+            "MissingValues": 0,
+            "UniqueValues": 220086
+          },
+          {
+            "Feature": "DomainLength",
+            "DataType": "int64",
+            "MissingValues": 0,
+            "UniqueValues": 101
+          },
+          {
+            "Feature": "IsDomainIP",
+            "DataType": "int64",
+            "MissingValues": 0,
+            "UniqueValues": 2
+          },
+          {
+            "Feature": "TLD",
+            "DataType": "object",
+            "MissingValues": 0,
+            "UniqueValues": 695
+          },
+          {
+            "Feature": "URLSimilarityIndex",
+            "DataType": "float64",
+            "MissingValues": 0,
+            "UniqueValues": 36360
+          },
+          {
+            "Feature": "CharContinuationRate",
+            "DataType": "float64",
+            "MissingValues": 0,
+            "UniqueValues": 898
+          },
+          {
+            "Feature": "TLDLegitimateProb",
+            "DataType": "float64",
+            "MissingValues": 0,
+            "UniqueValues": 465
+          },
+          {
+            "Feature": "URLCharProb",
+            "DataType": "float64",
+            "MissingValues": 0,
+            "UniqueValues": 227421
+          },
+          {
+            "Feature": "TLDLength",
+            "DataType": "int64",
+            "MissingValues": 0,
+            "UniqueValues": 12
+          },
+          {
+            "Feature": "NoOfSubDomain",
+            "DataType": "int64",
+            "MissingValues": 0,
+            "UniqueValues": 10
+          },
+          {
+            "Feature": "HasObfuscation",
+            "DataType": "int64",
+            "MissingValues": 0,
+            "UniqueValues": 2
+          },
+          {
+            "Feature": "NoOfObfuscatedChar",
+            "DataType": "int64",
+            "MissingValues": 0,
+            "UniqueValues": 20
+          },
+          {
+            "Feature": "ObfuscationRatio",
+            "DataType": "float64",
+            "MissingValues": 0,
+            "UniqueValues": 146
+          },
+          {
+            "Feature": "NoOfLettersInURL",
+            "DataType": "int64",
+            "MissingValues": 0,
+            "UniqueValues": 421
+          },
+          {
+            "Feature": "LetterRatioInURL",
+            "DataType": "float64",
+            "MissingValues": 0,
+            "UniqueValues": 709
+          },
+          {
+            "Feature": "NoOfDegitsInURL",
+            "DataType": "int64",
+            "MissingValues": 0,
+            "UniqueValues": 182
+          },
+          {
+            "Feature": "DegitRatioInURL",
+            "DataType": "float64",
+            "MissingValues": 0,
+            "UniqueValues": 575
+          },
+          {
+            "Feature": "NoOfEqualsInURL",
+            "DataType": "int64",
+            "MissingValues": 0,
+            "UniqueValues": 25
+          },
+          {
+            "Feature": "NoOfQMarkInURL",
+            "DataType": "int64",
+            "MissingValues": 0,
+            "UniqueValues": 5
+          },
+          {
+            "Feature": "NoOfAmpersandInURL",
+            "DataType": "int64",
+            "MissingValues": 0,
+            "UniqueValues": 31
+          },
+          {
+            "Feature": "NoOfOtherSpecialCharsInURL",
+            "DataType": "int64",
+            "MissingValues": 0,
+            "UniqueValues": 74
+          },
+          {
+            "Feature": "SpacialCharRatioInURL",
+            "DataType": "float64",
+            "MissingValues": 0,
+            "UniqueValues": 240
+          },
+          {
+            "Feature": "IsHTTPS",
+            "DataType": "int64",
+            "MissingValues": 0,
+            "UniqueValues": 2
+          },
+          {
+            "Feature": "LineOfCode",
+            "DataType": "int64",
+            "MissingValues": 0,
+            "UniqueValues": 10738
+          },
+          {
+            "Feature": "LargestLineLength",
+            "DataType": "int64",
+            "MissingValues": 0,
+            "UniqueValues": 26181
+          },
+          {
+            "Feature": "HasTitle",
+            "DataType": "int64",
+            "MissingValues": 0,
+            "UniqueValues": 2
+          },
+          {
+            "Feature": "Title",
+            "DataType": "object",
+            "MissingValues": 0,
+            "UniqueValues": 197874
+          },
+          {
+            "Feature": "DomainTitleMatchScore",
+            "DataType": "float64",
+            "MissingValues": 0,
+            "UniqueValues": 152
+          },
+          {
+            "Feature": "URLTitleMatchScore",
+            "DataType": "float64",
+            "MissingValues": 0,
+            "UniqueValues": 497
+          },
+          {
+            "Feature": "HasFavicon",
+            "DataType": "int64",
+            "MissingValues": 0,
+            "UniqueValues": 2
+          },
+          {
+            "Feature": "Robots",
+            "DataType": "int64",
+            "MissingValues": 0,
+            "UniqueValues": 2
+          },
+          {
+            "Feature": "IsResponsive",
+            "DataType": "int64",
+            "MissingValues": 0,
+            "UniqueValues": 2
+          },
+          {
+            "Feature": "NoOfURLRedirect",
+            "DataType": "int64",
+            "MissingValues": 0,
+            "UniqueValues": 2
+          },
+          {
+            "Feature": "NoOfSelfRedirect",
+            "DataType": "int64",
+            "MissingValues": 0,
+            "UniqueValues": 2
+          },
+          {
+            "Feature": "HasDescription",
+            "DataType": "int64",
+            "MissingValues": 0,
+            "UniqueValues": 2
+          },
+          {
+            "Feature": "NoOfPopup",
+            "DataType": "int64",
+            "MissingValues": 0,
+            "UniqueValues": 115
+          },
+          {
+            "Feature": "NoOfiFrame",
+            "DataType": "int64",
+            "MissingValues": 0,
+            "UniqueValues": 119
+          },
+          {
+            "Feature": "HasExternalFormSubmit",
+            "DataType": "int64",
+            "MissingValues": 0,
+            "UniqueValues": 2
+          },
+          {
+            "Feature": "HasSocialNet",
+            "DataType": "int64",
+            "MissingValues": 0,
+            "UniqueValues": 2
+          },
+          {
+            "Feature": "HasSubmitButton",
+            "DataType": "int64",
+            "MissingValues": 0,
+            "UniqueValues": 2
+          },
+          {
+            "Feature": "HasHiddenFields",
+            "DataType": "int64",
+            "MissingValues": 0,
+            "UniqueValues": 2
+          },
+          {
+            "Feature": "HasPasswordField",
+            "DataType": "int64",
+            "MissingValues": 0,
+            "UniqueValues": 2
+          },
+          {
+            "Feature": "Bank",
+            "DataType": "int64",
+            "MissingValues": 0,
+            "UniqueValues": 2
+          },
+          {
+            "Feature": "Pay",
+            "DataType": "int64",
+            "MissingValues": 0,
+            "UniqueValues": 2
+          },
+          {
+            "Feature": "Crypto",
+            "DataType": "int64",
+            "MissingValues": 0,
+            "UniqueValues": 2
+          },
+          {
+            "Feature": "HasCopyrightInfo",
+            "DataType": "int64",
+            "MissingValues": 0,
+            "UniqueValues": 2
+          },
+          {
+            "Feature": "NoOfImage",
+            "DataType": "int64",
+            "MissingValues": 0,
+            "UniqueValues": 992
+          },
+          {
+            "Feature": "NoOfCSS",
+            "DataType": "int64",
+            "MissingValues": 0,
+            "UniqueValues": 209
+          },
+          {
+            "Feature": "NoOfJS",
+            "DataType": "int64",
+            "MissingValues": 0,
+            "UniqueValues": 253
+          },
+          {
+            "Feature": "NoOfSelfRef",
+            "DataType": "int64",
+            "MissingValues": 0,
+            "UniqueValues": 1374
+          },
+          {
+            "Feature": "NoOfEmptyRef",
+            "DataType": "int64",
+            "MissingValues": 0,
+            "UniqueValues": 296
+          },
+          {
+            "Feature": "NoOfExternalRef",
+            "DataType": "int64",
+            "MissingValues": 0,
+            "UniqueValues": 1191
+          },
+          {
+            "Feature": "label",
+            "DataType": "int64",
+            "MissingValues": 0,
+            "UniqueValues": 2
+          }
+        ]
+      ]
+    },
+    {
+      "cell": 7,
+      "stdout": "",
+      "tables": [
+        []
+      ]
+    },
+    {
+      "cell": 9,
+      "stdout": "",
+      "tables": [
+        [
+          {
+            "Check": "Raw rows",
+            "Count": 235795
+          },
+          {
+            "Check": "Missing cells",
+            "Count": 0
+          },
+          {
+            "Check": "Exact duplicate rows removed",
+            "Count": 0
+          },
+          {
+            "Check": "Conflicting URL rows excluded",
+            "Count": 0
+          },
+          {
+            "Check": "Same-label URL repeats removed",
+            "Count": 425
+          },
+          {
+            "Check": "Unparseable hosts excluded",
+            "Count": 0
+          },
+          {
+            "Check": "Unique eligible URLs",
+            "Count": 235370
+          },
+          {
+            "Check": "Mixed-label hosts excluded from tests",
+            "Count": 54
+          },
+          {
+            "Check": "One URL per host for tests",
+            "Count": 220023
+          }
+        ],
+        [
+          {
+            "Hosts": 85227
+          },
+          {
+            "Hosts": 134796
+          }
+        ]
+      ]
+    },
+    {
+      "cell": 11,
+      "stdout": "",
+      "tables": [
+        [
+          {
+            "Feature": "URLLength",
+            "Q1": 23.0,
+            "Q3": 34.0,
+            "IQR": 11.0,
+            "FlaggedRows": 22362
+          },
+          {
+            "Feature": "DomainLength",
+            "Q1": 16.0,
+            "Q3": 24.0,
+            "IQR": 8.0,
+            "FlaggedRows": 13372
+          },
+          {
+            "Feature": "NoOfSubDomain",
+            "Q1": 1.0,
+            "Q3": 1.0,
+            "IQR": 0.0,
+            "FlaggedRows": 57228
+          },
+          {
+            "Feature": "NoOfImage",
+            "Q1": 0.0,
+            "Q3": 29.0,
+            "IQR": 29.0,
+            "FlaggedRows": 18362
+          },
+          {
+            "Feature": "NoOfCSS",
+            "Q1": 0.0,
+            "Q3": 8.0,
+            "IQR": 8.0,
+            "FlaggedRows": 17906
+          },
+          {
+            "Feature": "NoOfJS",
+            "Q1": 0.0,
+            "Q3": 15.0,
+            "IQR": 15.0,
+            "FlaggedRows": 11852
+          }
+        ]
+      ]
+    },
+    {
+      "cell": 13,
+      "stdout": "",
+      "tables": [
+        [
+          {
+            "Class": "Phishing",
+            "Feature": "URLLength",
+            "Count": 100520,
+            "Mean": 45.7,
+            "Median": 34.0,
+            "Mode": 26,
+            "StandardDeviation": 61.25,
+            "Variance": 3751.88,
+            "IQR": 22.0,
+            "Minimum": 13,
+            "Maximum": 6097
+          },
+          {
+            "Class": "Phishing",
+            "Feature": "DomainLength",
+            "Count": 100520,
+            "Mean": 24.44,
+            "Median": 22.0,
+            "Mode": 18,
+            "StandardDeviation": 12.18,
+            "Variance": 148.39,
+            "IQR": 13.0,
+            "Minimum": 4,
+            "Maximum": 110
+          },
+          {
+            "Class": "Phishing",
+            "Feature": "NoOfSubDomain",
+            "Count": 100520,
+            "Mean": 1.17,
+            "Median": 1.0,
+            "Mode": 1,
+            "StandardDeviation": 0.79,
+            "Variance": 0.63,
+            "IQR": 0.0,
+            "Minimum": 0,
+            "Maximum": 10
+          },
+          {
+            "Class": "Phishing",
+            "Feature": "NoOfImage",
+            "Count": 100520,
+            "Mean": 0.86,
+            "Median": 0.0,
+            "Mode": 0,
+            "StandardDeviation": 3.3,
+            "Variance": 10.87,
+            "IQR": 0.0,
+            "Minimum": 0,
+            "Maximum": 158
+          },
+          {
+            "Class": "Phishing",
+            "Feature": "NoOfCSS",
+            "Count": 100520,
+            "Mean": 0.44,
+            "Median": 0.0,
+            "Mode": 0,
+            "StandardDeviation": 1.44,
+            "Variance": 2.07,
+            "IQR": 0.0,
+            "Minimum": 0,
+            "Maximum": 131
+          },
+          {
+            "Class": "Phishing",
+            "Feature": "NoOfJS",
+            "Count": 100520,
+            "Mean": 0.89,
+            "Median": 0.0,
+            "Mode": 0,
+            "StandardDeviation": 3.37,
+            "Variance": 11.33,
+            "IQR": 0.0,
+            "Minimum": 0,
+            "Maximum": 102
+          },
+          {
+            "Class": "Legitimate",
+            "Feature": "URLLength",
+            "Count": 134850,
+            "Mean": 26.23,
+            "Median": 26.0,
+            "Mode": 25,
+            "StandardDeviation": 4.82,
+            "Variance": 23.19,
+            "IQR": 6.0,
+            "Minimum": 15,
+            "Maximum": 57
+          },
+          {
+            "Class": "Legitimate",
+            "Feature": "DomainLength",
+            "Count": 134850,
+            "Mean": 19.23,
+            "Median": 19.0,
+            "Mode": 18,
+            "StandardDeviation": 4.82,
+            "Variance": 23.19,
+            "IQR": 6.0,
+            "Minimum": 8,
+            "Maximum": 50
+          },
+          {
+            "Class": "Legitimate",
+            "Feature": "NoOfSubDomain",
+            "Count": 134850,
+            "Mean": 1.16,
+            "Median": 1.0,
+            "Mode": 1,
+            "StandardDeviation": 0.4,
+            "Variance": 0.16,
+            "IQR": 0.0,
+            "Minimum": 1,
+            "Maximum": 4
+          },
+          {
+            "Class": "Legitimate",
+            "Feature": "NoOfImage",
+            "Count": 134850,
+            "Mean": 44.95,
+            "Median": 25.0,
+            "Mode": 11,
+            "StandardDeviation": 100.93,
+            "Variance": 10186.97,
+            "IQR": 34.0,
+            "Minimum": 0,
+            "Maximum": 8956
+          },
+          {
+            "Class": "Legitimate",
+            "Feature": "NoOfCSS",
+            "Count": 134850,
+            "Mean": 10.74,
+            "Median": 6.0,
+            "Mode": 2,
+            "StandardDeviation": 98.76,
+            "Variance": 9753.7,
+            "IQR": 10.0,
+            "Minimum": 0,
+            "Maximum": 35820
+          },
+          {
+            "Class": "Legitimate",
+            "Feature": "NoOfJS",
+            "Count": 134850,
+            "Mean": 17.73,
+            "Median": 14.0,
+            "Mode": 7,
+            "StandardDeviation": 27.21,
+            "Variance": 740.6,
+            "IQR": 15.0,
+            "Minimum": 0,
+            "Maximum": 6957
+          }
+        ]
+      ]
+    },
+    {
+      "cell": 15,
+      "stdout": "Mean URL length: phishing 45.7, legitimate 26.2.\nMedian URL length: phishing 34.0, legitimate 26.0.\nDifferences between means, medians and maxima show why the full distribution matters.\nThe cleaned data contain 695 TLD categories and repeated hosts.\nWe therefore use one host per main observation and pool uncommon TLDs before testing.\n",
+      "tables": []
+    },
+    {
+      "cell": 17,
+      "stdout": "",
+      "tables": [
+        [
+          {
+            "HasPath": 0.2714,
+            "HasQuery": 0.0604
+          },
+          {
+            "HasPath": 0.0,
+            "HasQuery": 0.0
+          }
+        ]
+      ]
+    },
+    {
+      "cell": 20,
+      "stdout": "",
+      "tables": []
+    },
+    {
+      "cell": 22,
+      "stdout": "Phishing mean: 38.955 characters\nLegitimate mean: 26.229 characters\nDifference: 12.725 characters (phishing minus legitimate)\nTest: Two-sample t-test\nStatistic = 79.0995, p-value = below numerical precision\nAt alpha = 0.05: Reject H0.\nThe test provides evidence of a mean difference within this benchmark.\nLength can be useful context, but overlapping values and long tails prevent a simple length rule from settling the class.\n",
+      "tables": []
+    },
+    {
+      "cell": 25,
+      "stdout": "Phishing mean: 25.095 characters\nLegitimate mean: 19.229 characters\nDifference: 5.865 characters (phishing minus legitimate)\nTest: Two-sample t-test\nStatistic = 137.3400, p-value = below numerical precision\nAt alpha = 0.05: Reject H0.\nThe test provides evidence of a mean difference within this benchmark.\nCompare the size of the character gap with the spread in the plot before treating it as a useful review cue.\n",
+      "tables": []
+    },
+    {
+      "cell": 28,
+      "stdout": "Phishing mean: 1.222 subdomains\nLegitimate mean: 1.162 subdomains\nDifference: 0.061 subdomains (phishing minus legitimate)\nTest: Two-sample t-test\nStatistic = 21.4800, p-value = 3.78e-102\nAt alpha = 0.05: Reject H0.\nThe test provides evidence of a mean difference within this benchmark.\nA small p-value alone does not make a small subdomain-count difference useful for a blocking rule.\n",
+      "tables": []
+    },
+    {
+      "cell": 31,
+      "stdout": "Smallest expected count: 18281.22; degrees of freedom: 1\nPresence rates: phishing 44.62%, legitimate 100.00%.\nGap: -55.38 percentage points (phishing minus legitimate).\nTest: Chi-square independence\nStatistic = 95027.6023, p-value = below numerical precision\nAt alpha = 0.05: Reject H0.\nThe feature is associated with class and is more common in legitimate hosts here.\nThis association can guide review, but it does not show that the feature causes a site's class.\n",
+      "tables": [
+        [
+          {
+            "Absent": 47195,
+            "Present": 38032
+          },
+          {
+            "Absent": 0,
+            "Present": 134796
+          }
+        ]
+      ]
+    },
+    {
+      "cell": 34,
+      "stdout": "Smallest expected count: 32172.15; degrees of freedom: 1\nPresence rates: phishing 7.78%, legitimate 56.70%.\nGap: -48.92 percentage points (phishing minus legitimate).\nTest: Chi-square independence\nStatistic = 53167.2376, p-value = below numerical precision\nAt alpha = 0.05: Reject H0.\nThe feature is associated with class and is more common in legitimate hosts here.\nThis association can guide review, but it does not show that the feature causes a site's class.\n",
+      "tables": [
+        [
+          {
+            "Absent": 78596,
+            "Present": 6631
+          },
+          {
+            "Absent": 58371,
+            "Present": 76425
+          }
+        ]
+      ]
+    },
+    {
+      "cell": 37,
+      "stdout": "Smallest expected count: 41653.44; degrees of freedom: 1\nPresence rates: phishing 0.50%, legitimate 79.46%.\nGap: -78.96 percentage points (phishing minus legitimate).\nTest: Chi-square independence\nStatistic = 130270.4893, p-value = below numerical precision\nAt alpha = 0.05: Reject H0.\nThe feature is associated with class and is more common in legitimate hosts here.\nThis association can guide review, but it does not show that the feature causes a site's class.\n",
+      "tables": [
+        [
+          {
+            "Absent": 84800,
+            "Present": 427
+          },
+          {
+            "Absent": 27690,
+            "Present": 107106
+          }
+        ]
+      ]
+    },
+    {
+      "cell": 40,
+      "stdout": "Smallest expected count: 3948.70; degrees of freedom: 1\nPresence rates: phishing 0.30%, legitimate 7.37%.\nGap: -7.07 percentage points (phishing minus legitimate).\nTest: Chi-square independence\nStatistic = 5913.7410, p-value = below numerical precision\nAt alpha = 0.05: Reject H0.\nThe feature is associated with class and is more common in legitimate hosts here.\nThis association can guide review, but it does not show that the feature causes a site's class.\n",
+      "tables": [
+        [
+          {
+            "Absent": 84972,
+            "Present": 255
+          },
+          {
+            "Absent": 124857,
+            "Present": 9939
+          }
+        ]
+      ]
+    },
+    {
+      "cell": 43,
+      "stdout": "Smallest expected count: 11187.20; degrees of freedom: 1\nPresence rates: phishing 5.18%, legitimate 18.15%.\nGap: -12.97 percentage points (phishing minus legitimate).\nTest: Chi-square independence\nStatistic = 7702.6657, p-value = below numerical precision\nAt alpha = 0.05: Reject H0.\nThe feature is associated with class and is more common in legitimate hosts here.\nThis association can guide review, but it does not show that the feature causes a site's class.\n",
+      "tables": [
+        [
+          {
+            "Absent": 80812,
+            "Present": 4415
+          },
+          {
+            "Absent": 110330,
+            "Present": 24466
+          }
+        ]
+      ]
+    },
+    {
+      "cell": 46,
+      "stdout": "Smallest expected count: 21087.60; degrees of freedom: 1\nPresence rates: phishing 5.45%, legitimate 36.94%.\nGap: -31.49 percentage points (phishing minus legitimate).\nTest: Chi-square independence\nStatistic = 27797.0608, p-value = below numerical precision\nAt alpha = 0.05: Reject H0.\nThe feature is associated with class and is more common in legitimate hosts here.\nThis association can guide review, but it does not show that the feature causes a site's class.\n",
+      "tables": [
+        [
+          {
+            "Absent": 80579,
+            "Present": 4648
+          },
+          {
+            "Absent": 85004,
+            "Present": 49792
+          }
+        ]
+      ]
+    },
+    {
+      "cell": 49,
+      "stdout": "Smallest expected count: 2108.37; degrees of freedom: 1\nPresence rates: phishing 0.61%, legitimate 3.65%.\nGap: -3.03 percentage points (phishing minus legitimate).\nTest: Chi-square independence\nStatistic = 1992.6790, p-value = below numerical precision\nAt alpha = 0.05: Reject H0.\nThe feature is associated with class and is more common in legitimate hosts here.\nThis association can guide review, but it does not show that the feature causes a site's class.\n",
+      "tables": [
+        [
+          {
+            "Absent": 84703,
+            "Present": 524
+          },
+          {
+            "Absent": 129877,
+            "Present": 4919
+          }
+        ]
+      ]
+    },
+    {
+      "cell": 52,
+      "stdout": "Smallest expected count: 870.39; degrees of freedom: 10\nTest: Chi-square independence\nStatistic = 30468.0676, p-value = below numerical precision\nAt alpha = 0.05: Reject H0.\nThe class distribution is associated with TLD group in this benchmark.\nUse these groups for context. An unfamiliar TLD is not enough to label a new URL as phishing.\n",
+      "tables": [
+        [
+          {
+            "TLD": "Other",
+            "Hosts": 58370,
+            "Phishing": 26747,
+            "PhishingRate": 0.45823196847695735
+          },
+          {
+            "TLD": "app",
+            "Hosts": 6252,
+            "Phishing": 6112,
+            "PhishingRate": 0.9776071657069738
+          },
+          {
+            "TLD": "au",
+            "Hosts": 2893,
+            "Phishing": 288,
+            "PhishingRate": 0.09955063947459385
+          },
+          {
+            "TLD": "co",
+            "Hosts": 4654,
+            "Phishing": 4196,
+            "PhishingRate": 0.9015900300816502
+          },
+          {
+            "TLD": "com",
+            "Hosts": 106533,
+            "Phishing": 37783,
+            "PhishingRate": 0.35466005838566456
+          },
+          {
+            "TLD": "de",
+            "Hosts": 3901,
+            "Phishing": 591,
+            "PhishingRate": 0.15149961548320942
+          },
+          {
+            "TLD": "io",
+            "Hosts": 2247,
+            "Phishing": 1816,
+            "PhishingRate": 0.8081886960391633
+          },
+          {
+            "TLD": "net",
+            "Hosts": 6752,
+            "Phishing": 2756,
+            "PhishingRate": 0.408175355450237
+          },
+          {
+            "TLD": "org",
+            "Hosts": 18626,
+            "Phishing": 2107,
+            "PhishingRate": 0.11312144314399226
+          },
+          {
+            "TLD": "ru",
+            "Hosts": 3416,
+            "Phishing": 2524,
+            "PhishingRate": 0.7388758782201406
+          },
+          {
+            "TLD": "uk",
+            "Hosts": 6379,
+            "Phishing": 307,
+            "PhishingRate": 0.04812666562157078
+          }
+        ]
+      ]
+    },
+    {
+      "cell": 55,
+      "stdout": "Paired hosts: 85,227\nMean URL-title score: 21.64\nMean domain-title score: 19.01\nAverage paired gap: 2.63 score points\nTest: Paired t-test\nStatistic = 48.2387, p-value = below numerical precision\nAt alpha = 0.05: Reject H0.\nThere is a mean paired difference; URL-title scores are higher on average here.\nThe scores come from the same pages. This result describes score construction, not a treatment effect.\n",
+      "tables": []
+    },
+    {
+      "cell": 58,
+      "stdout": "Permutation comparisons use 1,500 different hosts per class.\n",
+      "tables": []
+    },
+    {
+      "cell": 60,
+      "stdout": "Sample medians: phishing 0.0, legitimate 25.0.\nObserved median gap: -25.0; smallest possible simulated p-value: 0.0005.\nTest: Permutation test\nStatistic = -25.0000, p-value = 0.0005\nAt alpha = 0.05: Reject H0.\nThe observed median gap is unusual under exchangeable class labels in this subsample.\nThis describes the selected hosts. It does not establish that changing page content changes phishing status.\n",
+      "tables": []
+    },
+    {
+      "cell": 63,
+      "stdout": "Sample medians: phishing 0.0, legitimate 13.5.\nObserved median gap: -13.5; smallest possible simulated p-value: 0.0005.\nTest: Permutation test\nStatistic = -13.5000, p-value = 0.0005\nAt alpha = 0.05: Reject H0.\nThe observed median gap is unusual under exchangeable class labels in this subsample.\nThis describes the selected hosts. It does not establish that changing page content changes phishing status.\n",
+      "tables": []
+    },
+    {
+      "cell": 66,
+      "stdout": "Test: Paired t-test\nStatistic = -12.6141, p-value = 1.82e-36\nAt alpha = 0.05: Reject H0.\n",
+      "tables": []
+    },
+    {
+      "cell": 68,
+      "stdout": "Accuracy change, B minus A: -0.072 percentage points.\nRule B misses 159 additional phishing hosts and avoids 0 false alerts here.\nThe paired test finds a difference in average correctness. Check its size and error trade-off before choosing a rule.\nZero observed false alerts cannot guarantee zero risk on future websites.\n",
+      "tables": [
+        [
+          {
+            "Rule": "A: No HTTPS",
+            "CaughtPhishing": 47195,
+            "FlaggedLegitimate": 0,
+            "MissedPhishing": 38032,
+            "Recall": 0.5538,
+            "FalsePositiveRate": 0.0,
+            "Accuracy": 0.8271
+          },
+          {
+            "Rule": "B: No HTTPS and no social links",
+            "CaughtPhishing": 47036,
+            "FlaggedLegitimate": 0,
+            "MissedPhishing": 38191,
+            "Recall": 0.5519,
+            "FalsePositiveRate": 0.0,
+            "Accuracy": 0.8264
+          }
+        ]
+      ]
+    },
+    {
+      "cell": 71,
+      "stdout": "Our decision is to use the features as contextual information in a review dashboard.\nShow the within-class rates and sample counts, and keep the rule error trade-offs visible.\nThe tests describe associations and paired rule differences within this dataset.\nThey do not justify a universal automatic blocking policy or prove a benefit to users.\n",
+      "tables": [
+        [
+          {
+            "Question": 1,
+            "Feature": "URLLength",
+            "Test": "Two-sample t-test",
+            "Statistic": 79.0995,
+            "PValueDisplay": "below numerical precision",
+            "Estimate": 12.7252,
+            "EstimateUnits": "characters: phishing minus legitimate",
+            "Decision": "Reject H0"
+          },
+          {
+            "Question": 2,
+            "Feature": "DomainLength",
+            "Test": "Two-sample t-test",
+            "Statistic": 137.34,
+            "PValueDisplay": "below numerical precision",
+            "Estimate": 5.8654,
+            "EstimateUnits": "characters: phishing minus legitimate",
+            "Decision": "Reject H0"
+          },
+          {
+            "Question": 3,
+            "Feature": "NoOfSubDomain",
+            "Test": "Two-sample t-test",
+            "Statistic": 21.48,
+            "PValueDisplay": "3.78e-102",
+            "Estimate": 0.0605,
+            "EstimateUnits": "subdomains: phishing minus legitimate",
+            "Decision": "Reject H0"
+          },
+          {
+            "Question": 4,
+            "Feature": "IsHTTPS",
+            "Test": "Chi-square independence",
+            "Statistic": 95027.6023,
+            "PValueDisplay": "below numerical precision",
+            "Estimate": -55.3756,
+            "EstimateUnits": "presence percentage points: phishing minus legitimate",
+            "Decision": "Reject H0"
+          },
+          {
+            "Question": 5,
+            "Feature": "HasFavicon",
+            "Test": "Chi-square independence",
+            "Statistic": 53167.2376,
+            "PValueDisplay": "below numerical precision",
+            "Estimate": -48.9164,
+            "EstimateUnits": "presence percentage points: phishing minus legitimate",
+            "Decision": "Reject H0"
+          },
+          {
+            "Question": 6,
+            "Feature": "HasSocialNet",
+            "Test": "Chi-square independence",
+            "Statistic": 130270.4893,
+            "PValueDisplay": "below numerical precision",
+            "Estimate": -78.9568,
+            "EstimateUnits": "presence percentage points: phishing minus legitimate",
+            "Decision": "Reject H0"
+          },
+          {
+            "Question": 7,
+            "Feature": "HasExternalFormSubmit",
+            "Test": "Chi-square independence",
+            "Statistic": 5913.741,
+            "PValueDisplay": "below numerical precision",
+            "Estimate": -7.0742,
+            "EstimateUnits": "presence percentage points: phishing minus legitimate",
+            "Decision": "Reject H0"
+          },
+          {
+            "Question": 8,
+            "Feature": "Bank",
+            "Test": "Chi-square independence",
+            "Statistic": 7702.6657,
+            "PValueDisplay": "below numerical precision",
+            "Estimate": -12.9701,
+            "EstimateUnits": "presence percentage points: phishing minus legitimate",
+            "Decision": "Reject H0"
+          },
+          {
+            "Question": 9,
+            "Feature": "Pay",
+            "Test": "Chi-square independence",
+            "Statistic": 27797.0608,
+            "PValueDisplay": "below numerical precision",
+            "Estimate": -31.4851,
+            "EstimateUnits": "presence percentage points: phishing minus legitimate",
+            "Decision": "Reject H0"
+          },
+          {
+            "Question": 10,
+            "Feature": "Crypto",
+            "Test": "Chi-square independence",
+            "Statistic": 1992.679,
+            "PValueDisplay": "below numerical precision",
+            "Estimate": -3.0344,
+            "EstimateUnits": "presence percentage points: phishing minus legitimate",
+            "Decision": "Reject H0"
+          },
+          {
+            "Question": 11,
+            "Feature": "TLDGroup",
+            "Test": "Chi-square independence",
+            "Statistic": 30468.0676,
+            "PValueDisplay": "below numerical precision",
+            "Estimate": 30468.0676,
+            "EstimateUnits": "chi-square statistic; no single mean difference",
+            "Decision": "Reject H0"
+          },
+          {
+            "Question": 12,
+            "Feature": "URL-title versus domain-title score",
+            "Test": "Paired t-test",
+            "Statistic": 48.2387,
+            "PValueDisplay": "below numerical precision",
+            "Estimate": 2.6282,
+            "EstimateUnits": "score points: URL-title minus domain-title",
+            "Decision": "Reject H0"
+          },
+          {
+            "Question": 13,
+            "Feature": "NoOfImage",
+            "Test": "Permutation test",
+            "Statistic": -25.0,
+            "PValueDisplay": "0.0005",
+            "Estimate": -25.0,
+            "EstimateUnits": "median count: phishing minus legitimate",
+            "Decision": "Reject H0"
+          },
+          {
+            "Question": 14,
+            "Feature": "NoOfJS",
+            "Test": "Permutation test",
+            "Statistic": -13.5,
+            "PValueDisplay": "0.0005",
+            "Estimate": -13.5,
+            "EstimateUnits": "median count: phishing minus legitimate",
+            "Decision": "Reject H0"
+          },
+          {
+            "Question": 15,
+            "Feature": "Rule B versus Rule A",
+            "Test": "Paired t-test",
+            "Statistic": -12.6141,
+            "PValueDisplay": "1.82e-36",
+            "Estimate": -0.0723,
+            "EstimateUnits": "accuracy percentage points: B minus A",
+            "Decision": "Reject H0"
+          }
+        ]
+      ]
+    },
+    {
+      "cell": 74,
+      "stdout": "",
+      "tables": []
+    },
+    {
+      "cell": 76,
+      "stdout": "",
+      "tables": [
+        [
+          {
+            "Table": "class_summary",
+            "Rows": 2
+          },
+          {
+            "Table": "quality_summary",
+            "Rows": 9
+          },
+          {
+            "Table": "feature_rates",
+            "Rows": 14
+          },
+          {
+            "Table": "tld_summary",
+            "Rows": 11
+          },
+          {
+            "Table": "length_distribution",
+            "Rows": 8
+          },
+          {
+            "Table": "statistical_evidence",
+            "Rows": 15
+          },
+          {
+            "Table": "indicator_decisions",
+            "Rows": 11
+          },
+          {
+            "Table": "rule_summary",
+            "Rows": 2
+          },
+          {
+            "Table": "rule_chart",
+            "Rows": 4
+          },
+          {
+            "Table": "descriptive_summary",
+            "Rows": 12
+          }
+        ]
+      ]
+    }
+  ],
+  "models": [
+    {
+      "cell": 1,
+      "stdout": "",
+      "tables": []
+    },
+    {
+      "cell": 3,
+      "stdout": "Loaded 235,795 rows and 56 columns.\nCleaned unique eligible URLs: 235,370\n",
+      "tables": []
+    },
+    {
+      "cell": 5,
+      "stdout": "",
+      "tables": [
+        [
+          {
+            "Partition": "Training",
+            "URLs": 188658,
+            "Hosts": 176062,
+            "PhishingShare": 0.42781647213476237
+          },
+          {
+            "Partition": "Test",
+            "URLs": 46712,
+            "Hosts": 44015,
+            "PhishingShare": 0.424066620996746
+          }
+        ]
+      ]
+    },
+    {
+      "cell": 7,
+      "stdout": "All classification models trained successfully.\n",
+      "tables": []
+    },
+    {
+      "cell": 9,
+      "stdout": "=========================================================\nCLASSIFICATION REPORT: GAUSSIAN NAIVE BAYES\n=========================================================\n                precision    recall  f1-score   support\n\nLegitimate (0)     0.9489    0.9976    0.9726     26903\n  Phishing (1)     0.9965    0.9270    0.9605     19809\n\n      accuracy                         0.9677     46712\n     macro avg     0.9727    0.9623    0.9666     46712\n  weighted avg     0.9691    0.9677    0.9675     46712\n\n=========================================================\nCLASSIFICATION REPORT: PRUNED DECISION TREE (max_depth=5)\n=========================================================\n                precision    recall  f1-score   support\n\nLegitimate (0)     0.9919    0.9806    0.9862     26903\n  Phishing (1)     0.9741    0.9891    0.9815     19809\n\n      accuracy                         0.9842     46712\n     macro avg     0.9830    0.9849    0.9839     46712\n  weighted avg     0.9843    0.9842    0.9842     46712\n\n=========================================================\nCLASSIFICATION REPORT: LOGISTIC REGRESSION\n=========================================================\n                precision    recall  f1-score   support\n\nLegitimate (0)     0.9973    0.9979    0.9976     26903\n  Phishing (1)     0.9972    0.9963    0.9967     19809\n\n      accuracy                         0.9972     46712\n     macro avg     0.9972    0.9971    0.9972     46712\n  weighted avg     0.9972    0.9972    0.9972     46712\n\n=========================================================\nCLASSIFICATION REPORT: FULL DECISION TREE\n=========================================================\n                precision    recall  f1-score   support\n\nLegitimate (0)     0.9977    0.9978    0.9977     26903\n  Phishing (1)     0.9970    0.9968    0.9969     19809\n\n      accuracy                         0.9974     46712\n     macro avg     0.9973    0.9973    0.9973     46712\n  weighted avg     0.9974    0.9974    0.9974     46712\n\n",
+      "tables": []
+    },
+    {
+      "cell": 11,
+      "stdout": "",
+      "tables": [
+        [
+          {
+            "Model": "Majority baseline",
+            "Accuracy": 0.5759,
+            "BalancedAccuracy": 0.5,
+            "Precision": 0.0,
+            "Recall": 0.0,
+            "F1": 0.0,
+            "FalsePositiveRate": 0.0,
+            "TruePositive": 0,
+            "FalsePositive": 0,
+            "TrueNegative": 26903,
+            "FalseNegative": 19809
+          },
+          {
+            "Model": "Gaussian Naive Bayes",
+            "Accuracy": 0.9677,
+            "BalancedAccuracy": 0.9623,
+            "Precision": 0.9965,
+            "Recall": 0.927,
+            "F1": 0.9605,
+            "FalsePositiveRate": 0.0024,
+            "TruePositive": 18363,
+            "FalsePositive": 65,
+            "TrueNegative": 26838,
+            "FalseNegative": 1446
+          },
+          {
+            "Model": "Decision Tree (max_depth=5)",
+            "Accuracy": 0.9842,
+            "BalancedAccuracy": 0.9849,
+            "Precision": 0.9741,
+            "Recall": 0.9891,
+            "F1": 0.9815,
+            "FalsePositiveRate": 0.0194,
+            "TruePositive": 19593,
+            "FalsePositive": 521,
+            "TrueNegative": 26382,
+            "FalseNegative": 216
+          },
+          {
+            "Model": "Logistic regression",
+            "Accuracy": 0.9972,
+            "BalancedAccuracy": 0.9971,
+            "Precision": 0.9972,
+            "Recall": 0.9963,
+            "F1": 0.9967,
+            "FalsePositiveRate": 0.0021,
+            "TruePositive": 19736,
+            "FalsePositive": 56,
+            "TrueNegative": 26847,
+            "FalseNegative": 73
+          },
+          {
+            "Model": "Decision Tree (full)",
+            "Accuracy": 0.9974,
+            "BalancedAccuracy": 0.9973,
+            "Precision": 0.997,
+            "Recall": 0.9968,
+            "F1": 0.9969,
+            "FalsePositiveRate": 0.0022,
+            "TruePositive": 19746,
+            "FalsePositive": 59,
+            "TrueNegative": 26844,
+            "FalseNegative": 63
+          }
+        ]
+      ]
+    },
+    {
+      "cell": 13,
+      "stdout": "Top 5 Most Informative Features:\n",
+      "tables": []
+    },
+    {
+      "cell": 15,
+      "stdout": "",
+      "tables": []
+    },
+    {
+      "cell": 17,
+      "stdout": "",
+      "tables": []
+    },
+    {
+      "cell": 19,
+      "stdout": "",
+      "tables": []
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+{
+  "dataset_sha256": "a236549cd369cd80bd478ff8e1779cbf44c58d5c3f79f7a51a1adbed7d06d1c6",
+  "raw_rows": 235795,
+  "unique_eligible_urls": 235370,
+  "inference_hosts": 220023,
+  "test_count": 15,
+  "tests_used": [
+    "Two-sample t-test",
+    "Chi-square independence",
+    "Paired t-test",
+    "Permutation test"
+  ],
+  "alpha": 0.05,
+  "p_values": "Unadjusted, exploratory course tests",
+  "permutation_hosts_per_class": 1500,
+  "permutation_shuffles": 1999,
+  "scope": "Observational benchmark statistical analysis; no user experiment"
+}

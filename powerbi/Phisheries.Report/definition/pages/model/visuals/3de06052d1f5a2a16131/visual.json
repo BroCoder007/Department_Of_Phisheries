@@ -84,7 +84,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Test predictions by recorded class'"
+                  "Value": "'Logistic regression: verified test predictions'"
                 }
               }
             },

@@ -1,0 +1,5 @@
+Rule,Metric,Rate
+A: No HTTPS,Recall,0.5537564386872704
+B: No HTTPS and no social links,Recall,0.5518908327173314
+A: No HTTPS,FalsePositiveRate,0.0
+B: No HTTPS and no social links,FalsePositiveRate,0.0

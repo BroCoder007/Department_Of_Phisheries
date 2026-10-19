@@ -20,7 +20,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "Fixed threshold = 0.5. Counts are log-transformed and scaled using training means and standard deviations. The model uses counts and 0/1 flags, with no TLD encoding or supplied similarity/probability scores. Related subdomains and collection artifacts remain limitations.",
+                    "value": "Four classifiers reproduce Model_Evaluation.ipynb. Logistic regression and Naive Bayes use log-count training-only scaling; both trees use raw features. The confusion chart shows logistic regression. Exact hosts are separated; related sites and collection artifacts remain limitations.",
                     "textStyle": {
                       "fontFamily": "Segoe UI",
                       "fontSize": "12pt",

@@ -84,7 +84,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Majority baseline versus logistic regression'"
+                  "Value": "'Four notebook classifiers and majority baseline'"
                 }
               }
             },

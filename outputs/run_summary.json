@@ -4,27 +4,7 @@
   "unique_eligible_urls": 235370,
   "inference_hosts": 220023,
   "test_count": 15,
-  "tests_used": [
-    "Welch two-sample t-test",
-    "Chi-square independence",
-    "Paired t-test",
-    "Permutation test"
-  ],
+  "model_count": 4,
   "alpha": 0.05,
-  "p_values": "Unadjusted, exploratory course tests",
-  "permutation_hosts_per_class": 1500,
-  "permutation_shuffles": 1999,
-  "model_test_metrics": {
-    "Accuracy": 0.9972383969857852,
-    "BalancedAccuracy": 0.9971166270789432,
-    "Precision": 0.9971705739692805,
-    "Recall": 0.9963148064011308,
-    "F1": 0.9967425065023611,
-    "FalsePositiveRate": 0.002081552243244248,
-    "TruePositive": 19736.0,
-    "FalsePositive": 56.0,
-    "TrueNegative": 26847.0,
-    "FalseNegative": 73.0
-  },
-  "scope": "Observational benchmark with an internal model comparison; no user experiment"
+  "scope": "Notebook-backed observational case study; model metrics verified against Model_Evaluation.ipynb"
 }

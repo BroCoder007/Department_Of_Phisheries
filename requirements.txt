@@ -2,7 +2,12 @@ numpy>=1.26
 pandas>=2.2
 scipy>=1.11
 matplotlib>=3.8
-scikit-learn>=1.4
+scikit-learn==1.9.0
+streamlit>=1.53,<2
+plotly>=6.9,<7
+joblib>=1.5
+Pillow>=11
+seaborn>=0.13
 nbformat>=5.9
 nbclient>=0.10
 ipykernel>=6.29

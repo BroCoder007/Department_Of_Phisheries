@@ -1,0 +1,522 @@
+[
+  {
+    "number": 1,
+    "title": "Class Distribution Bar Chart",
+    "source_cell": 11,
+    "code": "counts = df['label'].value_counts().sort_index()\nlabels_txt = [LABEL_NAMES[i] for i in counts.index]\ncolors     = [PALETTE[i]     for i in counts.index]\n\nfig, ax = plt.subplots(figsize=(7, 5))\nbars = ax.bar(labels_txt, counts.values, color=colors, width=0.45,\n              edgecolor='black', linewidth=0.8)\nfor bar, cnt in zip(bars, counts.values):\n    ax.text(bar.get_x()+bar.get_width()/2, bar.get_height()+800,\n            f'{cnt:,}\\n({cnt/len(df)*100:.1f}%)',\n            ha='center', va='bottom', fontsize=11, fontweight='bold')\nax.set_title('Plot 1: Class Distribution in PhiUSIIL Dataset',\n             fontsize=14, fontweight='bold')\nax.set_xlabel('URL Class'); ax.set_ylabel('Number of URLs')\nax.set_ylim(0, counts.max()*1.18)\nax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda x,_: f'{int(x):,}'))\nplt.tight_layout(); plt.savefig('plot_01.png', dpi=110, bbox_inches='tight')\nplt.show()\n",
+    "interpretation": "**Interpretation:**\nThe dataset has **134,850 Legitimate URLs (57.2%)** and **100,945 Phishing URLs (42.8%)** — a moderate imbalance of ~1.34×. A naive classifier that always predicts 'Legitimate' would score 57.2% accuracy, so imbalance-aware metrics (precision, recall, F1) are essential.\n",
+    "saved_output": "",
+    "original_figures": [
+      "original/eda/cell_011_00.png"
+    ],
+    "sample_note": "All raw source records; repeated URLs and domains retained.",
+    "table": [],
+    "linked_questions": [
+      1,
+      4
+    ]
+  },
+  {
+    "number": 2,
+    "title": "Pie Chart: Class Proportions",
+    "source_cell": 14,
+    "code": "counts = df['label'].value_counts().sort_index()\nfig, ax = plt.subplots(figsize=(6, 6))\nwedges, texts, auts = ax.pie(\n    counts.values,\n    labels=[LABEL_NAMES[i] for i in counts.index],\n    autopct='%1.1f%%',\n    colors=[PALETTE[i] for i in counts.index],\n    startangle=140, explode=(0.05, 0),\n    wedgeprops=dict(edgecolor='white', linewidth=2))\nfor at in auts: at.set_fontsize(12); at.set_fontweight('bold')\nax.set_title('Plot 2: Phishing vs Legitimate URL Proportions',\n             fontsize=14, fontweight='bold')\nplt.tight_layout(); plt.savefig('plot_02.png', dpi=110, bbox_inches='tight')\nplt.show()\n",
+    "interpretation": "**Interpretation:**\nThe pie chart makes proportional comparison instant. With 57.2% vs 42.8%, the dataset is not severely imbalanced (unlike real-world 1:100 ratios), but the 14.4-point gap still demands stratified sampling and balanced evaluation metrics.\n",
+    "saved_output": "",
+    "original_figures": [
+      "original/eda/cell_014_00.png"
+    ]
+  },
+  {
+    "number": 3,
+    "title": "Histogram + KDE: URLLength Distribution",
+    "source_cell": 17,
+    "code": "fig, ax = plt.subplots(figsize=(10, 5))\nclip_val = 300\nfor lbl, color in PALETTE.items():\n    raw = df.loc[df['label']==lbl, 'URLLength']\n    visible = raw[raw <= clip_val]\n    data = visible.sample(n=min(7000, len(visible)), random_state=RANDOM_STATE)\n    ax.hist(data, bins=70, density=True, alpha=0.32, color=color, label=LABEL_NAMES[lbl])\n    sns.kdeplot(data=data, ax=ax, color=color, linewidth=2.1, label=f'{LABEL_NAMES[lbl]} KDE')\n    med = raw.median()\n    ax.axvline(med, color=color, ls='--', lw=1.4, label=f'{LABEL_NAMES[lbl]} median={med:.0f}')\nax.set_title('Plot 3: URL Length Distribution by Class (display limited to 300 chars)', fontweight='bold')\nax.set_xlabel('URL length (characters; values >300 omitted from this view)'); ax.set_ylabel('Density')\nax.legend(fontsize=8, ncol=2)\nplt.tight_layout(); plt.savefig('plot_03.png', bbox_inches='tight'); plt.show()\n",
+    "interpretation": "**Interpretation:** The full-data medians are **34 characters for phishing** and **26 for legitimate** URLs. The distribution is right-skewed, so the mean is influenced by long URLs. Values above 300 characters are intentionally omitted from this view rather than piled at the boundary; the chart is a readable view of the central distribution, not a claim that longer URLs do not exist.",
+    "saved_output": "",
+    "original_figures": [
+      "original/eda/cell_017_00.png"
+    ],
+    "sample_note": "Notebook recipe: up to 7,000 rows per class, random_state=42; per-class histogram bins and Scott-bandwidth KDE. Display cutoff only; omitted rows remain in the dataset.",
+    "table": [],
+    "linked_questions": [
+      1,
+      2
+    ]
+  },
+  {
+    "number": 4,
+    "title": "Histogram: LineOfCode (log scale)",
+    "source_cell": 20,
+    "code": "fig, ax = plt.subplots(figsize=(10, 5))\nfor lbl, color in PALETTE.items():\n    raw = df.loc[df['label']==lbl, 'LineOfCode']\n    data = np.log1p(raw.sample(n=min(10000, len(raw)), random_state=RANDOM_STATE))\n    ax.hist(data, bins=70, density=True, alpha=0.35, color=color, label=LABEL_NAMES[lbl])\n    sns.kdeplot(data=data, ax=ax, color=color, linewidth=2.1)\n    med_raw = raw.median()\n    ax.axvline(np.log1p(med_raw), color=color, ls=':', lw=1.8,\n               label=f'{LABEL_NAMES[lbl]} median raw={med_raw:.0f}')\nax.set_title('Plot 4: log(LineOfCode + 1) Distribution by Class', fontweight='bold')\nax.set_xlabel('log(Lines of code + 1)'); ax.set_ylabel('Density'); ax.legend(fontsize=8, ncol=2)\nplt.tight_layout(); plt.savefig('plot_04.png', bbox_inches='tight'); plt.show()\n",
+    "interpretation": "**Interpretation:** On the full dataset, the median `LineOfCode` is **12 for phishing** and **1,105 for legitimate** records. The logarithmic axis makes the strongly right-skewed distribution readable; the dataset also contains very large values (maximum 442,666). The median gap is large in this sample, but it is not a validated measure of predictive performance.",
+    "saved_output": "",
+    "original_figures": [
+      "original/eda/cell_020_00.png"
+    ],
+    "sample_note": "Notebook recipe: up to 10,000 rows per class, random_state=42; per-class histogram bins and Scott-bandwidth KDE. log1p transform.",
+    "table": [],
+    "linked_questions": [
+      13,
+      14
+    ]
+  },
+  {
+    "number": 5,
+    "title": "Histogram: NoOfImage Distribution",
+    "source_cell": 23,
+    "code": "clip_img = 200\nfig, ax = plt.subplots(figsize=(10, 5))\nfor lbl, color in PALETTE.items():\n    raw = df.loc[df['label']==lbl, 'NoOfImage']\n    visible = raw[raw <= clip_img]\n    data = visible.sample(n=min(10000, len(visible)), random_state=RANDOM_STATE)\n    ax.hist(data, bins=60, density=True, alpha=0.34, color=color, label=LABEL_NAMES[lbl])\n    sns.kdeplot(data=data, ax=ax, color=color, linewidth=2.0)\nax.set_title('Plot 5: Image Counts by Class (values >200 omitted from view)', fontweight='bold')\nax.set_xlabel('Number of images'); ax.set_ylabel('Density'); ax.legend()\nplt.tight_layout(); plt.savefig('plot_05.png', bbox_inches='tight'); plt.show()\n",
+    "interpretation": "**Interpretation:** The median `NoOfImage` count is **0 for phishing** and **25 for legitimate** records. The distributions differ, though values overlap and both classes contain pages with few or many images. This is a descriptive association in the supplied dataset; it does not establish why a page has a particular image count or make image count a reliable standalone security rule.",
+    "saved_output": "",
+    "original_figures": [
+      "original/eda/cell_023_00.png"
+    ],
+    "sample_note": "Notebook recipe: up to 10,000 rows per class, random_state=42; per-class histogram bins and Scott-bandwidth KDE. Display cutoff only; omitted rows remain in the dataset.",
+    "table": [],
+    "linked_questions": [
+      13
+    ]
+  },
+  {
+    "number": 6,
+    "title": "Grouped Bar Chart: Top-15 TLDs",
+    "source_cell": 26,
+    "code": "tld_class = df.groupby(['TLD','label']).size().unstack(fill_value=0)\ntld_class.columns = ['Phishing','Legitimate']\ntld_class['Total']    = tld_class.sum(axis=1)\ntld_class['PhishPct'] = tld_class['Phishing'] / tld_class['Total']\ntop15 = tld_class.nlargest(15, 'Total')\n\nx = np.arange(len(top15)); w = 0.38\nfig, ax = plt.subplots(figsize=(13, 6))\nax.bar(x-w/2, top15['Legitimate'], width=w, color=COLOR_LEGIT,\n       label='Legitimate', edgecolor='white')\nax.bar(x+w/2, top15['Phishing'],   width=w, color=COLOR_PHISH,\n       label='Phishing',   edgecolor='white')\nax.set_xticks(x)\nax.set_xticklabels([f'.{t}' for t in top15.index], rotation=40, ha='right', fontsize=10)\nax.set_title('Plot 6: Top-15 TLDs — Legitimate vs Phishing Count',\n             fontsize=14, fontweight='bold')\nax.set_ylabel('Number of URLs')\nax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda x,_: f'{int(x):,}'))\nax.legend()\nfor xi, (tld, row) in zip(x, top15.iterrows()):\n    ax.text(xi, max(row['Legitimate'], row['Phishing'])+200,\n            f\"{row['PhishPct']*100:.0f}%\", ha='center', fontsize=8, color='dimgray')\nplt.tight_layout(); plt.savefig('plot_06.png', dpi=110, bbox_inches='tight')\nplt.show()\n",
+    "interpretation": "**Interpretation:** `.com` is the most frequent suffix in the sample, but frequency and class composition are different questions. Rates for uncommon TLDs are sensitive to sample size. TLD-level differences describe this dataset and should be used as one investigative signal—not as a blanket blocklist or a universal statement about a suffix.",
+    "saved_output": "",
+    "original_figures": [
+      "original/eda/cell_026_00.png"
+    ],
+    "sample_note": "All raw source records; repeated URLs and domains retained.",
+    "table": [
+      {
+        "TLD": "com",
+        "Legitimate": 68785,
+        "Phishing": 43769
+      },
+      {
+        "TLD": "org",
+        "Legitimate": 16524,
+        "Phishing": 2269
+      },
+      {
+        "TLD": "net",
+        "Legitimate": 3998,
+        "Phishing": 3099
+      },
+      {
+        "TLD": "app",
+        "Legitimate": 140,
+        "Phishing": 6368
+      },
+      {
+        "TLD": "uk",
+        "Legitimate": 6073,
+        "Phishing": 322
+      },
+      {
+        "TLD": "co",
+        "Legitimate": 458,
+        "Phishing": 4964
+      },
+      {
+        "TLD": "io",
+        "Legitimate": 432,
+        "Phishing": 3769
+      },
+      {
+        "TLD": "de",
+        "Legitimate": 3310,
+        "Phishing": 686
+      },
+      {
+        "TLD": "ru",
+        "Legitimate": 892,
+        "Phishing": 2983
+      },
+      {
+        "TLD": "au",
+        "Legitimate": 2606,
+        "Phishing": 373
+      },
+      {
+        "TLD": "dev",
+        "Legitimate": 33,
+        "Phishing": 2312
+      },
+      {
+        "TLD": "top",
+        "Legitimate": 2,
+        "Phishing": 2327
+      },
+      {
+        "TLD": "jp",
+        "Legitimate": 2082,
+        "Phishing": 137
+      },
+      {
+        "TLD": "it",
+        "Legitimate": 1669,
+        "Phishing": 218
+      },
+      {
+        "TLD": "edu",
+        "Legitimate": 1856,
+        "Phishing": 5
+      }
+    ],
+    "linked_questions": [
+      11
+    ]
+  },
+  {
+    "number": 7,
+    "title": "Stacked Bar: Phishing-Dominated TLDs",
+    "source_cell": 29,
+    "code": "tld_rel = tld_class[tld_class['Total'] >= 100].copy()\ntld_sorted = tld_rel.sort_values('PhishPct', ascending=False).head(20)\nfig, ax = plt.subplots(figsize=(13, 6))\nx = np.arange(len(tld_sorted))\nax.bar(x, tld_sorted['Phishing'], label='Phishing', color=COLOR_PHISH, edgecolor='white')\nax.bar(x, tld_sorted['Legitimate'], bottom=tld_sorted['Phishing'], label='Legitimate', color=COLOR_LEGIT, edgecolor='white')\nax.set_xticks(x)\nax.set_xticklabels([f'.{t}' for t in tld_sorted.index], rotation=40, ha='right', fontsize=9)\nax.set_title('Plot 7: TLDs with Highest Phishing Share (minimum 100 records)', fontweight='bold')\nax.set_xlabel('Top-level domain'); ax.set_ylabel('Record count'); ax.legend()\nfor i, (tld, row) in enumerate(tld_sorted.iterrows()):\n    ax.text(i, row['Total']+max(tld_sorted['Total'])*0.01, f\"{row['PhishPct']*100:.0f}%\\nn={int(row['Total']):,}\",\n            ha='center', va='bottom', fontsize=7.5, fontweight='bold')\nplt.tight_layout(); plt.savefig('plot_07.png', bbox_inches='tight'); plt.show()\n",
+    "interpretation": "**Interpretation:** The figure ranks suffixes represented by at least 100 records in this dataset. Some suffixes show very high phishing shares, while others have lower shares; the `n=` annotations expose the support behind each rate. These are descriptive sample associations and do not establish that a TLD causes phishing.",
+    "saved_output": "",
+    "original_figures": [
+      "original/eda/cell_029_00.png"
+    ]
+  },
+  {
+    "number": 8,
+    "title": "Annotated Histogram: URLSimilarityIndex",
+    "source_cell": 32,
+    "code": "bins = np.linspace(0, 100, 40)\nfig, ax = plt.subplots(figsize=(10, 5))\nfor lbl, color in PALETTE.items():\n    ax.hist(df.loc[df['label']==lbl,'URLSimilarityIndex'],\n            bins=bins, density=True, alpha=0.45, color=color,\n            label=LABEL_NAMES[lbl])\nax.annotate('All Legitimate URLs\\nscore exactly 100',\n            xy=(100, 0.055), xytext=(75, 0.055),\n            arrowprops=dict(arrowstyle='->', color='navy'),\n            color='navy', fontsize=10, ha='center')\nax.annotate('Phishing URLs\\nspread 0–100',\n            xy=(50, 0.008), xytext=(30, 0.025),\n            arrowprops=dict(arrowstyle='->', color='darkred'),\n            color='darkred', fontsize=10, ha='center')\nax.set_title('Plot 8: URLSimilarityIndex — Data Leakage Warning',\n             fontsize=14, fontweight='bold')\nax.set_xlabel('URL Similarity Index (0–100)'); ax.set_ylabel('Density')\nax.legend()\nplt.tight_layout(); plt.savefig('plot_08.png', dpi=110, bbox_inches='tight')\nplt.show()\n",
+    "interpretation": "**Interpretation and caution:** In this supplied dataset, every legitimate record has `URLSimilarityIndex = 100`, while phishing records span a wider range (median ≈51.4). This is a very strong class-aligned pattern. The chart alone does **not** prove how the feature was computed or that it is leakage. Before any predictive-model use, check the source definition and confirm that the feature could be computed at prediction time without using ground-truth labels or post-label information.",
+    "saved_output": "",
+    "original_figures": [
+      "original/eda/cell_032_00.png"
+    ],
+    "sample_note": "All raw source records; repeated URLs and domains retained.",
+    "table": [],
+    "linked_questions": [
+      12
+    ]
+  },
+  {
+    "number": 9,
+    "title": "Line Chart: Normalised Feature Means by Class",
+    "source_cell": 35,
+    "code": "# Compare class means on a common pooled-standard-deviation scale.\n# This preserves direction/magnitude instead of independently min-max scaling each class row.\nfeats_c = ['LetterRatioInURL','CharContinuationRate','TLDLegitimateProb',\n           'URLCharProb','DomainTitleMatchScore','URLTitleMatchScore']\npooled_mean = df[feats_c].mean()\npooled_std = df[feats_c].std(ddof=0).replace(0, np.nan)\nclass_means = df.groupby('label')[feats_c].mean()\nclass_z = (class_means - pooled_mean) / pooled_std\nclass_z.index = [LABEL_NAMES[int(i)] for i in class_z.index]\nfig, ax = plt.subplots(figsize=(11, 5))\nx = np.arange(len(feats_c))\nax.plot(x, class_z.loc['Legitimate'], 'o-', color=COLOR_LEGIT, lw=2.2, ms=7, label='Legitimate')\nax.plot(x, class_z.loc['Phishing'], 's--', color=COLOR_PHISH, lw=2.2, ms=7, label='Phishing')\nax.axhline(0, color='gray', linewidth=1, alpha=0.7)\nax.set_xticks(x); ax.set_xticklabels(feats_c, rotation=25, ha='right', fontsize=9)\nax.set_title('Plot 9: Class Mean Profiles (pooled standard-deviation units)', fontweight='bold')\nax.set_ylabel('Class mean relative to pooled mean (z units)'); ax.legend()\nplt.tight_layout(); plt.savefig('plot_09.png', bbox_inches='tight'); plt.show()\n",
+    "interpretation": "**Interpretation:** Features are standardized using each feature's pooled mean and standard deviation, so the vertical axis has the same meaning across features. The strongest class differences in this group are in the domain/title match scores and character continuation rate. These are descriptive mean contrasts; skewed distributions and overlapping individual records still matter.",
+    "saved_output": "",
+    "original_figures": [
+      "original/eda/cell_035_00.png"
+    ]
+  },
+  {
+    "number": 10,
+    "title": "Misleading Visualization: Truncated Y-Axis",
+    "source_cell": 38,
+    "code": "counts = df['label'].value_counts().sort_index()\nlabels_txt = [LABEL_NAMES[i] for i in counts.index]\ncolors = [PALETTE[i] for i in counts.index]\n\nfig, ax = plt.subplots(figsize=(6, 5))\nax.bar(labels_txt, counts.values, color=colors, width=0.4, edgecolor='black')\nax.set_ylim(95000, counts.max()*1.05)  # DELIBERATELY MISLEADING\nax.set_title('Plot 10: Truncated Y-Axis (Misleading Scale)\\nMakes the class gap appear larger',\n             fontsize=12, fontweight='bold', color='darkred')\nax.set_xlabel('Class')\nax.set_ylabel('Count (axis starts at 95,000!)')\nax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda x,_: f'{int(x):,}'))\nplt.tight_layout(); plt.savefig('plot_10.png', dpi=110, bbox_inches='tight')\nplt.show()\n",
+    "interpretation": "**Interpretation — why this chart misleads:** The displayed Y-axis begins at 95,000 instead of zero. The legitimate bar extends 39,850 units above the cut, while the phishing bar extends 5,945 units; that makes the visible bar heights differ by about **6.7×**. The true counts differ by only **1.34×** (134,850 / 100,945). The altered baseline exaggerates the visual gap.",
+    "saved_output": "",
+    "original_figures": [
+      "original/eda/cell_038_00.png"
+    ]
+  },
+  {
+    "number": 11,
+    "title": "Ethical Redesign: Full Y-Axis",
+    "source_cell": 41,
+    "code": "counts = df['label'].value_counts().sort_index()\nlabels_txt = [LABEL_NAMES[i] for i in counts.index]\ncolors = [PALETTE[i] for i in counts.index]\n\nfig, ax = plt.subplots(figsize=(6, 5))\nbars = ax.bar(labels_txt, counts.values, color=colors, width=0.4, edgecolor='black')\nax.set_ylim(0, counts.max()*1.20)\nfor bar, cnt in zip(bars, counts.values):\n    ax.text(bar.get_x()+bar.get_width()/2, bar.get_height()+1500,\n            f'{cnt:,}', ha='center', fontsize=11, fontweight='bold')\nratio = counts.max()/counts.min()\nax.text(0.98, 0.95, f'True ratio: {ratio:.2f}×',\n        transform=ax.transAxes, ha='right', va='top', fontsize=11, color='green',\n        bbox=dict(facecolor='lightyellow', edgecolor='green', alpha=0.7))\nax.set_title('Plot 11: Ethical Redesign — Y-Axis from Zero\\nTrue proportion visible',\n             fontsize=12, fontweight='bold', color='darkgreen')\nax.set_xlabel('Class'); ax.set_ylabel('Count')\nax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda x,_: f'{int(x):,}'))\nplt.tight_layout(); plt.savefig('plot_11.png', dpi=110, bbox_inches='tight')\nplt.show()\n",
+    "interpretation": "**Interpretation:**\nWith Y-axis starting at 0, the true 1.34× ratio is visible — not the exaggerated gap the previous chart implied. The ratio annotation makes the proportion explicit. **Key lesson:** Always start bar chart Y-axes at zero unless there is a clear scientific reason, labelled explicitly.\n",
+    "saved_output": "",
+    "original_figures": [
+      "original/eda/cell_041_00.png"
+    ]
+  },
+  {
+    "number": 12,
+    "title": "Box Plot: URLLength by Class",
+    "source_cell": 44,
+    "code": "sample = df.sample(n=min(40000, len(df)), random_state=RANDOM_STATE)\nfig, ax = plt.subplots(figsize=(7, 6))\nsns.boxplot(data=sample, x='label', y='URLLength', palette=[COLOR_PHISH, COLOR_LEGIT], ax=ax,\n            showfliers=True, flierprops=dict(marker='.', alpha=0.25, ms=2),\n            width=0.45, linewidth=1.4, order=[0,1])\nax.set_xticks([0,1]); ax.set_xticklabels([LABEL_NAMES[0], LABEL_NAMES[1]])\nax.set_ylim(0, 200)\nax.set_title('Plot 12: URL Length Boxplot by Class', fontweight='bold')\nax.set_xlabel('Class'); ax.set_ylabel('URL length (values above 200 hidden)')\nfor lbl in [0, 1]:\n    med = df.loc[df['label']==lbl,'URLLength'].median()\n    ax.text(lbl, min(med+5, 190), f'Median={med:.0f}', ha='center', fontsize=9,\n            color='white', fontweight='bold', bbox=dict(facecolor=PALETTE[lbl], alpha=0.9, boxstyle='round,pad=0.2'))\nplt.tight_layout(); plt.savefig('plot_12.png', bbox_inches='tight'); plt.show()\n",
+    "interpretation": "**Interpretation:** The boxplot summarizes the median, interquartile range and sampled outliers. Full-data medians are 34 characters for phishing and 26 for legitimate URLs. Both distributions have long right tails, and the boxes overlap, so URL length alone cannot identify every record. The chart hides values above 200 to keep the central region legible.",
+    "saved_output": "",
+    "original_figures": [
+      "original/eda/cell_044_00.png"
+    ]
+  },
+  {
+    "number": 13,
+    "title": "Box Plot: LineOfCode (log scale)",
+    "source_cell": 47,
+    "code": "sample = df.sample(40000, random_state=42).copy()\nsample['log_LOC'] = np.log1p(sample['LineOfCode'])\nfig, ax = plt.subplots(figsize=(7, 6))\nsns.boxplot(data=sample, x='label', y='log_LOC', palette=[COLOR_PHISH, COLOR_LEGIT], ax=ax,\n            showfliers=True, flierprops=dict(marker='.', alpha=0.2, ms=2),\n            width=0.45, linewidth=1.5, order=[0,1])\nax.set_xticklabels([LABEL_NAMES[0], LABEL_NAMES[1]])\nax.set_title('Plot 13: log(LineOfCode+1) Boxplot by Class',\n             fontsize=14, fontweight='bold')\nax.set_xlabel('Class'); ax.set_ylabel('log(Lines of Code + 1)')\nfor lbl in [0,1]:\n    raw_med = df.loc[df['label']==lbl,'LineOfCode'].median()\n    xi = [0,1].index(lbl)\n    ax.text(xi, np.log1p(raw_med)+0.1, f'raw={raw_med:.0f}', ha='center', fontsize=9,\n            color='white', fontweight='bold',\n            bbox=dict(facecolor=PALETTE[lbl], alpha=0.85, boxstyle='round,pad=0.2'))\nplt.tight_layout(); plt.savefig('plot_13.png', dpi=110, bbox_inches='tight')\nplt.show()\n",
+    "interpretation": "**Interpretation:** The full-data median is **12 lines of code for phishing** versus **1,105 for legitimate** records. The logarithmic transform makes the central distributions comparable despite extreme right-skew and very large source-code counts. This is a strong descriptive difference, not proof that line count alone separates all records or a validated feature-importance result.",
+    "saved_output": "/tmp/ipykernel_1214/3676370941.py:7: UserWarning: set_ticklabels() should only be used with a fixed number of ticks, i.e. after set_ticks() or using a FixedLocator.\n  ax.set_xticklabels([LABEL_NAMES[0], LABEL_NAMES[1]])\n",
+    "original_figures": [
+      "original/eda/cell_047_01.png"
+    ]
+  },
+  {
+    "number": 14,
+    "title": "Box Plot: NoOfExternalRef (log scale)",
+    "source_cell": 50,
+    "code": "sample = df.sample(40000, random_state=42).copy()\nsample['log_ERef'] = np.log1p(sample['NoOfExternalRef'])\nfig, ax = plt.subplots(figsize=(7, 6))\nsns.boxplot(data=sample, x='label', y='log_ERef', palette=[COLOR_PHISH, COLOR_LEGIT], ax=ax,\n            showfliers=True, flierprops=dict(marker='.', alpha=0.2, ms=2),\n            width=0.45, linewidth=1.5, order=[0,1])\nax.set_xticklabels([LABEL_NAMES[0], LABEL_NAMES[1]])\nax.set_title('Plot 14: log(NoOfExternalRef+1) Boxplot',\n             fontsize=14, fontweight='bold')\nax.set_xlabel('Class'); ax.set_ylabel('log(External References + 1)')\nfor lbl in [0,1]:\n    raw_med = df.loc[df['label']==lbl,'NoOfExternalRef'].median()\n    xi = [0,1].index(lbl)\n    ax.text(xi, np.log1p(raw_med)+0.08, f'raw={raw_med:.0f}', ha='center', fontsize=9,\n            color='white', fontweight='bold',\n            bbox=dict(facecolor=PALETTE[lbl], alpha=0.85, boxstyle='round,pad=0.2'))\nplt.tight_layout(); plt.savefig('plot_14.png', dpi=110, bbox_inches='tight')\nplt.show()\n",
+    "interpretation": "**Interpretation:** The median external-reference count is **0 for phishing** and **46 for legitimate** records. This feature shows a strong distributional difference in this dataset, but the plot does not establish the reason for that difference or prove that external references are safe/unsafe. The logarithmic transform is used only to make the range readable.",
+    "saved_output": "/tmp/ipykernel_1214/2585901242.py:7: UserWarning: set_ticklabels() should only be used with a fixed number of ticks, i.e. after set_ticks() or using a FixedLocator.\n  ax.set_xticklabels([LABEL_NAMES[0], LABEL_NAMES[1]])\n",
+    "original_figures": [
+      "original/eda/cell_050_01.png"
+    ],
+    "sample_note": "40,000 raw records, random_state=42; log1p external references. Box statistics use the sample; narrative medians use full raw classes.",
+    "table": [],
+    "linked_questions": [
+      7
+    ]
+  },
+  {
+    "number": 16,
+    "title": "KDE Plot: CharContinuationRate by Class",
+    "source_cell": 53,
+    "code": "fig, ax = plt.subplots(figsize=(9, 5))\nfor lbl, color in PALETTE.items():\n    data = df.loc[df['label']==lbl, 'CharContinuationRate'].sample(\n        n=min(18000, int((df['label']==lbl).sum())), random_state=RANDOM_STATE)\n    sns.kdeplot(data=data, ax=ax, color=color, fill=True, alpha=0.25, linewidth=2,\n                label=LABEL_NAMES[lbl], bw_adjust=1.0)\nax.set_title('Plot 16: Character Continuation Rate by Class', fontweight='bold')\nax.set_xlabel('Character continuation rate'); ax.set_ylabel('Density'); ax.legend()\nplt.tight_layout(); plt.savefig('plot_16.png', bbox_inches='tight'); plt.show()\n",
+    "interpretation": "**Interpretation:** The class distributions for `CharContinuationRate` differ, with the full-data median at 1.000 for legitimate records and about 0.727 for phishing records. The KDE is estimated from reproducible samples; overlap remains, and the pattern is an association in this dataset rather than a universal rule about URL character sequences.",
+    "saved_output": "",
+    "original_figures": [
+      "original/eda/cell_053_00.png"
+    ]
+  },
+  {
+    "number": 17,
+    "title": "Correlation Heatmap (Numerical Features)",
+    "source_cell": 56,
+    "code": "heat_cols = ['URLLength','DomainLength','TLDLength','NoOfSubDomain',\n             'CharContinuationRate','TLDLegitimateProb','URLCharProb',\n             'LetterRatioInURL','NoOfQMarkInURL','SpacialCharRatioInURL',\n             'LineOfCode','DomainTitleMatchScore','URLTitleMatchScore',\n             'NoOfImage','NoOfCSS','NoOfJS','NoOfExternalRef',\n             'NoOfSelfRef','NoOfEmptyRef','label']\ncorr = df[heat_cols].corr()\n\nfig, ax = plt.subplots(figsize=(14, 11))\nmask = np.triu(np.ones_like(corr, dtype=bool))\nsns.heatmap(corr, mask=mask, annot=True, fmt='.2f', cmap='coolwarm',\n            center=0, vmin=-1, vmax=1, linewidths=0.4, ax=ax,\n            annot_kws={'size': 7})\nax.set_title('Plot 17: Correlation Heatmap — Key Numerical Features',\n             fontsize=14, fontweight='bold')\nplt.tight_layout(); plt.savefig('plot_17.png', dpi=110, bbox_inches='tight')\nplt.show()\n",
+    "interpretation": "**Interpretation:** The correlation matrix reports pairwise linear associations among the selected numeric features. `LineOfCode`, `NoOfImage`, `NoOfCSS`, `NoOfJS` and reference-count features tend to capture related aspects of page complexity. The target is coded 1 for legitimate, so positive correlations with `label` indicate an association with legitimate records, while negative correlations indicate an association with phishing records. Correlation is not causation, and the heatmap alone is not a feature-selection or model-validation procedure.",
+    "saved_output": "",
+    "original_figures": [
+      "original/eda/cell_056_00.png"
+    ],
+    "sample_note": "All raw source records; repeated URLs and domains retained.",
+    "table": [],
+    "linked_questions": [
+      1,
+      2,
+      12,
+      13,
+      14
+    ]
+  },
+  {
+    "number": 20,
+    "title": "Count Plot: Binary Features Presence by Class",
+    "source_cell": 59,
+    "code": "bin_feats = ['IsHTTPS','HasFavicon','HasTitle','HasSocialNet',\n             'HasSubmitButton','HasPasswordField','HasObfuscation']\nmelted = df[bin_feats + ['label']].melt(id_vars='label',\n            var_name='Feature', value_name='Present')\nmelted_yes = melted[melted['Present']==1].copy()\nmelted_yes['Class'] = melted_yes['label'].map(LABEL_NAMES)\n\nfig, ax = plt.subplots(figsize=(12, 6))\nsns.countplot(data=melted_yes, x='Feature', hue='Class',\n              palette={'Legitimate': COLOR_LEGIT, 'Phishing': COLOR_PHISH}, ax=ax)\nax.set_title('Plot 20: Binary Feature Count (Present=1) by Class',\n             fontsize=14, fontweight='bold')\nax.set_xlabel('Feature'); ax.set_ylabel('Count')\nax.set_xticklabels(ax.get_xticklabels(), rotation=35, ha='right')\nax.legend(title='Class')\nplt.tight_layout(); plt.savefig('plot_20.png', dpi=110, bbox_inches='tight')\nplt.show()\n",
+    "interpretation": "**Interpretation:** The plot compares raw counts of records where each binary flag equals 1; raw counts are affected by the larger legitimate class. The rate heatmap in Plot 24 is better for comparing prevalence. On the full dataset, `IsHTTPS` is present in 100.0% of legitimate records but 49.2% of phishing records, and `HasTitle` is present in 99.9% versus 67.8%. HTTPS alone is not a sufficient safety guarantee.",
+    "saved_output": "/tmp/ipykernel_1214/1473898842.py:14: UserWarning: set_ticklabels() should only be used with a fixed number of ticks, i.e. after set_ticks() or using a FixedLocator.\n  ax.set_xticklabels(ax.get_xticklabels(), rotation=35, ha='right')\n",
+    "original_figures": [
+      "original/eda/cell_059_01.png"
+    ]
+  },
+  {
+    "number": 21,
+    "title": "Outlier Detection (IQR Method)",
+    "source_cell": 62,
+    "code": "feature = 'URLLength'\nQ1 = df[feature].quantile(0.25); Q3 = df[feature].quantile(0.75)\nIQR = Q3 - Q1\nlower = Q1 - 1.5*IQR; upper = Q3 + 1.5*IQR\noutliers = df[(df[feature]<lower)|(df[feature]>upper)]\nn_out = len(outliers)\nprint(f'Q1={Q1}, Q3={Q3}, IQR={IQR}')\nprint(f'Fences: [{lower:.0f}, {upper:.0f}]')\nprint(f'Outliers: {n_out:,} ({n_out/len(df)*100:.1f}%) '\n      f'| Phishing in outliers: {outliers[\"label\"].eq(0).mean()*100:.1f}%')\n\nfig, axes = plt.subplots(1, 2, figsize=(13, 5))\nax = axes[0]\nax.hist(df[feature].clip(upper=300), bins=100, color='steelblue', alpha=0.6)\nax.axvspan(upper, 300, color='red', alpha=0.2, label=f'Outlier zone (>{upper:.0f})')\nax.axvline(Q1, color='green', ls='--', lw=1.5, label=f'Q1={Q1:.0f}')\nax.axvline(Q3, color='purple', ls='--', lw=1.5, label=f'Q3={Q3:.0f}')\nax.axvline(upper, color='red', ls='-', lw=2, label=f'Upper fence={upper:.0f}')\nax.set_title('URLLength with IQR Fences (clipped at 300)', fontweight='bold')\nax.set_xlabel('URL Length'); ax.set_ylabel('Count')\nax.legend(fontsize=8)\n\nax2 = axes[1]\nout_comp = outliers['label'].value_counts()\nax2.pie(out_comp.values,\n        labels=[LABEL_NAMES[k] for k in out_comp.index],\n        colors=[PALETTE[k] for k in out_comp.index],\n        autopct='%1.1f%%', startangle=90,\n        wedgeprops=dict(edgecolor='white', lw=2))\nax2.set_title(f'Class Mix of Outliers ({n_out:,} rows)', fontweight='bold')\nplt.suptitle('Plot 21: IQR Outlier Detection on URLLength',\n             fontsize=14, fontweight='bold')\nplt.tight_layout(); plt.savefig('plot_21.png', dpi=110, bbox_inches='tight')\nplt.show()\n",
+    "interpretation": "**Interpretation:** The IQR method flags URL lengths outside the standard 1.5×IQR fences. These points are statistical outliers, not necessarily data errors. The class mix describes this dataset only; unusually long URLs should not be removed automatically because they may represent relevant behavior. Inspect their validity and role before any modeling or cleaning decision.",
+    "saved_output": "Q1=23.0, Q3=34.0, IQR=11.0\nFences: [6, 50]\nOutliers: 22,493 (9.5%) | Phishing in outliers: 99.9%\n",
+    "original_figures": [
+      "original/eda/cell_062_01.png"
+    ],
+    "sample_note": "All raw source records; repeated URLs and domains retained. Clipping is part of the original display recipe, not preprocessing.",
+    "table": [
+      {
+        "Q1": 23.0,
+        "Q3": 34.0,
+        "IQR": 11.0,
+        "Lower fence": 6.5,
+        "Upper fence": 50.5,
+        "Flagged records": 22493,
+        "Phishing among flagged": 0.9994220424131952
+      }
+    ],
+    "linked_questions": [
+      1
+    ]
+  },
+  {
+    "number": 22,
+    "title": "URL Length Binning Analysis",
+    "source_cell": 65,
+    "code": "bin_counts = df.groupby(['URLLength_bin','label'], observed=False).size().unstack(fill_value=0)\nbin_counts = bin_counts.reindex(length_labels, fill_value=0)\nbin_counts.columns = [LABEL_NAMES[int(c)] for c in bin_counts.columns]\nbin_counts['Total'] = bin_counts.sum(axis=1)\nbin_counts['PhishRate'] = np.where(bin_counts['Total'] > 0,\n                                    bin_counts.get('Phishing', 0) / bin_counts['Total'], np.nan)\n\nfig, axes = plt.subplots(1, 2, figsize=(13, 5))\nx = np.arange(len(bin_counts)); w = 0.36\nax = axes[0]\nax.bar(x-w/2, bin_counts['Legitimate'], width=w, color=COLOR_LEGIT, label='Legitimate', edgecolor='white')\nax.bar(x+w/2, bin_counts['Phishing'], width=w, color=COLOR_PHISH, label='Phishing', edgecolor='white')\nax.set_xticks(x); ax.set_xticklabels(bin_counts.index, rotation=20, ha='right', fontsize=9)\nax.set_title('Record count by URL length bin', fontweight='bold'); ax.set_xlabel('URL length category'); ax.set_ylabel('Record count')\nax.yaxis.set_major_formatter(ticker.FuncFormatter(lambda x,_: f'{int(x):,}')); ax.legend()\nax2 = axes[1]\nrates = bin_counts['PhishRate'].fillna(0)\nbar_colors = [COLOR_PHISH if r >= 0.5 else COLOR_LEGIT for r in rates]\nbars2 = ax2.bar(x, rates, color=bar_colors, width=0.55, edgecolor='white')\nax2.axhline(0.5, color='gray', ls='--', lw=1.3, label='50% reference')\nax2.set_xticks(x); ax2.set_xticklabels(bin_counts.index, rotation=20, ha='right', fontsize=9)\nax2.set_title('Phishing share within each length bin', fontweight='bold'); ax2.set_xlabel('URL length category'); ax2.set_ylabel('Phishing share')\nax2.set_ylim(0, 1.12); ax2.yaxis.set_major_formatter(ticker.PercentFormatter(xmax=1)); ax2.legend()\nfor bar, rate in zip(bars2, rates):\n    ax2.text(bar.get_x()+bar.get_width()/2, rate+0.025, f'{rate*100:.1f}%', ha='center', fontsize=9, fontweight='bold')\nplt.suptitle('Plot 22: URL Length Bins — Counts and Phishing Share', fontsize=13, fontweight='bold')\nplt.tight_layout(); plt.savefig('plot_22.png', bbox_inches='tight'); plt.show()\n",
+    "interpretation": "**Interpretation:** With the documented label mapping and bins `[0,20)`, `[20,30)`, `[30,50)`, `[50,100)` and `≥100`, the phishing share is approximately **33.0%, 27.0%, 54.4%, 99.9% and 100.0%**, respectively. The last two categories are highly phishing-heavy in this dataset. Treat these as sample-level associations, not a universal rule; inspect bin counts alongside percentages before making decisions.",
+    "saved_output": "",
+    "original_figures": [
+      "original/eda/cell_065_00.png"
+    ],
+    "sample_note": "All raw source records; repeated URLs and domains retained.",
+    "table": [
+      {
+        "Length bin": "Very short (<20)",
+        "Phishing": 4274,
+        "Legitimate": 8687,
+        "Phishing share": 0.32975850628809505
+      },
+      {
+        "Length bin": "Short (20–29)",
+        "Phishing": 34967,
+        "Legitimate": 94328,
+        "Phishing share": 0.2704435593023706
+      },
+      {
+        "Length bin": "Medium (30–49)",
+        "Phishing": 38016,
+        "Legitimate": 31816,
+        "Phishing share": 0.5443922556993929
+      },
+      {
+        "Length bin": "Long (50–99)",
+        "Phishing": 18712,
+        "Legitimate": 19,
+        "Phishing share": 0.9989856387806311
+      },
+      {
+        "Length bin": "Very long (≥100)",
+        "Phishing": 4976,
+        "Legitimate": 0,
+        "Phishing share": 1.0
+      }
+    ],
+    "linked_questions": [
+      1
+    ]
+  },
+  {
+    "number": 23,
+    "title": "Error Bar Chart: Mean ± 95% CI",
+    "source_cell": 68,
+    "code": "feats_eb = ['URLLength','DomainLength','TLDLength','NoOfSubDomain',\n            'LetterRatioInURL','SpacialCharRatioInURL','CharContinuationRate']\nresults = []\nfor feat in feats_eb:\n    pooled_mean = df[feat].mean()\n    pooled_sd = df[feat].std(ddof=0)\n    for lbl in [0,1]:\n        data = df.loc[df['label']==lbl, feat].dropna()\n        zdata = (data - pooled_mean) / pooled_sd if pooled_sd else data*0\n        mean = zdata.mean()\n        sem = scipy_stats.sem(zdata)\n        ci = sem * scipy_stats.t.ppf(0.975, max(len(zdata)-1, 1))\n        results.append({'Feature':feat,'Class':LABEL_NAMES[lbl],'MeanZ':mean,'CI95':ci})\neb_df = pd.DataFrame(results)\nfig, ax = plt.subplots(figsize=(13, 6))\nx = np.arange(len(feats_eb)); w = 0.34\nfor i, (cls, color) in enumerate([('Legitimate',COLOR_LEGIT),('Phishing',COLOR_PHISH)]):\n    sub = eb_df[eb_df['Class']==cls].set_index('Feature').loc[feats_eb]\n    xpos = x + (i-0.5)*w\n    ax.bar(xpos, sub['MeanZ'], width=w, color=color, label=cls, alpha=0.88)\n    ax.errorbar(xpos, sub['MeanZ'], yerr=sub['CI95'], fmt='none', color='black', capsize=3, lw=1)\nax.axhline(0, color='gray', linewidth=1)\nax.set_xticks(x); ax.set_xticklabels(feats_eb, rotation=28, ha='right', fontsize=9)\nax.set_title('Plot 23: Standardized Class Means ± 95% CI', fontweight='bold')\nax.set_xlabel('Feature'); ax.set_ylabel('Mean in pooled standard-deviation units'); ax.legend()\nplt.tight_layout(); plt.savefig('plot_23.png', bbox_inches='tight'); plt.show()\n",
+    "interpretation": "**Interpretation:** Each feature is standardized using its overall mean and standard deviation, so unlike raw units the means are visually comparable across features. The confidence intervals are narrow because the dataset is large; that does not establish practical importance or causal effect. Feature distributions are skewed, so interpret the standardized mean chart alongside medians and distribution plots.",
+    "saved_output": "",
+    "original_figures": [
+      "original/eda/cell_068_00.png"
+    ],
+    "sample_note": "All raw source records; repeated URLs and domains retained. Intervals reproduce Plot 23's t-based descriptive intervals, not additional hypothesis tests.",
+    "table": [],
+    "linked_questions": [
+      1,
+      2,
+      3
+    ]
+  },
+  {
+    "number": 24,
+    "title": "Custom Colormap Heatmap: Binary Feature Rates",
+    "source_cell": 71,
+    "code": "bin_features = ['IsHTTPS','HasFavicon','HasTitle','HasSocialNet',\n                'HasSubmitButton','HasHiddenFields','HasPasswordField',\n                'HasObfuscation','HasDescription','HasCopyrightInfo',\n                'Bank','Pay','Crypto','Robots','IsResponsive']\nrates = {f: {'Legitimate': df[df['label']==1][f].mean(),\n             'Phishing':   df[df['label']==0][f].mean()}\n         for f in bin_features}\nrates_df = pd.DataFrame(rates).T\n\nfig, ax = plt.subplots(figsize=(8, 9))\ncmap_custom = sns.diverging_palette(220, 20, as_cmap=True)\nsns.heatmap(rates_df, annot=True, fmt='.2f', cmap=cmap_custom,\n            center=0.5, vmin=0, vmax=1, linewidths=0.5, ax=ax,\n            annot_kws={'size': 11, 'weight': 'bold'})\nax.set_title('Plot 24: Binary Feature Presence Rate\\n(Diverging Colormap: Blue=High, Red=Low)',\n             fontsize=13, fontweight='bold')\nax.set_xlabel('Class'); ax.set_ylabel('Feature')\nplt.tight_layout(); plt.savefig('plot_24.png', dpi=110, bbox_inches='tight')\nplt.show()\n",
+    "interpretation": "**Interpretation:** The heatmap reports the observed proportion of each binary feature among each class (0–1 scale). Notable full-dataset rates include `HasTitle` (99.9% legitimate vs 67.8% phishing), `HasCopyrightInfo` (80.8% vs 5.7%), and `IsHTTPS` (100.0% vs 49.2%). `Crypto` is present in 3.7% of legitimate records and 0.6% of phishing records in this dataset, so it should **not** be described here as more common among phishing records. These are dataset associations and may not generalize to new data.",
+    "saved_output": "",
+    "original_figures": [
+      "original/eda/cell_071_00.png"
+    ],
+    "sample_note": "All raw source records; repeated URLs and domains retained.",
+    "table": [
+      {
+        "Feature": "IsHTTPS",
+        "Legitimate": 1.0,
+        "Phishing": 0.4922383476150379
+      },
+      {
+        "Feature": "HasFavicon",
+        "Legitimate": 0.5670226177233963,
+        "Phishing": 0.0875724404378622
+      },
+      {
+        "Feature": "HasTitle",
+        "Legitimate": 0.9987541713014461,
+        "Phishing": 0.6775868046956264
+      },
+      {
+        "Feature": "HasSocialNet",
+        "Legitimate": 0.7945569150908417,
+        "Phishing": 0.005062162563772351
+      },
+      {
+        "Feature": "HasSubmitButton",
+        "Legitimate": 0.660882461994809,
+        "Phishing": 0.08489771657833474
+      },
+      {
+        "Feature": "HasHiddenFields",
+        "Legitimate": 0.5907823507601038,
+        "Phishing": 0.09327851800485412
+      },
+      {
+        "Feature": "HasPasswordField",
+        "Legitimate": 0.13848720800889877,
+        "Phishing": 0.05387091980781614
+      },
+      {
+        "Feature": "HasObfuscation",
+        "Legitimate": 0.0,
+        "Phishing": 0.004804596562484521
+      },
+      {
+        "Feature": "HasDescription",
+        "Legitimate": 0.7366332962550982,
+        "Phishing": 0.04416266283619793
+      },
+      {
+        "Feature": "HasCopyrightInfo",
+        "Legitimate": 0.8082387838338895,
+        "Phishing": 0.05733815444053693
+      },
+      {
+        "Feature": "Bank",
+        "Legitimate": 0.18154245457916204,
+        "Phishing": 0.05434642627173213
+      },
+      {
+        "Feature": "Pay",
+        "Legitimate": 0.36936596218020024,
+        "Phishing": 0.060191193224032886
+      },
+      {
+        "Feature": "Crypto",
+        "Legitimate": 0.03652206154987023,
+        "Phishing": 0.006042894645599089
+      },
+      {
+        "Feature": "Robots",
+        "Legitimate": 0.4167371153133111,
+        "Phishing": 0.06589727079102481
+      },
+      {
+        "Feature": "IsResponsive",
+        "Legitimate": 0.8543641082684464,
+        "Phishing": 0.3174600029719154
+      }
+    ],
+    "linked_questions": [
+      4,
+      5,
+      6,
+      8,
+      9,
+      10
+    ]
+  },
+  {
+    "number": 25,
+    "title": "Scatter with Custom Colormap: URLCharProb vs TLDLegitimateProb",
+    "source_cell": 74,
+    "code": "sample = df.sample(15000, random_state=42)\ncmap_disc = ListedColormap([COLOR_PHISH, COLOR_LEGIT])\nfig, ax = plt.subplots(figsize=(9, 6))\nsc = ax.scatter(sample['URLCharProb'], sample['TLDLegitimateProb'],\n                c=sample['label'], cmap=cmap_disc,\n                alpha=0.25, s=8, linewidths=0)\ncbar = plt.colorbar(sc, ax=ax, ticks=[0.25, 0.75])\ncbar.ax.set_yticklabels(['Phishing', 'Legitimate'])\ncbar.set_label('Class', rotation=270, labelpad=15)\nax.set_title('Plot 25: URLCharProb vs TLDLegitimateProb — Discrete Colormap Scatter',\n             fontsize=13, fontweight='bold')\nax.set_xlabel('URL Character Probability')\nax.set_ylabel('TLD Legitimate Probability')\nplt.tight_layout(); plt.savefig('plot_25.png', dpi=110, bbox_inches='tight')\nplt.show()\n",
+    "interpretation": "**Interpretation:** The scatterplot shows two feature values colored by the class label for a reproducible 15,000-row sample. Legitimate records have a higher median `TLDLegitimateProb` (0.523 versus 0.018), but the overlap and the distributions of `URLCharProb` show why a two-feature view is not a complete detection rule. This is exploratory evidence, not a model-performance result.",
+    "saved_output": "",
+    "original_figures": [
+      "original/eda/cell_074_00.png"
+    ]
+  },
+  {
+    "number": 30,
+    "title": "Triangulation & Mesh Grid Interpolation",
+    "source_cell": 77,
+    "code": "# Plot 30: triangulation/interpolation of sampled class labels — explicitly NOT a rate estimate.\nsample_tri = df.sample(n=min(5000, len(df)), random_state=99)\nx_pts = sample_tri['CharContinuationRate'].to_numpy()\ny_pts = sample_tri['TLDLegitimateProb'].to_numpy()\nz_pts = (sample_tri['label'].to_numpy() == 0).astype(float)  # 1=phishing record, 0=legitimate record\ntriang = tri.Triangulation(x_pts, y_pts)\nfig, axes = plt.subplots(1, 2, figsize=(14, 5))\nax = axes[0]\ntcf = ax.tricontourf(triang, z_pts, levels=np.linspace(0,1,11), cmap='RdYlGn_r')\nplt.colorbar(tcf, ax=ax, label='Interpolated class label (0=legitimate, 1=phishing)')\nax.set_title('Triangular interpolation of sampled labels', fontsize=11, fontweight='bold')\nax.set_xlabel('CharContinuationRate'); ax.set_ylabel('TLDLegitimateProb')\nax2 = axes[1]\nxi = np.linspace(x_pts.min(), x_pts.max(), 100); yi = np.linspace(y_pts.min(), y_pts.max(), 100)\nXi, Yi = np.meshgrid(xi, yi)\nZi = griddata((x_pts, y_pts), z_pts, (Xi, Yi), method='linear')\nim = ax2.pcolormesh(Xi, Yi, Zi, cmap='RdYlGn_r', shading='auto', vmin=0, vmax=1)\nplt.colorbar(im, ax=ax2, label='Interpolated class label (not probability)')\nax2.set_title('Grid interpolation of sampled labels', fontsize=11, fontweight='bold')\nax2.set_xlabel('CharContinuationRate'); ax2.set_ylabel('TLDLegitimateProb')\nplt.suptitle('Plot 30: Triangulation and Mesh Interpolation — Exploratory Label Field', fontsize=13, fontweight='bold')\nplt.tight_layout(); plt.savefig('plot_30.png', bbox_inches='tight'); plt.show()\n",
+    "interpretation": "**Interpretation and limitation:** Triangulation and grid interpolation connect the sampled **binary class labels** in feature space. Intermediate colors arise from mathematical interpolation, not from observed frequencies or a fitted probability model. The plot is included to demonstrate a visualization technique; it must not be described as a phishing probability surface or used to set risk thresholds.",
+    "saved_output": "",
+    "original_figures": [
+      "original/eda/cell_077_00.png"
+    ]
+  }
+]
