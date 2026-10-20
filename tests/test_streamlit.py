@@ -65,6 +65,18 @@ class StreamlitDashboardTests(unittest.TestCase):
             app.selectbox(key="eda_index").set_value(index).run()
             self.assertEqual(len(app.exception), 0)
 
+    def test_all_fifteen_sample_comparisons_and_explicit_verdicts(self):
+        app = self.app()
+        self.navigate(app, "evidence")
+        for number in range(1, 16):
+            app.selectbox(key="evidence_number").set_value(number).run()
+            self.assertEqual(len(app.exception), 0, [e.message for e in app.exception])
+            contents = "\n".join(item.value for item in app.markdown)
+            self.assertIn("Original notebook and random-sample comparison", contents)
+            self.assertIn("Random sample verdict", contents)
+            self.assertIn("not the probability that H0 is true", contents)
+        self.assertTrue(any(button.label == "Download all sample comparisons" for button in app.get("download_button")))
+
     def test_random_fill_and_predict_with_every_classifier(self):
         app = self.app()
         self.navigate(app, "models")

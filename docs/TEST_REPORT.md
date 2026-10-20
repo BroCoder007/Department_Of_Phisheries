@@ -1,5 +1,38 @@
 # Verification report
 
+## 20 October sampling revision
+
+The amended analysis notebook executed successfully: 83 cells, 34 code cells,
+33 embedded figures, including **15 new comparison figures**, and no error outputs.
+The 15 original question headings, reference statistics, estimates and decisions
+match artifacts/reference_before_sampling. The companion notebooks' original
+hashes are unchanged. App artifacts were regenerated from the amended notebook.
+
+The complete suite passed **19 tests in 12.185 seconds**. Added checks cover:
+
+- Exact sample reproduction from the source host frame: 10,000 unique hosts,
+  seed 42, 3,885 phishing and 6,115 legitimate observations.
+- Correct per-question reference/sample sizes, preserved pairings, same methods,
+  expected counts and Monte Carlo resolution, with 30 comparison rows.
+- All 15 notebook figures saved and no notebook error outputs.
+- Tiny t tails checked against an independent incomplete-beta integral;
+  chi-square df=1 tails checked against normal tails; df=10 checked against the
+  closed-form integer-shape gamma survival probability.
+- Failure-to-reject wording distinguishes insufficient evidence from equality.
+- Every evidence view includes both scopes and explicit verdicts. All 15 views
+  passed a further targeted check after chart-label spacing was adjusted.
+- The new sampling JSON endpoint and both new CSV exports work. Scientific
+  p-value display strings survive API serialization without float underflow.
+
+The original 14 application checks also pass, including all four model inference
+paths, EDA, navigation, profiles and the now 16 CSV routes. Model procedures and
+saved evaluation values remain unchanged. Browser inspection confirms the real
+scientific p-value display, comparison table, chart, expanded verdicts and
+sampling/course-reference section. Sampling-comparison screenshots are in
+docs/images. See SAMPLING_COMPARISON.md for the design and its limitations.
+
+The earlier delivery record below is retained as history.
+
 Date: 19 October 2026. Environment: Windows, Python 3.14.6, Streamlit 1.53.1,
 scikit-learn 1.9.0. Other tested versions are in requirements-lock.txt.
 

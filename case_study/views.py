@@ -84,6 +84,78 @@ def question_selector(service, key):
     return service.question(number)
 
 
+def sampling_design(service):
+    design = service.sampling["design"]
+    st.markdown("#### How and why the sample was chosen")
+    st.write(f"{design['sample_size']:,} of {design['population_hosts']:,} eligible hosts "
+             f"({design['sampling_fraction']:.4%}), without replacement, seed {design['seed']}.")
+    st.write(design["scope"])
+    st.write(design["reason"])
+    st.code("random_hosts = host_sample.sample(n=10000, replace=False, random_state=42)", language="python")
+    st.write(design["selection"])
+    st.dataframe(pd.DataFrame(design["composition"]), hide_index=True, width="stretch",
+                 column_config={key: st.column_config.NumberColumn(key, format="%.4f") for key in ["EligibleShare", "SampleShare"]})
+    chart = go.Figure()
+    for label, field in [("Eligible host population", "EligibleShare"), ("Random sample", "SampleShare")]:
+        chart.add_bar(name=label, x=[row["Class"] for row in design["composition"]],
+                      y=[100 * row[field] for row in design["composition"]])
+    style(chart, "Recorded class composition: eligible hosts and random sample", "Recorded class", "Hosts (%)", 300)
+    figure(chart.to_dict(), "sampling_composition")
+    st.write(design["pairing"])
+    st.caption(design["limitations"])
+    st.markdown("**Links to the supplied syllabus**")
+    for reference in design["course_references"]:
+        st.write(f"{reference['file']} · slides {reference['slides']}: {reference['use']}")
+    st.caption("Selected-host membership SHA-256: " + design["host_membership_sha256"])
+    st.download_button("Download selected host membership", (ARTIFACTS / "bi/sampling_membership.csv").read_bytes(),
+                       "sampling_membership.csv", "text/csv")
+
+
+def sample_question_comparison(question, key):
+    rows = question["comparison"]
+    number = question["number"]
+    reference, sample = rows
+    st.markdown("#### Original notebook and random-sample comparison")
+    st.caption("The reference retains the original question's scope. Q13–Q14 already use 1,500 hosts per class. "
+               "The comparison uses the shared 10,000-host sample; Q12 uses its phishing subset.")
+    columns = ["Analysis", "N", "Estimate", "EstimateUnits", "Statistic", "DegreesOfFreedom", "PValueDisplay", "Decision"]
+    st.dataframe(pd.DataFrame(rows)[columns], hide_index=True, width="stretch",
+                 column_config={"PValueDisplay": st.column_config.TextColumn("p-value (scientific notation)"),
+                                "Estimate": st.column_config.NumberColumn("Observed effect", format="%.6f")})
+    field = "StandardizedEffect" if number == 11 else "Estimate"
+    units = "Cramer V" if number == 11 else reference["EstimateUnits"]
+    chart = go.Figure(go.Bar(x=[r["Analysis"] for r in rows], y=[r[field] for r in rows],
+                             marker_color=[INK, LEGIT], text=[f"{r[field]:.5g}" for r in rows], textposition="outside"))
+    style(chart, f"Q{number}: observed effect in the original analysis and the random sample", "Analysis scope", units, 340)
+    effects = [r[field] for r in rows]
+    lower, upper = min(0, *effects), max(0, *effects)
+    padding = 0.15 * (upper - lower or 1)
+    chart.update_yaxes(range=[lower - padding if lower < 0 else 0, upper + padding])
+    figure(chart.to_dict(), key + "_comparison")
+    with st.expander("Compare p-values on a logarithmic scale"):
+        chart = go.Figure(go.Bar(x=[r["Analysis"] for r in rows], y=[-r["Log10PValue"] for r in rows],
+                                 marker_color=[INK, LEGIT]))
+        chart.add_hline(y=-math.log10(0.05), line_dash="dash", line_color=PHISH, annotation_text="α = 0.05")
+        style(chart, f"Q{number}: strength of evidence under the null model", "Analysis scope", "−log10(p); larger means smaller p", 320)
+        figure(chart.to_dict(), key + "_probabilities")
+        st.caption("For example, −log10(p) = 3 means p = 0.001. This comparison uses the same test family for both scopes.")
+    for row in rows:
+        st.markdown("**" + row["Analysis"] + " verdict**")
+        st.write(row["Verdict"])
+    st.write(sample["PracticalInterpretation"])
+    if sample.get("StandardizedEffect") is not None:
+        st.write(f"Additional descriptive effect: {sample['StandardizedEffectName']} = {sample['StandardizedEffect']:.5f}.")
+    st.write("Decision agrees with the reference: " + ("Yes." if sample["DecisionMatchesReference"] else "No; sampling changes the evidence at α = 0.05."))
+    if number != 11:
+        st.caption(f"Sample estimate minus reference estimate: {sample['EstimateDifference']:.6f} {sample['EstimateUnits']}.")
+    if sample["MinimumExpectedCount"] is not None:
+        st.caption(f"Sample's smallest expected cell count: {sample['MinimumExpectedCount']:.3f}. {sample['AssumptionNote']}")
+    st.caption("The shared sample is contained in the reference frame. These results are dependent and their agreement is not independent replication. "
+               "No new hypothesis test of the difference between these two estimates has been performed.")
+    st.download_button("Download this question's comparison", pd.DataFrame(rows).to_csv(index=False).encode(),
+                       f"q{number:02d}_sampling_comparison.csv", "text/csv", key=key + "_csv")
+
+
 def overview(service):
     data = service.study
     hero(1, "A closer look at suspicious URLs.",
@@ -94,6 +166,8 @@ def overview(service):
     c.metric("Eligible unique URLs", f"{data['unique_urls']:,}")
     d.metric("Hosts used for testing", f"{data['inference_hosts']:,}")
     st.caption(f"The source has {data['feature_count']} features plus FILENAME and label. Descriptive EDA retains raw rows; formal comparisons use the sample named in each result.")
+    with st.expander("Random sampling plan and syllabus justification"):
+        sampling_design(service)
     st.subheader("The research question")
     st.write("Can familiar address and webpage features help us review suspected phishing without mistaking a strong dataset association for a universally safe blocking rule?")
     main, aside = st.columns([2, 1], gap="large")
@@ -200,6 +274,7 @@ def questions(service):
     st.markdown("#### Result and interpretation")
     st.write(question["interpretation"])
     st.caption(question["assumptions"])
+    sample_question_comparison(question, f"question_{question['number']}")
     st.button(f"Open the hypothesis test for Q{question['number']}", type="primary",
               on_click=go_to, args=("evidence", question["number"]))
     original_view(question, "Department_Of_Phisheries.ipynb")
@@ -208,7 +283,16 @@ def questions(service):
 
 def evidence(service):
     hero(4, "From observation to evidence.",
-         "The same 15 questions and their original hypotheses, methods, statistics and decisions. Reproduced results were checked against every saved notebook test output.")
+         "All 15 original hypotheses and methods, with the original results beside a reproducible random sample. Compare the effect sizes, actual p-values and explained decisions.")
+    with st.expander("Sampling plan, course references and class composition"):
+        sampling_design(service)
+    with st.expander("All 15 sample comparisons"):
+        frame = pd.DataFrame(service.sampling["rows"])
+        st.dataframe(frame[["Question", "Analysis", "N", "Estimate", "EstimateUnits", "PValueDisplay", "Decision"]],
+                     hide_index=True, width="stretch")
+        st.write(f"Matching decisions: {service.sampling['design']['agreement_count']} of 15. Agreement does not establish practical usefulness.")
+        st.download_button("Download all sample comparisons", (ARTIFACTS / "bi/sampling_comparison.csv").read_bytes(),
+                           "sampling_comparison.csv", "text/csv")
     with st.expander("All tests at a glance"):
         frame = pd.DataFrame([q["test"] for q in service.questions])
         st.dataframe(frame[["Question", "Feature", "Test", "Statistic", "PValueDisplay", "Decision"]], hide_index=True, width="stretch")
@@ -222,12 +306,21 @@ def evidence(service):
     st.markdown(q["alternative"])
     a, b, c, d = st.columns(4)
     a.metric("Test statistic", f"{result['Statistic']:,.4f}")
-    b.metric("p-value", result["PValueDisplay"])
+    b.markdown("p-value (approximate)")
+    b.code(result["PValueDisplay"], language=None)
     c.metric("Significance level", f"{result['alpha']:.2f}")
     df = result.get("DegreesOfFreedom")
     d.metric("Degrees of freedom", "Not used" if df is None else f"{df:,.2f}")
-    st.caption("Below numerical precision means floating-point underflow, not an exact probability of zero. All p-values are raw exploratory values; no adjustment is introduced.")
+    st.caption("Scientific notation: 2.3e-100 means 2.3 × 10⁻¹⁰⁰. Very small t/chi-square tails use a scaled log calculation. "
+               "All p-values are unadjusted exploratory values. Monte Carlo permutation p-values retain their 0.0005 resolution.")
     st.markdown(f"#### Statistical decision: {result['Decision']}")
+    st.write(result["Verdict"])
+    with st.expander("How this p-value was calculated"):
+        st.write(result["PValueCalculation"])
+        st.write(f"log10(p) = {result['Log10PValue']:.6f}")
+        if result["FloatUnderflow"]:
+            st.write("The ordinary floating-point return value is 0 because this tail is too small to represent. "
+                     "The scientific-notation approximation uses the same statistic, distribution and degrees of freedom.")
     st.write(q["method"])
     if result.get("MinimumExpectedCount") is not None:
         st.write(f"The smallest expected contingency-table count is {result['MinimumExpectedCount']:,.2f}; the notebook checks that it is at least 5.")
@@ -236,11 +329,12 @@ def evidence(service):
     st.write(q["interpretation"])
     st.caption("Assumptions: " + q["assumptions"])
     st.write("A small p-value does not measure practical importance, the probability that H0 is true, or whether a particular new URL is phishing. These comparisons do not establish causation.")
+    sample_question_comparison(q, f"evidence_{q['number']}")
     st.button(f"Return to Q{q['number']} and its visualization", on_click=go_to, args=("questions", q["number"]))
     with st.expander("Trace this test to the original implementation"):
         st.code(q["code"], language="python")
         st.text(q["saved_output"])
-    source_footer("Source: Department_Of_Phisheries.ipynb · df recovered from the same SciPy result where applicable; no new test, hypothesis or p-value substituted.")
+    source_footer("Source: Department_Of_Phisheries.ipynb · original tests retained; the documented sample repeats the same methods. Tiny tail probabilities are displayed in scientific notation.")
 
 
 FEATURE_LABELS = {
@@ -370,6 +464,10 @@ def conclusion(service):
     q1, q3, q15 = service.question(1), service.question(3), service.question(15)
     st.subheader("A contextual review dashboard is the justified next step")
     st.write(f"Cleaning retains {data['unique_urls']:,} unique URLs from {data['raw_rows']:,} source rows. The main test sample contains {data['inference_hosts']:,} consistently labeled exact hosts. Plots.ipynb deliberately keeps all source rows for descriptive EDA, so its denominators differ.")
+    design = service.sampling["design"]
+    st.write(f"The additional simple random sample selects {design['sample_size']:,} of those eligible hosts, "
+             f"without replacement, with seed {design['seed']}. {design['agreement_count']} of 15 statistical decisions agree "
+             "with the original question-specific results. Magnitudes are shown alongside decisions, and agreement is a dependent sensitivity check within this benchmark.")
     st.markdown("#### Findings demonstrated by the supplied data")
     st.write(f"Phishing URL lengths average {q1['test']['Estimate']:.2f} more characters in the host sample. The distributions still overlap. The subdomain-count gap is only {q3['test']['Estimate']:.3f}, illustrating why a tiny p-value alone is not a useful rule.")
     st.write("Feature-presence rates and page-content counts differ strongly between the recorded classes. The raw-record EDA also shows class-aligned URL structure and supplied feature scores. These observations warrant a source and feature-provenance audit before making wider claims.")

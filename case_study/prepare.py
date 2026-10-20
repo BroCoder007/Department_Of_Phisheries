@@ -201,6 +201,15 @@ def prepare():
             raise ValueError("The notebook's dataset path does not match the configured PhiUSIIL dataset.")
         clean = ns["website_data"]
         hosts = ns["host_sample"]
+        sampling = ns["sampling_results"]
+        sampling_rows = sampling["rows"]
+        for question in questions:
+            number = question["number"]
+            question["comparison"] = [row for row in sampling_rows if row["Question"] == number]
+            question["test"]["Verdict"] = question["comparison"][0]["Verdict"]
+        pd.DataFrame(sampling_rows).to_csv(ARTIFACTS / "bi/sampling_comparison.csv", index=False)
+        sampling["membership"].to_csv(ARTIFACTS / "bi/sampling_membership.csv", index=False)
+        write_json(ARTIFACTS / "sampling.json", {"design": sampling["design"], "rows": sampling_rows})
         raw_summary = raw.label.value_counts().sort_index()
         repeated_domains = int(raw.duplicated("Domain").sum())
         repeated_urls = int(raw.duplicated("URL").sum())
@@ -223,6 +232,7 @@ def prepare():
             "extra_missed": int(ns["extra_missed"]), "avoided_alerts": int(ns["avoided_alerts"]),
             "corrections": CORRECTIONS, "question_count": len(questions),
             "statistical_verification": stat_checks,
+            "sampling_design": sampling["design"],
             "notebook_inspection": {key: {"cells": len(book["cells"]), "saved_figures": sum(len(v) for v in originals[key].values()),
                                          "code_cells": sum(c["cell_type"] == "code" for c in book["cells"])} for key, book in notebooks.items()},
         }

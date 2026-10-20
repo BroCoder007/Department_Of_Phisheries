@@ -1,5 +1,12 @@
 # Application structure
 
+The 20 October amendment adds case_study/sampling.py for the common 10,000-host
+sample and case_study/statistics.py for readable tiny tail probabilities and
+verdicts. The analysis notebook calls the same functions and contains the actual
+comparison plots. Preparation persists sampling.json, the 30-row comparison and
+selected-host membership. Dashboards 1, 3, 4 and 6 consume these results.
+The previous analysis notebook is retained in artifacts/reference_before_sampling.
+
 The requested Streamlit frontend replaces the default React/Vite stack. Streamlit
 also runs the application server, so a second web framework is not required for
 the native website.

@@ -30,7 +30,7 @@ class StudyService:
         if not manifest_path.is_file():
             raise SnapshotError("Prepared analysis is missing. Run python -m case_study.prepare from the project folder.")
         self.manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-        for name in ["study.json", "questions.json", "eda.json", "models.joblib"]:
+        for name in ["study.json", "questions.json", "eda.json", "sampling.json", "models.joblib"]:
             path = self.folder / name
             expected = self.manifest["files"].get(name)
             if not path.is_file() or expected != fingerprint(path):
@@ -47,6 +47,7 @@ class StudyService:
         self.study = self.read_json("study.json")
         self.questions = self.read_json("questions.json")
         self.eda = self.read_json("eda.json")
+        self.sampling = self.read_json("sampling.json")
         self._models = None
         self._raw = None
 

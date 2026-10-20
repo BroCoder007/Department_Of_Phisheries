@@ -28,6 +28,7 @@ table_names = {
     "rule_summary", "rule_chart", "descriptive_summary",
     "model_summary", "model_metric_chart", "model_confusion",
     "model_partitions",
+    "sampling_comparison", "sampling_membership",
 }
 csv_paths = {f"/data/{name}.csv": dashboard_folder / f"{name}.csv" for name in table_names}
 
@@ -75,11 +76,11 @@ class AnalysisHandler(BaseHTTPRequestHandler):
                 "refresh": "Run python -m case_study.prepare, then refresh Power BI",
                 "error": error,
                 "endpoints": ["/api/summary", "/api/evidence", "/api/study", "/api/questions", "/api/eda",
-                              "/api/models", "/api/feature-schema?model=logistic_regression",
+                              "/api/models", "/api/sampling", "/api/feature-schema?model=logistic_regression",
                               "/api/random-fill?model=logistic_regression", "POST /api/predict", *sorted(csv_paths)],
             })
             return
-        if path in {"/api/study", "/api/questions", "/api/eda", "/api/models", "/api/feature-schema", "/api/random-fill"} or path.startswith("/api/questions/"):
+        if path in {"/api/study", "/api/questions", "/api/eda", "/api/models", "/api/sampling", "/api/feature-schema", "/api/random-fill"} or path.startswith("/api/questions/"):
             try:
                 service = get_service(snapshot_signature())
                 model_id = query.get("model", ["logistic_regression"])[0]
@@ -97,6 +98,8 @@ class AnalysisHandler(BaseHTTPRequestHandler):
                     result = service.eda
                 elif path == "/api/models":
                     result = {"models": service.study["models"], "target_mapping": service.study["model_label_mapping"]}
+                elif path == "/api/sampling":
+                    result = service.sampling
                 elif path == "/api/feature-schema":
                     result = {"model_id": model_id, "feature_order": service.study["feature_order"], "fields": service.schema(model_id)}
                 else:
@@ -125,7 +128,8 @@ class AnalysisHandler(BaseHTTPRequestHandler):
 
         if path == "/api/evidence":
             reader = csv.DictReader(io.StringIO(content.decode("utf-8-sig")))
-            records = [{key: json_value(value) for key, value in row.items()} for row in reader]
+            records = [{key: value if key == "PValueDisplay" else json_value(value)
+                        for key, value in row.items()} for row in reader]
             self.respond(200, records)
         elif path.endswith(".csv"):
             self.respond(200, content, "text/csv; charset=utf-8")

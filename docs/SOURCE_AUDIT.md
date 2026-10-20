@@ -1,5 +1,15 @@
 # Source and result audit
 
+**20 October 2026 revision:** The user requested amendments to the analysis
+notebook. It now adds a shared 10,000-host random sample beside the 15 original
+results. Original question headings, statistics, estimates and decisions are
+preserved. The previous notebook is in artifacts/reference_before_sampling;
+companion notebooks remain unchanged. Scientific p-value displays, expanded
+verdicts and syllabus references are documented in
+[SAMPLING_COMPARISON.md](SAMPLING_COMPARISON.md). The audit below records the
+19 October delivery; its unchanged-notebook statements refer to that version.
+Current fingerprints are recorded in artifacts/manifest.json.
+
 Prepared on 19 October 2026. The application uses only the supplied PhiUSIIL CSV
 and three original notebooks. All code cells, saved text/table outputs, markdown
 and embedded figures were inspected before the app was implemented. The notebooks

@@ -7,9 +7,9 @@
     "original_markdown": "## Q1. Are phishing URLs longer than legitimate ones on average?\n\n- Security tools and users often assume that very long URLs are suspicious.\nWe want to test if this assumption is actually supported by the data.\n\n- Null Hypothesis ($H_0$): There is no difference in average URL length between phishing and legitimate websites.\n\n- Alternative Hypothesis ($H_1$): Phishing and legitimate websites have different average URL lengths.\n\n- For this we use two-sample t-test to compare the average character lengths of both groups. This test is ideal because the websites in each group are completely separate and their lengths have unequal. \n- In the chart, URL lengths are shown in character counts, with extreme outliers hidden only in the boxplot so the main boxes stay easy to read.",
     "null": "Null Hypothesis ($H_0$): There is no difference in average URL length between phishing and legitimate websites.",
     "alternative": "Alternative Hypothesis ($H_1$): Phishing and legitimate websites have different average URL lengths.",
-    "original_interpretation": "**What we understand from this graph**\n- Phishing box is higher on the y-axis compared to the legitimate URLs.\n\n- The tests prove that the phishing URLs are longer on average,compared to the legitimate ones.\n\n- We see that the **two boxes overlap**, between 20 and 40 characters.\n\n- Thus we can conclude by saying that URL length is a supporting clue when combined with other features, but its not enough to make a safe blocking decision on its own.",
+    "original_interpretation": "**What we understand from this graph**\n\nThe original analysis observes 12.7252 characters: phishing minus legitimate.\n\np ≈ 2.201928e-1314 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for a difference in mean URL length between the recorded classes, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.\n\nThe later sample comparison gives p ≈ 3.495335e-140 and the decision **Reject H0**. Observed effect = 13.1619 characters: phishing minus legitimate. Consider this magnitude and the overlapping observations before recommending any rule.\n\nThe sample is nested in the benchmark. Agreement checks sensitivity within this collection; it does not establish independent replication, causality or guaranteed performance on new URLs.",
     "code": "phishing_values = host_sample.loc[host_sample[\"label\"] == 0, \"URLLength\"]\nlegitimate_values = host_sample.loc[host_sample[\"label\"] == 1, \"URLLength\"]\n\ntest = stats.ttest_ind(phishing_values, legitimate_values, equal_var=False)\nmean_difference = phishing_values.mean() - legitimate_values.mean()\n\nprint(f\"Phishing mean: {phishing_values.mean():.3f} characters\")\nprint(f\"Legitimate mean: {legitimate_values.mean():.3f} characters\")\nprint(f\"Difference: {mean_difference:.3f} characters (phishing minus legitimate)\")\n\nrecord_result(1, \"URLLength\", \"Two-sample t-test\", test.statistic,\n              test.pvalue, mean_difference, \"characters: phishing minus legitimate\")\n\nif test.pvalue <= alpha:\n    print(\"The test provides evidence of a mean difference within this benchmark.\")\nelse:\n    print(\"This test does not give enough evidence of a mean difference.\")\nprint(\"Length can be useful context, but overlapping values and long tails prevent a simple length rule from settling the class.\")\n\nplt.boxplot([phishing_values, legitimate_values], showfliers=False)\nplt.xticks([1, 2], class_order)\nplt.scatter([1, 2], [phishing_values.mean(), legitimate_values.mean()],\n            color=\"#364C70\", marker=\"D\", label=\"Mean\", zorder=3)\nplt.title(\"Q1: URL length by class; extreme points hidden in the plot\")\nplt.xlabel(\"Recorded class\")\nplt.ylabel(\"URL length (characters)\")\nplt.legend()\nshow_plot(\"q01_urllength\")",
-    "saved_output": "Phishing mean: 38.955 characters\nLegitimate mean: 26.229 characters\nDifference: 12.725 characters (phishing minus legitimate)\nTest: Two-sample t-test\nStatistic = 79.0995, p-value = below numerical precision\nAt alpha = 0.05: Reject H0.\nThe test provides evidence of a mean difference within this benchmark.\nLength can be useful context, but overlapping values and long tails prevent a simple length rule from settling the class.\n",
+    "saved_output": "Phishing mean: 38.955 characters\nLegitimate mean: 26.229 characters\nDifference: 12.725 characters (phishing minus legitimate)\nTest: Two-sample t-test\nStatistic = 79.0995, p-value = 2.201928e-1314\np ≈ 2.201928e-1314 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for a difference in mean URL length between the recorded classes, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.\nThe ordinary float underflows to zero. The displayed approximation uses the same test distribution on a scaled log scale.\nThe test provides evidence of a mean difference within this benchmark.\nLength can be useful context, but overlapping values and long tails prevent a simple length rule from settling the class.\n",
     "original_figures": [
       "original/analysis/cell_022_01.png"
     ],
@@ -20,12 +20,16 @@
       "Test": "Two-sample t-test",
       "Statistic": 79.09953462920966,
       "PValue": 0.0,
-      "PValueDisplay": "below numerical precision",
       "Estimate": 12.725203196616874,
       "EstimateUnits": "characters: phishing minus legitimate",
       "Decision": "Reject H0",
+      "DegreesOfFreedom": 86367.98576326827,
       "alpha": 0.05,
-      "DegreesOfFreedom": 86367.98576326827
+      "PValueDisplay": "2.201928e-1314",
+      "Log10PValue": -1313.6571969642175,
+      "PValueCalculation": "Two-sided t tail, integrated after scaling the density to avoid float underflow",
+      "FloatUnderflow": true,
+      "Verdict": "p ≈ 2.201928e-1314 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for a difference in mean URL length between the recorded classes, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters."
     },
     "figure": {
       "data": [
@@ -959,7 +963,62 @@
     ],
     "method": "Independent two-sample t-test with equal_var=False (the Welch version), comparing phishing minus legitimate means.",
     "interpretation": "The mean gap is 12.725 characters: phishing minus legitimate. The test supplies evidence of a mean difference within this benchmark. The distributions overlap, so this does not establish an individual blocking rule.",
-    "assumptions": "Eligible exact hosts are treated as independent; related subdomains and campaigns may remain dependent. Results describe a curated benchmark, and multiple exploratory questions raise false-discovery risk."
+    "assumptions": "Eligible exact hosts are treated as independent; related subdomains and campaigns may remain dependent. Results describe a curated benchmark, and multiple exploratory questions raise false-discovery risk.",
+    "comparison": [
+      {
+        "Question": 1,
+        "Feature": "URLLength",
+        "Scope": "One URL per eligible hostname",
+        "Test": "Two-sample t-test",
+        "Statistic": 79.09953462920966,
+        "PValue": 0.0,
+        "Estimate": 12.725203196616874,
+        "EstimateUnits": "characters: phishing minus legitimate",
+        "Decision": "Reject H0",
+        "DegreesOfFreedom": 86367.98576326827,
+        "alpha": 0.05,
+        "PValueDisplay": "2.201928e-1314",
+        "Log10PValue": -1313.6571969642175,
+        "PValueCalculation": "Two-sided t tail, integrated after scaling the density to avoid float underflow",
+        "FloatUnderflow": true,
+        "Verdict": "p ≈ 2.201928e-1314 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for a difference in mean URL length between the recorded classes, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.",
+        "Analysis": "Original notebook",
+        "N": 220023
+      },
+      {
+        "Question": 1,
+        "Feature": "URLLength",
+        "Test": "Two-sample t-test",
+        "EstimateUnits": "characters: phishing minus legitimate",
+        "Analysis": "Random sample",
+        "Scope": "Shared simple random sample of eligible hosts",
+        "alpha": 0.05,
+        "N": 10000,
+        "PhishingHosts": 3885,
+        "LegitimateHosts": 6115,
+        "MinimumExpectedCount": null,
+        "StandardizedEffect": 0.6681369270435682,
+        "StandardizedEffectName": "Mean gap / pooled sample SD (descriptive Cohen d)",
+        "PhishingMean": 39.257915057915056,
+        "LegitimateMean": 26.095993458708094,
+        "PhishingVariance": 962.7655945190446,
+        "LegitimateVariance": 22.98342359171383,
+        "Statistic": 26.241331415597585,
+        "PValue": 3.4953353782856014e-140,
+        "DegreesOfFreedom": 4002.12288405716,
+        "Estimate": 13.161921599206963,
+        "PValueDisplay": "3.495335e-140",
+        "Log10PValue": -139.45651114725712,
+        "PValueCalculation": "SciPy probability from the original test",
+        "FloatUnderflow": false,
+        "Decision": "Reject H0",
+        "Verdict": "p ≈ 3.495335e-140 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for a difference in mean URL length between the recorded classes, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.",
+        "AssumptionNote": "No expected-count failure detected where applicable.",
+        "PracticalInterpretation": "Observed effect = 13.1619 characters: phishing minus legitimate. Consider this magnitude and the overlapping observations before recommending any rule.",
+        "DecisionMatchesReference": true,
+        "EstimateDifference": 0.4367184025900883
+      }
+    ]
   },
   {
     "number": 2,
@@ -969,9 +1028,9 @@
     "original_markdown": "### Q2. Is average domain length different between the two classes?\n\n- Domain length describes the address itself and may add context beyond the full URL length.\n\n**H0:** The two classes have the same mean domain length.\n\n**H1:** Their means differ.\n\n- For this we use , two-sample t-test . These are different hosts, and we do not assume equal variances. We show the original units, with extreme points hidden only in the boxplot.",
     "null": "**H0:** The two classes have the same mean domain length.",
     "alternative": "**H1:** Their means differ.",
-    "original_interpretation": "**What we understand from this graph**\n\n- The phishing box sits higher on the y-axis compared to the legitimate domains.\n\n- The test proves that phishing domain names are longer on average compared to legitimate ones, with an average gap of about 6 characters.\n\n- We see that the two boxes heavily overlap, especially between 18 and 24 characters.\n\n- Thus we can conclude by saying that domain length is a useful supporting clue when combined with other features, but the difference is too small and overlapping to make a safe blocking decision on its own.",
+    "original_interpretation": "**What we understand from this graph**\n\nThe original analysis observes 5.86539 characters: phishing minus legitimate.\n\np ≈ 1.214745e-3764 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for a difference in mean domain length between the recorded classes, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.\n\nThe later sample comparison gives p ≈ 3.199607e-183 and the decision **Reject H0**. Observed effect = 6.0157 characters: phishing minus legitimate. Consider this magnitude and the overlapping observations before recommending any rule.\n\nThe sample is nested in the benchmark. Agreement checks sensitivity within this collection; it does not establish independent replication, causality or guaranteed performance on new URLs.",
     "code": "phishing_values = host_sample.loc[host_sample[\"label\"] == 0, \"DomainLength\"]\nlegitimate_values = host_sample.loc[host_sample[\"label\"] == 1, \"DomainLength\"]\n\ntest = stats.ttest_ind(phishing_values, legitimate_values, equal_var=False)\nmean_difference = phishing_values.mean() - legitimate_values.mean()\n\nprint(f\"Phishing mean: {phishing_values.mean():.3f} characters\")\nprint(f\"Legitimate mean: {legitimate_values.mean():.3f} characters\")\nprint(f\"Difference: {mean_difference:.3f} characters (phishing minus legitimate)\")\n\nrecord_result(2, \"DomainLength\", \"Two-sample t-test\", test.statistic,\n              test.pvalue, mean_difference, \"characters: phishing minus legitimate\")\n\nplt.boxplot([phishing_values, legitimate_values], showfliers=False)\nplt.xticks([1, 2], class_order)\nplt.scatter([1, 2], [phishing_values.mean(), legitimate_values.mean()],\n            color=\"#364C70\", marker=\"D\", label=\"Mean\", zorder=3)\nplt.title(\"Q2: Domain length by class; extreme points hidden only in the plot\")\nplt.xlabel(\"Recorded class\")\nplt.ylabel(\"Domain length (characters)\")\nplt.legend()\nshow_plot(\"q02_domainlength\")\n\nif test.pvalue <= alpha:\n    print(\"The test provides evidence of a mean difference within this benchmark.\")\nelse:\n    print(\"This test does not give enough evidence of a mean difference.\")\nprint(\"Compare the size of the character gap with the spread in the plot before treating it as a useful review cue.\")",
-    "saved_output": "Phishing mean: 25.095 characters\nLegitimate mean: 19.229 characters\nDifference: 5.865 characters (phishing minus legitimate)\nTest: Two-sample t-test\nStatistic = 137.3400, p-value = below numerical precision\nAt alpha = 0.05: Reject H0.\n\nThe test provides evidence of a mean difference within this benchmark.\nCompare the size of the character gap with the spread in the plot before treating it as a useful review cue.\n",
+    "saved_output": "Phishing mean: 25.095 characters\nLegitimate mean: 19.229 characters\nDifference: 5.865 characters (phishing minus legitimate)\nTest: Two-sample t-test\nStatistic = 137.3400, p-value = 1.214745e-3764\np ≈ 1.214745e-3764 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for a difference in mean domain length between the recorded classes, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.\nThe ordinary float underflows to zero. The displayed approximation uses the same test distribution on a scaled log scale.\n\nThe test provides evidence of a mean difference within this benchmark.\nCompare the size of the character gap with the spread in the plot before treating it as a useful review cue.\n",
     "original_figures": [
       "original/analysis/cell_025_01.png"
     ],
@@ -982,12 +1041,16 @@
       "Test": "Two-sample t-test",
       "Statistic": 137.33999788571913,
       "PValue": 0.0,
-      "PValueDisplay": "below numerical precision",
       "Estimate": 5.865393511892549,
       "EstimateUnits": "characters: phishing minus legitimate",
       "Decision": "Reject H0",
+      "DegreesOfFreedom": 103194.86142597375,
       "alpha": 0.05,
-      "DegreesOfFreedom": 103194.86142597375
+      "PValueDisplay": "1.214745e-3764",
+      "Log10PValue": -3763.9155148446766,
+      "PValueCalculation": "Two-sided t tail, integrated after scaling the density to avoid float underflow",
+      "FloatUnderflow": true,
+      "Verdict": "p ≈ 1.214745e-3764 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for a difference in mean domain length between the recorded classes, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters."
     },
     "figure": {
       "data": [
@@ -1921,7 +1984,62 @@
     ],
     "method": "Independent two-sample t-test with equal_var=False (the Welch version), comparing phishing minus legitimate means.",
     "interpretation": "The mean gap is 5.865 characters: phishing minus legitimate. The test supplies evidence of a mean difference within this benchmark. The distributions overlap, so this does not establish an individual blocking rule.",
-    "assumptions": "Eligible exact hosts are treated as independent; related subdomains and campaigns may remain dependent. Results describe a curated benchmark, and multiple exploratory questions raise false-discovery risk."
+    "assumptions": "Eligible exact hosts are treated as independent; related subdomains and campaigns may remain dependent. Results describe a curated benchmark, and multiple exploratory questions raise false-discovery risk.",
+    "comparison": [
+      {
+        "Question": 2,
+        "Feature": "DomainLength",
+        "Scope": "One URL per eligible hostname",
+        "Test": "Two-sample t-test",
+        "Statistic": 137.33999788571913,
+        "PValue": 0.0,
+        "Estimate": 5.865393511892549,
+        "EstimateUnits": "characters: phishing minus legitimate",
+        "Decision": "Reject H0",
+        "DegreesOfFreedom": 103194.86142597375,
+        "alpha": 0.05,
+        "PValueDisplay": "1.214745e-3764",
+        "Log10PValue": -3763.9155148446766,
+        "PValueCalculation": "Two-sided t tail, integrated after scaling the density to avoid float underflow",
+        "FloatUnderflow": true,
+        "Verdict": "p ≈ 1.214745e-3764 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for a difference in mean domain length between the recorded classes, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.",
+        "Analysis": "Original notebook",
+        "N": 220023
+      },
+      {
+        "Question": 2,
+        "Feature": "DomainLength",
+        "Test": "Two-sample t-test",
+        "EstimateUnits": "characters: phishing minus legitimate",
+        "Analysis": "Random sample",
+        "Scope": "Shared simple random sample of eligible hosts",
+        "alpha": 0.05,
+        "N": 10000,
+        "PhishingHosts": 3885,
+        "LegitimateHosts": 6115,
+        "MinimumExpectedCount": null,
+        "StandardizedEffect": 0.7279502448731675,
+        "StandardizedEffectName": "Mean gap / pooled sample SD (descriptive Cohen d)",
+        "PhishingMean": 25.111711711711713,
+        "LegitimateMean": 19.095993458708094,
+        "PhishingVariance": 139.61522067896937,
+        "LegitimateVariance": 22.98342359171383,
+        "Statistic": 30.193725909687934,
+        "PValue": 3.1996065464907532e-183,
+        "DegreesOfFreedom": 4706.211960363092,
+        "Estimate": 6.0157182530036195,
+        "PValueDisplay": "3.199607e-183",
+        "Log10PValue": -182.4949034233031,
+        "PValueCalculation": "SciPy probability from the original test",
+        "FloatUnderflow": false,
+        "Decision": "Reject H0",
+        "Verdict": "p ≈ 3.199607e-183 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for a difference in mean domain length between the recorded classes, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.",
+        "AssumptionNote": "No expected-count failure detected where applicable.",
+        "PracticalInterpretation": "Observed effect = 6.0157 characters: phishing minus legitimate. Consider this magnitude and the overlapping observations before recommending any rule.",
+        "DecisionMatchesReference": true,
+        "EstimateDifference": 0.15032474111107064
+      }
+    ]
   },
   {
     "number": 3,
@@ -1931,9 +2049,9 @@
     "original_markdown": "### Q3. Do phishing hosts have a different average number of subdomains?\n\n- Extra subdomains can make an address harder to read. A small average gap may still be detected in a large dataset.\n\n**H0:** The two classes have the same mean number of subdomains.\n\n**H1:** Their means differ.\n\n- For this we use the Two-sample t-test. These are\ndifferent hosts, and we do not assume equal variances. We show the original\nunits, with extreme points hidden only in the boxplot.",
     "null": "**H0:** The two classes have the same mean number of subdomains.",
     "alternative": "**H1:** Their means differ.",
-    "original_interpretation": "**What we understand from this graph**\n\n- There are no visible boxes only a single flat line at 1.00 for both classes because the vast majority of all websites have exactly 1 subdomain.\n\n- The only visible difference is between the two diamond dots,showing that phishing sites average 1.22 subdomains while legitimate sites average 1.16 subdomains.\n\n- We see that this leaves an average difference of just 0.06 subdomains, meaning the typical site in either class looks virtually identical.\n\n- Thus we can conclude that while the test is statistically significant due to the massive dataset size, the difference is practically invisible and useless for detecting phishing on its own.",
+    "original_interpretation": "**What we understand from this graph**\n\nThe original analysis observes 0.0605104 subdomains: phishing minus legitimate.\n\np ≈ 3.784781e-102 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for a difference in mean subdomain count between the recorded classes, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.\n\nThe later sample comparison gives p ≈ 2.495867e-6 and the decision **Reject H0**. Observed effect = 0.0629 subdomains: phishing minus legitimate. Consider this magnitude and the overlapping observations before recommending any rule.\n\nThe sample is nested in the benchmark. Agreement checks sensitivity within this collection; it does not establish independent replication, causality or guaranteed performance on new URLs.",
     "code": "phishing_values = host_sample.loc[host_sample[\"label\"] == 0, \"NoOfSubDomain\"]\nlegitimate_values = host_sample.loc[host_sample[\"label\"] == 1, \"NoOfSubDomain\"]\n\ntest = stats.ttest_ind(phishing_values, legitimate_values, equal_var=False)\nmean_difference = phishing_values.mean() - legitimate_values.mean()\n\nprint(f\"Phishing mean: {phishing_values.mean():.3f} subdomains\")\nprint(f\"Legitimate mean: {legitimate_values.mean():.3f} subdomains\")\nprint(f\"Difference: {mean_difference:.3f} subdomains (phishing minus legitimate)\")\n\nrecord_result(3, \"NoOfSubDomain\", \"Two-sample t-test\", test.statistic,\n              test.pvalue, mean_difference, \"subdomains: phishing minus legitimate\")\n\nplt.boxplot([phishing_values, legitimate_values], showfliers=False)\nplt.xticks([1, 2], class_order)\nplt.scatter([1, 2], [phishing_values.mean(), legitimate_values.mean()],\n            color=\"#364C70\", marker=\"D\", label=\"Mean\", zorder=3)\nplt.title(\"Q3: Number of subdomains by class; extreme points hidden only in the plot\")\nplt.xlabel(\"Recorded class\")\nplt.ylabel(\"Number of subdomains (subdomains)\")\nplt.legend()\nshow_plot(\"q03_noofsubdomain\")\n\nif test.pvalue <= alpha:\n    print(\"The test provides evidence of a mean difference within this benchmark.\")\nelse:\n    print(\"This test does not give enough evidence of a mean difference.\")\nprint(\"A small p-value alone does not make a small subdomain-count difference useful for a blocking rule.\")",
-    "saved_output": "Phishing mean: 1.222 subdomains\nLegitimate mean: 1.162 subdomains\nDifference: 0.061 subdomains (phishing minus legitimate)\nTest: Two-sample t-test\nStatistic = 21.4800, p-value = 3.78e-102\nAt alpha = 0.05: Reject H0.\n\nThe test provides evidence of a mean difference within this benchmark.\nA small p-value alone does not make a small subdomain-count difference useful for a blocking rule.\n",
+    "saved_output": "Phishing mean: 1.222 subdomains\nLegitimate mean: 1.162 subdomains\nDifference: 0.061 subdomains (phishing minus legitimate)\nTest: Two-sample t-test\nStatistic = 21.4800, p-value = 3.784781e-102\np ≈ 3.784781e-102 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for a difference in mean subdomain count between the recorded classes, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.\n\nThe test provides evidence of a mean difference within this benchmark.\nA small p-value alone does not make a small subdomain-count difference useful for a blocking rule.\n",
     "original_figures": [
       "original/analysis/cell_028_01.png"
     ],
@@ -1944,12 +2062,16 @@
       "Test": "Two-sample t-test",
       "Statistic": 21.480034470783227,
       "PValue": 3.7847807929433286e-102,
-      "PValueDisplay": "3.78e-102",
       "Estimate": 0.06051038496235139,
       "EstimateUnits": "subdomains: phishing minus legitimate",
       "Decision": "Reject H0",
+      "DegreesOfFreedom": 116316.77105207363,
       "alpha": 0.05,
-      "DegreesOfFreedom": 116316.77105207363
+      "PValueDisplay": "3.784781e-102",
+      "Log10PValue": -101.42195926891739,
+      "PValueCalculation": "SciPy probability from the original test",
+      "FloatUnderflow": false,
+      "Verdict": "p ≈ 3.784781e-102 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for a difference in mean subdomain count between the recorded classes, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters."
     },
     "figure": {
       "data": [
@@ -2883,7 +3005,62 @@
     ],
     "method": "Independent two-sample t-test with equal_var=False (the Welch version), comparing phishing minus legitimate means.",
     "interpretation": "The mean gap is 0.061 subdomains: phishing minus legitimate. The test supplies evidence of a mean difference within this benchmark. The distributions overlap, so this does not establish an individual blocking rule. Most hosts have one recorded subdomain; the small average gap illustrates statistical versus practical significance.",
-    "assumptions": "Eligible exact hosts are treated as independent; related subdomains and campaigns may remain dependent. Results describe a curated benchmark, and multiple exploratory questions raise false-discovery risk."
+    "assumptions": "Eligible exact hosts are treated as independent; related subdomains and campaigns may remain dependent. Results describe a curated benchmark, and multiple exploratory questions raise false-discovery risk.",
+    "comparison": [
+      {
+        "Question": 3,
+        "Feature": "NoOfSubDomain",
+        "Scope": "One URL per eligible hostname",
+        "Test": "Two-sample t-test",
+        "Statistic": 21.480034470783227,
+        "PValue": 3.7847807929433286e-102,
+        "Estimate": 0.06051038496235139,
+        "EstimateUnits": "subdomains: phishing minus legitimate",
+        "Decision": "Reject H0",
+        "DegreesOfFreedom": 116316.77105207363,
+        "alpha": 0.05,
+        "PValueDisplay": "3.784781e-102",
+        "Log10PValue": -101.42195926891739,
+        "PValueCalculation": "SciPy probability from the original test",
+        "FloatUnderflow": false,
+        "Verdict": "p ≈ 3.784781e-102 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for a difference in mean subdomain count between the recorded classes, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.",
+        "Analysis": "Original notebook",
+        "N": 220023
+      },
+      {
+        "Question": 3,
+        "Feature": "NoOfSubDomain",
+        "Test": "Two-sample t-test",
+        "EstimateUnits": "subdomains: phishing minus legitimate",
+        "Analysis": "Random sample",
+        "Scope": "Shared simple random sample of eligible hosts",
+        "alpha": 0.05,
+        "N": 10000,
+        "PhishingHosts": 3885,
+        "LegitimateHosts": 6115,
+        "MinimumExpectedCount": null,
+        "StandardizedEffect": 0.10994080356443393,
+        "StandardizedEffectName": "Mean gap / pooled sample SD (descriptive Cohen d)",
+        "PhishingMean": 1.2236808236808236,
+        "LegitimateMean": 1.1607522485690924,
+        "PhishingVariance": 0.5902732657624522,
+        "LegitimateVariance": 0.16077535813813906,
+        "Statistic": 4.7136722054666595,
+        "PValue": 2.4958669575388434e-06,
+        "DegreesOfFreedom": 5244.7548956431065,
+        "Estimate": 0.06292857511173122,
+        "PValueDisplay": "2.495867e-6",
+        "Log10PValue": -5.602778568487484,
+        "PValueCalculation": "SciPy probability from the original test",
+        "FloatUnderflow": false,
+        "Decision": "Reject H0",
+        "Verdict": "p ≈ 2.495867e-6 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for a difference in mean subdomain count between the recorded classes, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.",
+        "AssumptionNote": "No expected-count failure detected where applicable.",
+        "PracticalInterpretation": "Observed effect = 0.0629 subdomains: phishing minus legitimate. Consider this magnitude and the overlapping observations before recommending any rule.",
+        "DecisionMatchesReference": true,
+        "EstimateDifference": 0.0024181901493798286
+      }
+    ]
   },
   {
     "number": 4,
@@ -2893,9 +3070,9 @@
     "original_markdown": "### Q4. Is HTTPS use associated with the recorded class?\n\nHTTPS is familiar to users, but encrypted transport alone does not establish whether a site is legitimate.\n\n**H0:** HTTPS use and recorded class are independent.\n\n**H1:** They are associated.\n\n- For this we use, Chi-square independence. Both variables are categorical.",
     "null": "**H0:** HTTPS use and recorded class are independent.",
     "alternative": "**H1:** They are associated.",
-    "original_interpretation": "**What we understand from this graph**\n\n- The legitimate bar reaches all the way to 100%, showing that every single legitimate website in this dataset uses HTTPS.\n\n- In contrast, the phishing bar reaches only 44.62%, meaning less than half of the phishing sites have HTTPS enabled (a massive 55.38 percentage point gap).\n\n- We see a very strong statistical association ($\\chi^2 \\approx 95,028$, $p \\approx 0.000$), showing that unencrypted HTTP is overwhelmingly concentrated in phishing sites within this dataset.\n\n- Thus we can conclude that while missing HTTPS is a strong warning sign, having HTTPS does not guarantee a site is safe nearly 45% of phishing sites still obtained SSL certificates to look authentic.",
+    "original_interpretation": "**What we understand from this graph**\n\nThe original analysis observes -55.3756 presence percentage points: phishing minus legitimate.\n\np ≈ 2.699916e-20638 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for an association between HTTPS use and recorded class, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.\n\nThe later sample comparison gives p ≈ 1.503935e-909 and the decision **Reject H0**. Observed effect = -53.9768 presence percentage points: phishing minus legitimate. Consider this magnitude and the overlapping observations before recommending any rule.\n\nThe sample is nested in the benchmark. Agreement checks sensitivity within this collection; it does not establish independent replication, causality or guaranteed performance on new URLs.",
     "code": "observed = pd.crosstab(host_sample[\"label\"], host_sample[\"IsHTTPS\"])\nobserved = observed.reindex(index=[0, 1], columns=[0, 1], fill_value=0)\n\nchi_square, p_value, degrees_of_freedom, expected = stats.chi2_contingency(\n    observed, correction=False\n)\n\n# Chi-square needs adequate expected counts, even when an observed cell is zero.\nif expected.min() < 5:\n    raise ValueError(\"Expected counts are too small for this chi-square comparison.\")\n\npresence_rates = observed[1] / observed.sum(axis=1)\nrate_difference = 100 * (presence_rates.loc[0] - presence_rates.loc[1])\n\ndisplay(observed.rename(index=class_names, columns={0: \"Absent\", 1: \"Present\"}))\nprint(f\"Smallest expected count: {expected.min():.2f}; degrees of freedom: {degrees_of_freedom}\")\nprint(f\"Presence rates: phishing {presence_rates.loc[0]:.2%}, legitimate {presence_rates.loc[1]:.2%}.\")\nprint(f\"Gap: {rate_difference:.2f} percentage points (phishing minus legitimate).\")\n\nrecord_result(4, \"IsHTTPS\", \"Chi-square independence\", chi_square, p_value,\n              rate_difference, \"presence percentage points: phishing minus legitimate\")\n\nplt.bar(class_order, 100 * presence_rates.to_numpy(), color=class_colors)\nplt.title(\"Q4: HTTPS use within each recorded class\")\nplt.xlabel(\"Recorded class\")\nplt.ylabel(\"Hosts with this feature (%)\")\nplt.ylim(0, 110)\nshow_plot(\"q04_ishttps\")\n\nif p_value <= alpha:\n    more_common = \"phishing\" if rate_difference > 0 else \"legitimate\"\n    print(f\"The feature is associated with class and is more common in {more_common} hosts here.\")\nelse:\n    print(\"The data do not give enough evidence of an association in this comparison.\")\nprint(\"This association can guide review, but it does not show that the feature causes a site's class.\")",
-    "saved_output": "Smallest expected count: 18281.22; degrees of freedom: 1\nPresence rates: phishing 44.62%, legitimate 100.00%.\nGap: -55.38 percentage points (phishing minus legitimate).\nTest: Chi-square independence\nStatistic = 95027.6023, p-value = below numerical precision\nAt alpha = 0.05: Reject H0.\n\nThe feature is associated with class and is more common in legitimate hosts here.\nThis association can guide review, but it does not show that the feature causes a site's class.\n",
+    "saved_output": "Smallest expected count: 18281.22; degrees of freedom: 1\nPresence rates: phishing 44.62%, legitimate 100.00%.\nGap: -55.38 percentage points (phishing minus legitimate).\nTest: Chi-square independence\nStatistic = 95027.6023, p-value = 2.699916e-20638\np ≈ 2.699916e-20638 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for an association between HTTPS use and recorded class, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.\nThe ordinary float underflows to zero. The displayed approximation uses the same test distribution on a scaled log scale.\n\nThe feature is associated with class and is more common in legitimate hosts here.\nThis association can guide review, but it does not show that the feature causes a site's class.\n",
     "original_figures": [
       "original/analysis/cell_031_02.png"
     ],
@@ -2906,12 +3083,16 @@
       "Test": "Chi-square independence",
       "Statistic": 95027.60233041267,
       "PValue": 0.0,
-      "PValueDisplay": "below numerical precision",
       "Estimate": -55.37564386872704,
       "EstimateUnits": "presence percentage points: phishing minus legitimate",
       "Decision": "Reject H0",
-      "alpha": 0.05,
       "DegreesOfFreedom": 1,
+      "alpha": 0.05,
+      "PValueDisplay": "2.699916e-20638",
+      "Log10PValue": -20637.568649691788,
+      "PValueCalculation": "Right chi-square tail, integrated after scaling the density to avoid float underflow",
+      "FloatUnderflow": true,
+      "Verdict": "p ≈ 2.699916e-20638 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for an association between HTTPS use and recorded class, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.",
       "MinimumExpectedCount": 18281.21725910473
     },
     "figure": {
@@ -3803,7 +3984,68 @@
     ],
     "method": "Chi-square independence on a class-by-feature contingency table, correction=False. Expected cell counts are checked against 5.",
     "interpretation": "Presence differs by -55.38 percentage points (phishing minus legitimate). The feature is more common in legitimate hosts in this collection. Association does not identify its cause or validate a standalone security rule.",
-    "assumptions": "Eligible exact hosts are treated as independent; related subdomains and campaigns may remain dependent. Results describe a curated benchmark, and multiple exploratory questions raise false-discovery risk."
+    "assumptions": "Eligible exact hosts are treated as independent; related subdomains and campaigns may remain dependent. Results describe a curated benchmark, and multiple exploratory questions raise false-discovery risk.",
+    "comparison": [
+      {
+        "Question": 4,
+        "Feature": "IsHTTPS",
+        "Scope": "One URL per eligible hostname",
+        "Test": "Chi-square independence",
+        "Statistic": 95027.60233041267,
+        "PValue": 0.0,
+        "Estimate": -55.37564386872704,
+        "EstimateUnits": "presence percentage points: phishing minus legitimate",
+        "Decision": "Reject H0",
+        "DegreesOfFreedom": 1,
+        "alpha": 0.05,
+        "PValueDisplay": "2.699916e-20638",
+        "Log10PValue": -20637.568649691788,
+        "PValueCalculation": "Right chi-square tail, integrated after scaling the density to avoid float underflow",
+        "FloatUnderflow": true,
+        "Verdict": "p ≈ 2.699916e-20638 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for an association between HTTPS use and recorded class, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.",
+        "Analysis": "Original notebook",
+        "N": 220023
+      },
+      {
+        "Question": 4,
+        "Feature": "IsHTTPS",
+        "Test": "Chi-square independence",
+        "EstimateUnits": "presence percentage points: phishing minus legitimate",
+        "Analysis": "Random sample",
+        "Scope": "Shared simple random sample of eligible hosts",
+        "alpha": 0.05,
+        "N": 10000,
+        "PhishingHosts": 3885,
+        "LegitimateHosts": 6115,
+        "MinimumExpectedCount": 814.6845,
+        "StandardizedEffect": 0.6462580165662438,
+        "StandardizedEffectName": "Cramer V",
+        "Observed": [
+          [
+            2097,
+            1788
+          ],
+          [
+            0,
+            6115
+          ]
+        ],
+        "Statistic": 4176.494239761354,
+        "PValue": 0.0,
+        "DegreesOfFreedom": 1.0,
+        "Estimate": -53.97683397683397,
+        "PValueDisplay": "1.503935e-909",
+        "Log10PValue": -908.8227708196749,
+        "PValueCalculation": "Right chi-square tail, integrated after scaling the density to avoid float underflow",
+        "FloatUnderflow": true,
+        "Decision": "Reject H0",
+        "Verdict": "p ≈ 1.503935e-909 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for an association between HTTPS use and recorded class, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.",
+        "AssumptionNote": "No expected-count failure detected where applicable.",
+        "PracticalInterpretation": "Observed effect = -53.9768 presence percentage points: phishing minus legitimate. Consider this magnitude and the overlapping observations before recommending any rule.",
+        "DecisionMatchesReference": true,
+        "EstimateDifference": 1.398809891893066
+      }
+    ]
   },
   {
     "number": 5,
@@ -3813,9 +4055,9 @@
     "original_markdown": "### Q5. Is favicon presence associated with the recorded class?\n\nA favicon is a familiar site icon in the browser tab, but attackers can easily omit or clone it.\n\n**H0:** Favicon presence and recorded class are independent.\n\n**H1:** They are associated.\n\n- For this we use, Chi-square independence. Both variables are categorical.",
     "null": "**H0:** Favicon presence and recorded class are independent.",
     "alternative": "**H1:** They are associated.",
-    "original_interpretation": "**What we understand from this graph**\n\n- The legitimate bar is much taller (56.70%) compared to the phishing bar (7.78%), creating a large 48.92 percentage point gap.\n\n- The test shows a highly significant association ($\\chi^2 \\approx 53,167$,  \\approx 0.000$), confirming that legitimate sites are far more likely to include custom browser favicons.\n\n- We see that over 92% of phishing pages in this dataset omit a favicon, reflecting their hurried and bare-bones setup.\n\n- Thus we can conclude that while missing a favicon is a helpful warning indicator, having a favicon does not prove safety because attackers can still copy one.",
+    "original_interpretation": "**What we understand from this graph**\n\nThe original analysis observes -48.9164 presence percentage points: phishing minus legitimate.\n\np ≈ 2.631260e-11548 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for an association between favicon presence and recorded class, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.\n\nThe later sample comparison gives p ≈ 5.017299e-501 and the decision **Reject H0**. Observed effect = -47.5580 presence percentage points: phishing minus legitimate. Consider this magnitude and the overlapping observations before recommending any rule.\n\nThe sample is nested in the benchmark. Agreement checks sensitivity within this collection; it does not establish independent replication, causality or guaranteed performance on new URLs.",
     "code": "observed = pd.crosstab(host_sample[\"label\"], host_sample[\"HasFavicon\"])\nobserved = observed.reindex(index=[0, 1], columns=[0, 1], fill_value=0)\n\nchi_square, p_value, degrees_of_freedom, expected = stats.chi2_contingency(\n    observed, correction=False\n)\n\n# Chi-square needs adequate expected counts, even when an observed cell is zero.\nif expected.min() < 5:\n    raise ValueError(\"Expected counts are too small for this chi-square comparison.\")\n\npresence_rates = observed[1] / observed.sum(axis=1)\nrate_difference = 100 * (presence_rates.loc[0] - presence_rates.loc[1])\n\ndisplay(observed.rename(index=class_names, columns={0: \"Absent\", 1: \"Present\"}))\nprint(f\"Smallest expected count: {expected.min():.2f}; degrees of freedom: {degrees_of_freedom}\")\nprint(f\"Presence rates: phishing {presence_rates.loc[0]:.2%}, legitimate {presence_rates.loc[1]:.2%}.\")\nprint(f\"Gap: {rate_difference:.2f} percentage points (phishing minus legitimate).\")\n\nrecord_result(5, \"HasFavicon\", \"Chi-square independence\", chi_square, p_value,\n              rate_difference, \"presence percentage points: phishing minus legitimate\")\n\nplt.bar(class_order, 100 * presence_rates.to_numpy(), color=class_colors)\nplt.title(\"Q5: Favicon presence within each recorded class\")\nplt.xlabel(\"Recorded class\")\nplt.ylabel(\"Hosts with this feature (%)\")\nplt.ylim(0, 110)\nshow_plot(\"q05_hasfavicon\")\n\nif p_value <= alpha:\n    more_common = \"phishing\" if rate_difference > 0 else \"legitimate\"\n    print(f\"The feature is associated with class and is more common in {more_common} hosts here.\")\nelse:\n    print(\"The data do not give enough evidence of an association in this comparison.\")\nprint(\"This association can guide review, but it does not show that the feature causes a site's class.\")",
-    "saved_output": "Smallest expected count: 32172.15; degrees of freedom: 1\nPresence rates: phishing 7.78%, legitimate 56.70%.\nGap: -48.92 percentage points (phishing minus legitimate).\nTest: Chi-square independence\nStatistic = 53167.2376, p-value = below numerical precision\nAt alpha = 0.05: Reject H0.\n\nThe feature is associated with class and is more common in legitimate hosts here.\nThis association can guide review, but it does not show that the feature causes a site's class.\n",
+    "saved_output": "Smallest expected count: 32172.15; degrees of freedom: 1\nPresence rates: phishing 7.78%, legitimate 56.70%.\nGap: -48.92 percentage points (phishing minus legitimate).\nTest: Chi-square independence\nStatistic = 53167.2376, p-value = 2.631260e-11548\np ≈ 2.631260e-11548 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for an association between favicon presence and recorded class, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.\nThe ordinary float underflows to zero. The displayed approximation uses the same test distribution on a scaled log scale.\n\nThe feature is associated with class and is more common in legitimate hosts here.\nThis association can guide review, but it does not show that the feature causes a site's class.\n",
     "original_figures": [
       "original/analysis/cell_034_02.png"
     ],
@@ -3826,12 +4068,16 @@
       "Test": "Chi-square independence",
       "Statistic": 53167.237563959774,
       "PValue": 0.0,
-      "PValueDisplay": "below numerical precision",
       "Estimate": -48.91638802417733,
       "EstimateUnits": "presence percentage points: phishing minus legitimate",
       "Decision": "Reject H0",
-      "alpha": 0.05,
       "DegreesOfFreedom": 1,
+      "alpha": 0.05,
+      "PValueDisplay": "2.631260e-11548",
+      "Log10PValue": -11547.579836188124,
+      "PValueCalculation": "Right chi-square tail, integrated after scaling the density to avoid float underflow",
+      "FloatUnderflow": true,
+      "Verdict": "p ≈ 2.631260e-11548 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for an association between favicon presence and recorded class, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.",
       "MinimumExpectedCount": 32172.153420324237
     },
     "figure": {
@@ -4723,7 +4969,68 @@
     ],
     "method": "Chi-square independence on a class-by-feature contingency table, correction=False. Expected cell counts are checked against 5.",
     "interpretation": "Presence differs by -48.92 percentage points (phishing minus legitimate). The feature is more common in legitimate hosts in this collection. Association does not identify its cause or validate a standalone security rule.",
-    "assumptions": "Eligible exact hosts are treated as independent; related subdomains and campaigns may remain dependent. Results describe a curated benchmark, and multiple exploratory questions raise false-discovery risk."
+    "assumptions": "Eligible exact hosts are treated as independent; related subdomains and campaigns may remain dependent. Results describe a curated benchmark, and multiple exploratory questions raise false-discovery risk.",
+    "comparison": [
+      {
+        "Question": 5,
+        "Feature": "HasFavicon",
+        "Scope": "One URL per eligible hostname",
+        "Test": "Chi-square independence",
+        "Statistic": 53167.237563959774,
+        "PValue": 0.0,
+        "Estimate": -48.91638802417733,
+        "EstimateUnits": "presence percentage points: phishing minus legitimate",
+        "Decision": "Reject H0",
+        "DegreesOfFreedom": 1,
+        "alpha": 0.05,
+        "PValueDisplay": "2.631260e-11548",
+        "Log10PValue": -11547.579836188124,
+        "PValueCalculation": "Right chi-square tail, integrated after scaling the density to avoid float underflow",
+        "FloatUnderflow": true,
+        "Verdict": "p ≈ 2.631260e-11548 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for an association between favicon presence and recorded class, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.",
+        "Analysis": "Original notebook",
+        "N": 220023
+      },
+      {
+        "Question": 5,
+        "Feature": "HasFavicon",
+        "Test": "Chi-square independence",
+        "EstimateUnits": "presence percentage points: phishing minus legitimate",
+        "Analysis": "Random sample",
+        "Scope": "Shared simple random sample of eligible hosts",
+        "alpha": 0.05,
+        "N": 10000,
+        "PhishingHosts": 3885,
+        "LegitimateHosts": 6115,
+        "MinimumExpectedCount": 1451.8245,
+        "StandardizedEffect": 0.4791422754990406,
+        "StandardizedEffectName": "Cramer V",
+        "Observed": [
+          [
+            3563,
+            322
+          ],
+          [
+            2700,
+            3415
+          ]
+        ],
+        "Statistic": 2295.7732017039853,
+        "PValue": 0.0,
+        "DegreesOfFreedom": 1.0,
+        "Estimate": -47.55799135194066,
+        "PValueDisplay": "5.017299e-501",
+        "Log10PValue": -500.29952999604717,
+        "PValueCalculation": "Right chi-square tail, integrated after scaling the density to avoid float underflow",
+        "FloatUnderflow": true,
+        "Decision": "Reject H0",
+        "Verdict": "p ≈ 5.017299e-501 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for an association between favicon presence and recorded class, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.",
+        "AssumptionNote": "No expected-count failure detected where applicable.",
+        "PracticalInterpretation": "Observed effect = -47.5580 presence percentage points: phishing minus legitimate. Consider this magnitude and the overlapping observations before recommending any rule.",
+        "DecisionMatchesReference": true,
+        "EstimateDifference": 1.3583966722366725
+      }
+    ]
   },
   {
     "number": 6,
@@ -4733,9 +5040,9 @@
     "original_markdown": "### Q6. Is social-link presence associated with the recorded class?\n\nLegitimate businesses routinely link to social media profiles, whereas quick phishing clones often leave them out.\n\n**H0:** Social-link presence and recorded class are independent.\n\n**H1:** They are associated.\n\n- For this we use, Chi-square independence. Both variables are categorical.",
     "null": "**H0:** Social-link presence and recorded class are independent.",
     "alternative": "**H1:** They are associated.",
-    "original_interpretation": "**What we understand from this graph**\n\n- The legitimate bar reaches 79.46%, while the phishing bar barely registers at only 0.50% (an enormous 78.96 percentage point difference).\n\n- The test reveals the single strongest individual flag association in the dataset ($\\chi^2 \\approx 130,270$,  \\approx 0.000$).\n\n- We see that legitimate organizations almost always include social media links (Facebook, Twitter, LinkedIn), whereas phishing lure pages almost never have them.\n\n- Thus we can conclude that absence of social links is a very strong clue of phishing, making it one of the most effective non-content features for automated filtering.",
+    "original_interpretation": "**What we understand from this graph**\n\nThe original analysis observes -78.9568 presence percentage points: phishing minus legitimate.\n\np ≈ 2.932204e-28291 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for an association between social-link presence and recorded class, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.\n\nThe later sample comparison gives p ≈ 2.779774e-1288 and the decision **Reject H0**. Observed effect = -78.9059 presence percentage points: phishing minus legitimate. Consider this magnitude and the overlapping observations before recommending any rule.\n\nThe sample is nested in the benchmark. Agreement checks sensitivity within this collection; it does not establish independent replication, causality or guaranteed performance on new URLs.",
     "code": "observed = pd.crosstab(host_sample[\"label\"], host_sample[\"HasSocialNet\"])\nobserved = observed.reindex(index=[0, 1], columns=[0, 1], fill_value=0)\n\nchi_square, p_value, degrees_of_freedom, expected = stats.chi2_contingency(\n    observed, correction=False\n)\n\n# Chi-square needs adequate expected counts, even when an observed cell is zero.\nif expected.min() < 5:\n    raise ValueError(\"Expected counts are too small for this chi-square comparison.\")\n\npresence_rates = observed[1] / observed.sum(axis=1)\nrate_difference = 100 * (presence_rates.loc[0] - presence_rates.loc[1])\n\ndisplay(observed.rename(index=class_names, columns={0: \"Absent\", 1: \"Present\"}))\nprint(f\"Smallest expected count: {expected.min():.2f}; degrees of freedom: {degrees_of_freedom}\")\nprint(f\"Presence rates: phishing {presence_rates.loc[0]:.2%}, legitimate {presence_rates.loc[1]:.2%}.\")\nprint(f\"Gap: {rate_difference:.2f} percentage points (phishing minus legitimate).\")\n\nrecord_result(6, \"HasSocialNet\", \"Chi-square independence\", chi_square, p_value,\n              rate_difference, \"presence percentage points: phishing minus legitimate\")\n\nplt.bar(class_order, 100 * presence_rates.to_numpy(), color=class_colors)\nplt.title(\"Q6: Social-link presence within each recorded class\")\nplt.xlabel(\"Recorded class\")\nplt.ylabel(\"Hosts with this feature (%)\")\nplt.ylim(0, 110)\nshow_plot(\"q06_hassocialnet\")\n\nif p_value <= alpha:\n    more_common = \"phishing\" if rate_difference > 0 else \"legitimate\"\n    print(f\"The feature is associated with class and is more common in {more_common} hosts here.\")\nelse:\n    print(\"The data do not give enough evidence of an association in this comparison.\")\nprint(\"This association can guide review, but it does not show that the feature causes a site's class.\")",
-    "saved_output": "Smallest expected count: 41653.44; degrees of freedom: 1\nPresence rates: phishing 0.50%, legitimate 79.46%.\nGap: -78.96 percentage points (phishing minus legitimate).\nTest: Chi-square independence\nStatistic = 130270.4893, p-value = below numerical precision\nAt alpha = 0.05: Reject H0.\n\nThe feature is associated with class and is more common in legitimate hosts here.\nThis association can guide review, but it does not show that the feature causes a site's class.\n",
+    "saved_output": "Smallest expected count: 41653.44; degrees of freedom: 1\nPresence rates: phishing 0.50%, legitimate 79.46%.\nGap: -78.96 percentage points (phishing minus legitimate).\nTest: Chi-square independence\nStatistic = 130270.4893, p-value = 2.932204e-28291\np ≈ 2.932204e-28291 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for an association between social-link presence and recorded class, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.\nThe ordinary float underflows to zero. The displayed approximation uses the same test distribution on a scaled log scale.\n\nThe feature is associated with class and is more common in legitimate hosts here.\nThis association can guide review, but it does not show that the feature causes a site's class.\n",
     "original_figures": [
       "original/analysis/cell_037_02.png"
     ],
@@ -4746,12 +5053,16 @@
       "Test": "Chi-square independence",
       "Statistic": 130270.48925671139,
       "PValue": 0.0,
-      "PValueDisplay": "below numerical precision",
       "Estimate": -78.95683247728871,
       "EstimateUnits": "presence percentage points: phishing minus legitimate",
       "Decision": "Reject H0",
-      "alpha": 0.05,
       "DegreesOfFreedom": 1,
+      "alpha": 0.05,
+      "PValueDisplay": "2.932204e-28291",
+      "Log10PValue": -28290.532805807656,
+      "PValueCalculation": "Right chi-square tail, integrated after scaling the density to avoid float underflow",
+      "FloatUnderflow": true,
+      "Verdict": "p ≈ 2.932204e-28291 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for an association between social-link presence and recorded class, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.",
       "MinimumExpectedCount": 41653.440735741264
     },
     "figure": {
@@ -5643,7 +5954,68 @@
     ],
     "method": "Chi-square independence on a class-by-feature contingency table, correction=False. Expected cell counts are checked against 5.",
     "interpretation": "Presence differs by -78.96 percentage points (phishing minus legitimate). The feature is more common in legitimate hosts in this collection. Association does not identify its cause or validate a standalone security rule.",
-    "assumptions": "Eligible exact hosts are treated as independent; related subdomains and campaigns may remain dependent. Results describe a curated benchmark, and multiple exploratory questions raise false-discovery risk."
+    "assumptions": "Eligible exact hosts are treated as independent; related subdomains and campaigns may remain dependent. Results describe a curated benchmark, and multiple exploratory questions raise false-discovery risk.",
+    "comparison": [
+      {
+        "Question": 6,
+        "Feature": "HasSocialNet",
+        "Scope": "One URL per eligible hostname",
+        "Test": "Chi-square independence",
+        "Statistic": 130270.48925671139,
+        "PValue": 0.0,
+        "Estimate": -78.95683247728871,
+        "EstimateUnits": "presence percentage points: phishing minus legitimate",
+        "Decision": "Reject H0",
+        "DegreesOfFreedom": 1,
+        "alpha": 0.05,
+        "PValueDisplay": "2.932204e-28291",
+        "Log10PValue": -28290.532805807656,
+        "PValueCalculation": "Right chi-square tail, integrated after scaling the density to avoid float underflow",
+        "FloatUnderflow": true,
+        "Verdict": "p ≈ 2.932204e-28291 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for an association between social-link presence and recorded class, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.",
+        "Analysis": "Original notebook",
+        "N": 220023
+      },
+      {
+        "Question": 6,
+        "Feature": "HasSocialNet",
+        "Test": "Chi-square independence",
+        "EstimateUnits": "presence percentage points: phishing minus legitimate",
+        "Analysis": "Random sample",
+        "Scope": "Shared simple random sample of eligible hosts",
+        "alpha": 0.05,
+        "N": 10000,
+        "PhishingHosts": 3885,
+        "LegitimateHosts": 6115,
+        "MinimumExpectedCount": 1893.549,
+        "StandardizedEffect": 0.7694333240222503,
+        "StandardizedEffectName": "Cramer V",
+        "Observed": [
+          [
+            3866,
+            19
+          ],
+          [
+            1260,
+            4855
+          ]
+        ],
+        "Statistic": 5920.276401159293,
+        "PValue": 0.0,
+        "DegreesOfFreedom": 1.0,
+        "Estimate": -78.90587000971301,
+        "PValueDisplay": "2.779774e-1288",
+        "Log10PValue": -1287.5559904390504,
+        "PValueCalculation": "Right chi-square tail, integrated after scaling the density to avoid float underflow",
+        "FloatUnderflow": true,
+        "Decision": "Reject H0",
+        "Verdict": "p ≈ 2.779774e-1288 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for an association between social-link presence and recorded class, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.",
+        "AssumptionNote": "No expected-count failure detected where applicable.",
+        "PracticalInterpretation": "Observed effect = -78.9059 presence percentage points: phishing minus legitimate. Consider this magnitude and the overlapping observations before recommending any rule.",
+        "DecisionMatchesReference": true,
+        "EstimateDifference": 0.050962467575701
+      }
+    ]
   },
   {
     "number": 7,
@@ -5653,9 +6025,9 @@
     "original_markdown": "### Q7. Is external form submission associated with the recorded class?\n\nSubmitting form data to an external third-party domain is often treated as a security warning.\n\n**H0:** External form submission and recorded class are independent.\n\n**H1:** They are associated.\n\n- For this we use, Chi-square independence. Both variables are categorical.",
     "null": "**H0:** External form submission and recorded class are independent.",
     "alternative": "**H1:** They are associated.",
-    "original_interpretation": "**What we understand from this graph**\n\n- Both bars are quite low, but legitimate sites have external form submissions at 7.37% compared to only 0.30% for phishing sites.\n\n- The test is statistically significant ($\\chi^2 \\approx 5,914$,  \\approx 0.000$), showing that third-party form submissions are not independent of website class.\n\n- We see that the common security assumption that phishing sites frequently submit to external URLs is actually rare in this dataset (less than 1%).\n\n- Thus we can conclude that external form submission is not a frequent enough signal on its own to serve as a reliable standalone phishing detector.",
+    "original_interpretation": "**What we understand from this graph**\n\nThe original analysis observes -7.07416 presence percentage points: phishing minus legitimate.\n\np ≈ 7.301083e-1287 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for an association between external form submission and recorded class, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.\n\nThe later sample comparison gives p ≈ 8.782287e-67 and the decision **Reject H0**. Observed effect = -7.6903 presence percentage points: phishing minus legitimate. Consider this magnitude and the overlapping observations before recommending any rule.\n\nThe sample is nested in the benchmark. Agreement checks sensitivity within this collection; it does not establish independent replication, causality or guaranteed performance on new URLs.",
     "code": "observed = pd.crosstab(host_sample[\"label\"], host_sample[\"HasExternalFormSubmit\"])\nobserved = observed.reindex(index=[0, 1], columns=[0, 1], fill_value=0)\n\nchi_square, p_value, degrees_of_freedom, expected = stats.chi2_contingency(\n    observed, correction=False\n)\n\n# Chi-square needs adequate expected counts, even when an observed cell is zero.\nif expected.min() < 5:\n    raise ValueError(\"Expected counts are too small for this chi-square comparison.\")\n\npresence_rates = observed[1] / observed.sum(axis=1)\nrate_difference = 100 * (presence_rates.loc[0] - presence_rates.loc[1])\n\ndisplay(observed.rename(index=class_names, columns={0: \"Absent\", 1: \"Present\"}))\nprint(f\"Smallest expected count: {expected.min():.2f}; degrees of freedom: {degrees_of_freedom}\")\nprint(f\"Presence rates: phishing {presence_rates.loc[0]:.2%}, legitimate {presence_rates.loc[1]:.2%}.\")\nprint(f\"Gap: {rate_difference:.2f} percentage points (phishing minus legitimate).\")\n\nrecord_result(7, \"HasExternalFormSubmit\", \"Chi-square independence\", chi_square, p_value,\n              rate_difference, \"presence percentage points: phishing minus legitimate\")\n\nplt.bar(class_order, 100 * presence_rates.to_numpy(), color=class_colors)\nplt.title(\"Q7: External form submission within each recorded class\")\nplt.xlabel(\"Recorded class\")\nplt.ylabel(\"Hosts with this feature (%)\")\nplt.ylim(0, 110)\nshow_plot(\"q07_hasexternalformsubmit\")\n\nif p_value <= alpha:\n    more_common = \"phishing\" if rate_difference > 0 else \"legitimate\"\n    print(f\"The feature is associated with class and is more common in {more_common} hosts here.\")\nelse:\n    print(\"The data do not give enough evidence of an association in this comparison.\")\nprint(\"This association can guide review, but it does not show that the feature causes a site's class.\")",
-    "saved_output": "Smallest expected count: 3948.70; degrees of freedom: 1\nPresence rates: phishing 0.30%, legitimate 7.37%.\nGap: -7.07 percentage points (phishing minus legitimate).\nTest: Chi-square independence\nStatistic = 5913.7410, p-value = below numerical precision\nAt alpha = 0.05: Reject H0.\n\nThe feature is associated with class and is more common in legitimate hosts here.\nThis association can guide review, but it does not show that the feature causes a site's class.\n",
+    "saved_output": "Smallest expected count: 3948.70; degrees of freedom: 1\nPresence rates: phishing 0.30%, legitimate 7.37%.\nGap: -7.07 percentage points (phishing minus legitimate).\nTest: Chi-square independence\nStatistic = 5913.7410, p-value = 7.301083e-1287\np ≈ 7.301083e-1287 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for an association between external form submission and recorded class, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.\nThe ordinary float underflows to zero. The displayed approximation uses the same test distribution on a scaled log scale.\n\nThe feature is associated with class and is more common in legitimate hosts here.\nThis association can guide review, but it does not show that the feature causes a site's class.\n",
     "original_figures": [
       "original/analysis/cell_040_02.png"
     ],
@@ -5666,12 +6038,16 @@
       "Test": "Chi-square independence",
       "Statistic": 5913.7410292595305,
       "PValue": 0.0,
-      "PValueDisplay": "below numerical precision",
       "Estimate": -7.074163237340164,
       "EstimateUnits": "presence percentage points: phishing minus legitimate",
       "Decision": "Reject H0",
-      "alpha": 0.05,
       "DegreesOfFreedom": 1,
+      "alpha": 0.05,
+      "PValueDisplay": "7.301083e-1287",
+      "Log10PValue": -1286.1366127029592,
+      "PValueCalculation": "Right chi-square tail, integrated after scaling the density to avoid float underflow",
+      "FloatUnderflow": true,
+      "Verdict": "p ≈ 7.301083e-1287 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for an association between external form submission and recorded class, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.",
       "MinimumExpectedCount": 3948.69644537162
     },
     "figure": {
@@ -6563,7 +6939,68 @@
     ],
     "method": "Chi-square independence on a class-by-feature contingency table, correction=False. Expected cell counts are checked against 5.",
     "interpretation": "Presence differs by -7.07 percentage points (phishing minus legitimate). The feature is more common in legitimate hosts in this collection. Association does not identify its cause or validate a standalone security rule.",
-    "assumptions": "Eligible exact hosts are treated as independent; related subdomains and campaigns may remain dependent. Results describe a curated benchmark, and multiple exploratory questions raise false-discovery risk."
+    "assumptions": "Eligible exact hosts are treated as independent; related subdomains and campaigns may remain dependent. Results describe a curated benchmark, and multiple exploratory questions raise false-discovery risk.",
+    "comparison": [
+      {
+        "Question": 7,
+        "Feature": "HasExternalFormSubmit",
+        "Scope": "One URL per eligible hostname",
+        "Test": "Chi-square independence",
+        "Statistic": 5913.7410292595305,
+        "PValue": 0.0,
+        "Estimate": -7.074163237340164,
+        "EstimateUnits": "presence percentage points: phishing minus legitimate",
+        "Decision": "Reject H0",
+        "DegreesOfFreedom": 1,
+        "alpha": 0.05,
+        "PValueDisplay": "7.301083e-1287",
+        "Log10PValue": -1286.1366127029592,
+        "PValueCalculation": "Right chi-square tail, integrated after scaling the density to avoid float underflow",
+        "FloatUnderflow": true,
+        "Verdict": "p ≈ 7.301083e-1287 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for an association between external form submission and recorded class, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.",
+        "Analysis": "Original notebook",
+        "N": 220023
+      },
+      {
+        "Question": 7,
+        "Feature": "HasExternalFormSubmit",
+        "Test": "Chi-square independence",
+        "EstimateUnits": "presence percentage points: phishing minus legitimate",
+        "Analysis": "Random sample",
+        "Scope": "Shared simple random sample of eligible hosts",
+        "alpha": 0.05,
+        "N": 10000,
+        "PhishingHosts": 3885,
+        "LegitimateHosts": 6115,
+        "MinimumExpectedCount": 192.696,
+        "StandardizedEffect": 0.17263992734491995,
+        "StandardizedEffectName": "Cramer V",
+        "Observed": [
+          [
+            3875,
+            10
+          ],
+          [
+            5629,
+            486
+          ]
+        ],
+        "Statistic": 298.04544513659243,
+        "PValue": 8.78228669426942e-67,
+        "DegreesOfFreedom": 1.0,
+        "Estimate": -7.6902694073585325,
+        "PValueDisplay": "8.782287e-67",
+        "Log10PValue": -66.05639238962893,
+        "PValueCalculation": "SciPy probability from the original test",
+        "FloatUnderflow": false,
+        "Decision": "Reject H0",
+        "Verdict": "p ≈ 8.782287e-67 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for an association between external form submission and recorded class, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.",
+        "AssumptionNote": "No expected-count failure detected where applicable.",
+        "PracticalInterpretation": "Observed effect = -7.6903 presence percentage points: phishing minus legitimate. Consider this magnitude and the overlapping observations before recommending any rule.",
+        "DecisionMatchesReference": true,
+        "EstimateDifference": -0.6161061700183685
+      }
+    ]
   },
   {
     "number": 8,
@@ -6573,9 +7010,9 @@
     "original_markdown": "### Q8. Is the Bank keyword associated with the recorded class?\n\nFinancial keywords appear in legitimate banking portals as well as deceptive phishing lures.\n\n**H0:** Bank keyword presence and recorded class are independent.\n\n**H1:** They are associated.\n\n- For this we use, Chi-square independence. Both variables are categorical.",
     "null": "**H0:** Bank keyword presence and recorded class are independent.",
     "alternative": "**H1:** They are associated.",
-    "original_interpretation": "**What we understand from this graph**\n\n- The legitimate bar is taller at 18.15%, while the phishing bar sits at only 5.18% (a 12.97 percentage point gap).\n\n- The test confirms a significant association ($\\chi^2 \\approx 7,703$,  \\approx 0.000$), but in the opposite direction from what many users intuitively expect.\n\n- We see that the word bank appears more often on genuine corporate and financial sites than on typical phishing sites in this benchmark.\n\n- Thus we can conclude that simply seeing the word bank does not indicate phishing, and an automatic rule blocking sites with financial keywords would create high false alarms.",
+    "original_interpretation": "**What we understand from this graph**\n\nThe original analysis observes -12.9701 presence percentage points: phishing minus legitimate.\n\np ≈ 2.217935e-1675 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for an association between the Bank keyword and recorded class, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.\n\nThe later sample comparison gives p ≈ 2.194188e-69 and the decision **Reject H0**. Observed effect = -12.2625 presence percentage points: phishing minus legitimate. Consider this magnitude and the overlapping observations before recommending any rule.\n\nThe sample is nested in the benchmark. Agreement checks sensitivity within this collection; it does not establish independent replication, causality or guaranteed performance on new URLs.",
     "code": "observed = pd.crosstab(host_sample[\"label\"], host_sample[\"Bank\"])\nobserved = observed.reindex(index=[0, 1], columns=[0, 1], fill_value=0)\n\nchi_square, p_value, degrees_of_freedom, expected = stats.chi2_contingency(\n    observed, correction=False\n)\n\n# Chi-square needs adequate expected counts, even when an observed cell is zero.\nif expected.min() < 5:\n    raise ValueError(\"Expected counts are too small for this chi-square comparison.\")\n\npresence_rates = observed[1] / observed.sum(axis=1)\nrate_difference = 100 * (presence_rates.loc[0] - presence_rates.loc[1])\n\ndisplay(observed.rename(index=class_names, columns={0: \"Absent\", 1: \"Present\"}))\nprint(f\"Smallest expected count: {expected.min():.2f}; degrees of freedom: {degrees_of_freedom}\")\nprint(f\"Presence rates: phishing {presence_rates.loc[0]:.2%}, legitimate {presence_rates.loc[1]:.2%}.\")\nprint(f\"Gap: {rate_difference:.2f} percentage points (phishing minus legitimate).\")\n\nrecord_result(8, \"Bank\", \"Chi-square independence\", chi_square, p_value,\n              rate_difference, \"presence percentage points: phishing minus legitimate\")\n\nplt.bar(class_order, 100 * presence_rates.to_numpy(), color=class_colors)\nplt.title(\"Q8: Bank keyword within each recorded class\")\nplt.xlabel(\"Recorded class\")\nplt.ylabel(\"Hosts with this feature (%)\")\nplt.ylim(0, 110)\nshow_plot(\"q08_bank\")\n\nif p_value <= alpha:\n    more_common = \"phishing\" if rate_difference > 0 else \"legitimate\"\n    print(f\"The feature is associated with class and is more common in {more_common} hosts here.\")\nelse:\n    print(\"The data do not give enough evidence of an association in this comparison.\")\nprint(\"This association can guide review, but it does not show that the feature causes a site's class.\")",
-    "saved_output": "Smallest expected count: 11187.20; degrees of freedom: 1\nPresence rates: phishing 5.18%, legitimate 18.15%.\nGap: -12.97 percentage points (phishing minus legitimate).\nTest: Chi-square independence\nStatistic = 7702.6657, p-value = below numerical precision\nAt alpha = 0.05: Reject H0.\n\nThe feature is associated with class and is more common in legitimate hosts here.\nThis association can guide review, but it does not show that the feature causes a site's class.\n",
+    "saved_output": "Smallest expected count: 11187.20; degrees of freedom: 1\nPresence rates: phishing 5.18%, legitimate 18.15%.\nGap: -12.97 percentage points (phishing minus legitimate).\nTest: Chi-square independence\nStatistic = 7702.6657, p-value = 2.217935e-1675\np ≈ 2.217935e-1675 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for an association between the Bank keyword and recorded class, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.\nThe ordinary float underflows to zero. The displayed approximation uses the same test distribution on a scaled log scale.\n\nThe feature is associated with class and is more common in legitimate hosts here.\nThis association can guide review, but it does not show that the feature causes a site's class.\n",
     "original_figures": [
       "original/analysis/cell_043_02.png"
     ],
@@ -6586,12 +7023,16 @@
       "Test": "Chi-square independence",
       "Statistic": 7702.665744513961,
       "PValue": 0.0,
-      "PValueDisplay": "below numerical precision",
       "Estimate": -12.970106975721297,
       "EstimateUnits": "presence percentage points: phishing minus legitimate",
       "Decision": "Reject H0",
-      "alpha": 0.05,
       "DegreesOfFreedom": 1,
+      "alpha": 0.05,
+      "PValueDisplay": "2.217935e-1675",
+      "Log10PValue": -1674.6540512224744,
+      "PValueCalculation": "Right chi-square tail, integrated after scaling the density to avoid float underflow",
+      "FloatUnderflow": true,
+      "Verdict": "p ≈ 2.217935e-1675 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for an association between the Bank keyword and recorded class, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.",
       "MinimumExpectedCount": 11187.198551969566
     },
     "figure": {
@@ -7483,7 +7924,68 @@
     ],
     "method": "Chi-square independence on a class-by-feature contingency table, correction=False. Expected cell counts are checked against 5.",
     "interpretation": "Presence differs by -12.97 percentage points (phishing minus legitimate). The feature is more common in legitimate hosts in this collection. Association does not identify its cause or validate a standalone security rule.",
-    "assumptions": "Eligible exact hosts are treated as independent; related subdomains and campaigns may remain dependent. Results describe a curated benchmark, and multiple exploratory questions raise false-discovery risk."
+    "assumptions": "Eligible exact hosts are treated as independent; related subdomains and campaigns may remain dependent. Results describe a curated benchmark, and multiple exploratory questions raise false-discovery risk.",
+    "comparison": [
+      {
+        "Question": 8,
+        "Feature": "Bank",
+        "Scope": "One URL per eligible hostname",
+        "Test": "Chi-square independence",
+        "Statistic": 7702.665744513961,
+        "PValue": 0.0,
+        "Estimate": -12.970106975721297,
+        "EstimateUnits": "presence percentage points: phishing minus legitimate",
+        "Decision": "Reject H0",
+        "DegreesOfFreedom": 1,
+        "alpha": 0.05,
+        "PValueDisplay": "2.217935e-1675",
+        "Log10PValue": -1674.6540512224744,
+        "PValueCalculation": "Right chi-square tail, integrated after scaling the density to avoid float underflow",
+        "FloatUnderflow": true,
+        "Verdict": "p ≈ 2.217935e-1675 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for an association between the Bank keyword and recorded class, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.",
+        "Analysis": "Original notebook",
+        "N": 220023
+      },
+      {
+        "Question": 8,
+        "Feature": "Bank",
+        "Test": "Chi-square independence",
+        "EstimateUnits": "presence percentage points: phishing minus legitimate",
+        "Analysis": "Random sample",
+        "Scope": "Shared simple random sample of eligible hosts",
+        "alpha": 0.05,
+        "N": 10000,
+        "PhishingHosts": 3885,
+        "LegitimateHosts": 6115,
+        "MinimumExpectedCount": 516.3165,
+        "StandardizedEffect": 0.1760654972805409,
+        "StandardizedEffectName": "Cramer V",
+        "Observed": [
+          [
+            3660,
+            225
+          ],
+          [
+            5011,
+            1104
+          ]
+        ],
+        "Statistic": 309.9905933264416,
+        "PValue": 2.1941881862924757e-69,
+        "DegreesOfFreedom": 1.0,
+        "Estimate": -12.262459866711705,
+        "PValueDisplay": "2.194188e-69",
+        "Log10PValue": -68.65872612755277,
+        "PValueCalculation": "SciPy probability from the original test",
+        "FloatUnderflow": false,
+        "Decision": "Reject H0",
+        "Verdict": "p ≈ 2.194188e-69 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for an association between the Bank keyword and recorded class, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.",
+        "AssumptionNote": "No expected-count failure detected where applicable.",
+        "PracticalInterpretation": "Observed effect = -12.2625 presence percentage points: phishing minus legitimate. Consider this magnitude and the overlapping observations before recommending any rule.",
+        "DecisionMatchesReference": true,
+        "EstimateDifference": 0.7076471090095922
+      }
+    ]
   },
   {
     "number": 9,
@@ -7493,9 +7995,9 @@
     "original_markdown": "### Q9. Is the Pay keyword associated with the recorded class?\n\nPayment terms are common across e-commerce checkouts as well as payment-harvesting scams.\n\n**H0:** Pay keyword presence and recorded class are independent.\n\n**H1:** They are associated.\n\n- For this we use, Chi-square independence. Both variables are categorical.",
     "null": "**H0:** Pay keyword presence and recorded class are independent.",
     "alternative": "**H1:** They are associated.",
-    "original_interpretation": "**What we understand from this graph**\n\n- The legitimate bar reaches 36.94%, while the phishing bar reaches only 5.45% (a 31.49 percentage point difference).\n\n- The test shows a strong statistical association ($\\chi^2 \\approx 27,797$,  \\approx 0.000$), with payment terms being much more prevalent on legitimate websites.\n\n- We see that legitimate web pages frequently contain words like payment, checkout, or pay for commercial transactions, whereas general phishing attacks target all kinds of credentials.\n\n- Thus we can conclude that payment keywords are much more common on legitimate commercial domains, making keyword blocking ineffective on its own.",
+    "original_interpretation": "**What we understand from this graph**\n\nThe original analysis observes -31.4851 presence percentage points: phishing minus legitimate.\n\np ≈ 4.215729e-6039 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for an association between the Pay keyword and recorded class, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.\n\nThe later sample comparison gives p ≈ 1.603993e-269 and the decision **Reject H0**. Observed effect = -31.1898 presence percentage points: phishing minus legitimate. Consider this magnitude and the overlapping observations before recommending any rule.\n\nThe sample is nested in the benchmark. Agreement checks sensitivity within this collection; it does not establish independent replication, causality or guaranteed performance on new URLs.",
     "code": "observed = pd.crosstab(host_sample[\"label\"], host_sample[\"Pay\"])\nobserved = observed.reindex(index=[0, 1], columns=[0, 1], fill_value=0)\n\nchi_square, p_value, degrees_of_freedom, expected = stats.chi2_contingency(\n    observed, correction=False\n)\n\n# Chi-square needs adequate expected counts, even when an observed cell is zero.\nif expected.min() < 5:\n    raise ValueError(\"Expected counts are too small for this chi-square comparison.\")\n\npresence_rates = observed[1] / observed.sum(axis=1)\nrate_difference = 100 * (presence_rates.loc[0] - presence_rates.loc[1])\n\ndisplay(observed.rename(index=class_names, columns={0: \"Absent\", 1: \"Present\"}))\nprint(f\"Smallest expected count: {expected.min():.2f}; degrees of freedom: {degrees_of_freedom}\")\nprint(f\"Presence rates: phishing {presence_rates.loc[0]:.2%}, legitimate {presence_rates.loc[1]:.2%}.\")\nprint(f\"Gap: {rate_difference:.2f} percentage points (phishing minus legitimate).\")\n\nrecord_result(9, \"Pay\", \"Chi-square independence\", chi_square, p_value,\n              rate_difference, \"presence percentage points: phishing minus legitimate\")\n\nplt.bar(class_order, 100 * presence_rates.to_numpy(), color=class_colors)\nplt.title(\"Q9: Pay keyword within each recorded class\")\nplt.xlabel(\"Recorded class\")\nplt.ylabel(\"Hosts with this feature (%)\")\nplt.ylim(0, 110)\nshow_plot(\"q09_pay\")\n\nif p_value <= alpha:\n    more_common = \"phishing\" if rate_difference > 0 else \"legitimate\"\n    print(f\"The feature is associated with class and is more common in {more_common} hosts here.\")\nelse:\n    print(\"The data do not give enough evidence of an association in this comparison.\")\nprint(\"This association can guide review, but it does not show that the feature causes a site's class.\")",
-    "saved_output": "Smallest expected count: 21087.60; degrees of freedom: 1\nPresence rates: phishing 5.45%, legitimate 36.94%.\nGap: -31.49 percentage points (phishing minus legitimate).\nTest: Chi-square independence\nStatistic = 27797.0608, p-value = below numerical precision\nAt alpha = 0.05: Reject H0.\n\nThe feature is associated with class and is more common in legitimate hosts here.\nThis association can guide review, but it does not show that the feature causes a site's class.\n",
+    "saved_output": "Smallest expected count: 21087.60; degrees of freedom: 1\nPresence rates: phishing 5.45%, legitimate 36.94%.\nGap: -31.49 percentage points (phishing minus legitimate).\nTest: Chi-square independence\nStatistic = 27797.0608, p-value = 4.215729e-6039\np ≈ 4.215729e-6039 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for an association between the Pay keyword and recorded class, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.\nThe ordinary float underflows to zero. The displayed approximation uses the same test distribution on a scaled log scale.\n\nThe feature is associated with class and is more common in legitimate hosts here.\nThis association can guide review, but it does not show that the feature causes a site's class.\n",
     "original_figures": [
       "original/analysis/cell_046_02.png"
     ],
@@ -7506,12 +8008,16 @@
       "Test": "Chi-square independence",
       "Statistic": 27797.060768017112,
       "PValue": 0.0,
-      "PValueDisplay": "below numerical precision",
       "Estimate": -31.485110781138737,
       "EstimateUnits": "presence percentage points: phishing minus legitimate",
       "Decision": "Reject H0",
-      "alpha": 0.05,
       "DegreesOfFreedom": 1,
+      "alpha": 0.05,
+      "PValueDisplay": "4.215729e-6039",
+      "Log10PValue": -6038.375127338717,
+      "PValueCalculation": "Right chi-square tail, integrated after scaling the density to avoid float underflow",
+      "FloatUnderflow": true,
+      "Verdict": "p ≈ 4.215729e-6039 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for an association between the Pay keyword and recorded class, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.",
       "MinimumExpectedCount": 21087.603932316168
     },
     "figure": {
@@ -8403,7 +8909,68 @@
     ],
     "method": "Chi-square independence on a class-by-feature contingency table, correction=False. Expected cell counts are checked against 5.",
     "interpretation": "Presence differs by -31.49 percentage points (phishing minus legitimate). The feature is more common in legitimate hosts in this collection. Association does not identify its cause or validate a standalone security rule.",
-    "assumptions": "Eligible exact hosts are treated as independent; related subdomains and campaigns may remain dependent. Results describe a curated benchmark, and multiple exploratory questions raise false-discovery risk."
+    "assumptions": "Eligible exact hosts are treated as independent; related subdomains and campaigns may remain dependent. Results describe a curated benchmark, and multiple exploratory questions raise false-discovery risk.",
+    "comparison": [
+      {
+        "Question": 9,
+        "Feature": "Pay",
+        "Scope": "One URL per eligible hostname",
+        "Test": "Chi-square independence",
+        "Statistic": 27797.060768017112,
+        "PValue": 0.0,
+        "Estimate": -31.485110781138737,
+        "EstimateUnits": "presence percentage points: phishing minus legitimate",
+        "Decision": "Reject H0",
+        "DegreesOfFreedom": 1,
+        "alpha": 0.05,
+        "PValueDisplay": "4.215729e-6039",
+        "Log10PValue": -6038.375127338717,
+        "PValueCalculation": "Right chi-square tail, integrated after scaling the density to avoid float underflow",
+        "FloatUnderflow": true,
+        "Verdict": "p ≈ 4.215729e-6039 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for an association between the Pay keyword and recorded class, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.",
+        "Analysis": "Original notebook",
+        "N": 220023
+      },
+      {
+        "Question": 9,
+        "Feature": "Pay",
+        "Test": "Chi-square independence",
+        "EstimateUnits": "presence percentage points: phishing minus legitimate",
+        "Analysis": "Random sample",
+        "Scope": "Shared simple random sample of eligible hosts",
+        "alpha": 0.05,
+        "N": 10000,
+        "PhishingHosts": 3885,
+        "LegitimateHosts": 6115,
+        "MinimumExpectedCount": 973.9695,
+        "StandardizedEffect": 0.3507531308463932,
+        "StandardizedEffectName": "Cramer V",
+        "Observed": [
+          [
+            3652,
+            233
+          ],
+          [
+            3841,
+            2274
+          ]
+        ],
+        "Statistic": 1230.2775879854703,
+        "PValue": 1.6039926679910875e-269,
+        "DegreesOfFreedom": 1.0,
+        "Estimate": -31.189818483358955,
+        "PValueDisplay": "1.603993e-269",
+        "Log10PValue": -268.79479762125027,
+        "PValueCalculation": "SciPy probability from the original test",
+        "FloatUnderflow": false,
+        "Decision": "Reject H0",
+        "Verdict": "p ≈ 1.603993e-269 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for an association between the Pay keyword and recorded class, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.",
+        "AssumptionNote": "No expected-count failure detected where applicable.",
+        "PracticalInterpretation": "Observed effect = -31.1898 presence percentage points: phishing minus legitimate. Consider this magnitude and the overlapping observations before recommending any rule.",
+        "DecisionMatchesReference": true,
+        "EstimateDifference": 0.29529229777978117
+      }
+    ]
   },
   {
     "number": 10,
@@ -8413,9 +8980,9 @@
     "original_markdown": "### Q10. Is the Crypto keyword associated with the recorded class?\n\nCryptocurrency keywords represent a specialized financial target in modern web traffic.\n\n**H0:** Crypto keyword presence and recorded class are independent.\n\n**H1:** They are associated.\n\n- For this we use, Chi-square independence. Both variables are categorical.",
     "null": "**H0:** Crypto keyword presence and recorded class are independent.",
     "alternative": "**H1:** They are associated.",
-    "original_interpretation": "**What we understand from this graph**\n\n- Both bars are very small, with legitimate sites at 3.65% and phishing sites at only 0.61% (a 3.03 percentage point difference).\n\n- The test is statistically significant ($\\chi^2 \\approx 1,993$,  \\approx 0.000$), but the overall presence rate is extremely low across the entire collection.\n\n- We see that crypto-related keywords appear on fewer than 4% of sites in either category.\n\n- Thus we can conclude that while cryptocurrency terms provide targeted context for specific scam types, they are too rare to serve as a general phishing filter.",
+    "original_interpretation": "**What we understand from this graph**\n\nThe original analysis observes -3.03439 presence percentage points: phishing minus legitimate.\n\np ≈ 3.525738e-435 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for an association between the Crypto keyword and recorded class, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.\n\nThe later sample comparison gives p ≈ 5.238633e-25 and the decision **Reject H0**. Observed effect = -3.3212 presence percentage points: phishing minus legitimate. Consider this magnitude and the overlapping observations before recommending any rule.\n\nThe sample is nested in the benchmark. Agreement checks sensitivity within this collection; it does not establish independent replication, causality or guaranteed performance on new URLs.",
     "code": "observed = pd.crosstab(host_sample[\"label\"], host_sample[\"Crypto\"])\nobserved = observed.reindex(index=[0, 1], columns=[0, 1], fill_value=0)\n\nchi_square, p_value, degrees_of_freedom, expected = stats.chi2_contingency(\n    observed, correction=False\n)\n\n# Chi-square needs adequate expected counts, even when an observed cell is zero.\nif expected.min() < 5:\n    raise ValueError(\"Expected counts are too small for this chi-square comparison.\")\n\npresence_rates = observed[1] / observed.sum(axis=1)\nrate_difference = 100 * (presence_rates.loc[0] - presence_rates.loc[1])\n\ndisplay(observed.rename(index=class_names, columns={0: \"Absent\", 1: \"Present\"}))\nprint(f\"Smallest expected count: {expected.min():.2f}; degrees of freedom: {degrees_of_freedom}\")\nprint(f\"Presence rates: phishing {presence_rates.loc[0]:.2%}, legitimate {presence_rates.loc[1]:.2%}.\")\nprint(f\"Gap: {rate_difference:.2f} percentage points (phishing minus legitimate).\")\n\nrecord_result(10, \"Crypto\", \"Chi-square independence\", chi_square, p_value,\n              rate_difference, \"presence percentage points: phishing minus legitimate\")\n\nplt.bar(class_order, 100 * presence_rates.to_numpy(), color=class_colors)\nplt.title(\"Q10: Crypto keyword within each recorded class\")\nplt.xlabel(\"Recorded class\")\nplt.ylabel(\"Hosts with this feature (%)\")\nplt.ylim(0, 110)\nshow_plot(\"q10_crypto\")\n\nif p_value <= alpha:\n    more_common = \"phishing\" if rate_difference > 0 else \"legitimate\"\n    print(f\"The feature is associated with class and is more common in {more_common} hosts here.\")\nelse:\n    print(\"The data do not give enough evidence of an association in this comparison.\")\nprint(\"This association can guide review, but it does not show that the feature causes a site's class.\")",
-    "saved_output": "Smallest expected count: 2108.37; degrees of freedom: 1\nPresence rates: phishing 0.61%, legitimate 3.65%.\nGap: -3.03 percentage points (phishing minus legitimate).\nTest: Chi-square independence\nStatistic = 1992.6790, p-value = below numerical precision\nAt alpha = 0.05: Reject H0.\n\nThe feature is associated with class and is more common in legitimate hosts here.\nThis association can guide review, but it does not show that the feature causes a site's class.\n",
+    "saved_output": "Smallest expected count: 2108.37; degrees of freedom: 1\nPresence rates: phishing 0.61%, legitimate 3.65%.\nGap: -3.03 percentage points (phishing minus legitimate).\nTest: Chi-square independence\nStatistic = 1992.6790, p-value = 3.525738e-435\np ≈ 3.525738e-435 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for an association between the Crypto keyword and recorded class, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.\nThe ordinary float underflows to zero. The displayed approximation uses the same test distribution on a scaled log scale.\n\nThe feature is associated with class and is more common in legitimate hosts here.\nThis association can guide review, but it does not show that the feature causes a site's class.\n",
     "original_figures": [
       "original/analysis/cell_049_02.png"
     ],
@@ -8426,12 +8993,16 @@
       "Test": "Chi-square independence",
       "Statistic": 1992.6790310747297,
       "PValue": 0.0,
-      "PValueDisplay": "below numerical precision",
       "Estimate": -3.034389443569469,
       "EstimateUnits": "presence percentage points: phishing minus legitimate",
       "Decision": "Reject H0",
-      "alpha": 0.05,
       "DegreesOfFreedom": 1,
+      "alpha": 0.05,
+      "PValueDisplay": "3.525738e-435",
+      "Log10PValue": -434.45274998619607,
+      "PValueCalculation": "Right chi-square tail, integrated after scaling the density to avoid float underflow",
+      "FloatUnderflow": true,
+      "Verdict": "p ≈ 3.525738e-435 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for an association between the Crypto keyword and recorded class, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.",
       "MinimumExpectedCount": 2108.3730382732715
     },
     "figure": {
@@ -9323,7 +9894,68 @@
     ],
     "method": "Chi-square independence on a class-by-feature contingency table, correction=False. Expected cell counts are checked against 5.",
     "interpretation": "Presence differs by -3.03 percentage points (phishing minus legitimate). The feature is more common in legitimate hosts in this collection. Association does not identify its cause or validate a standalone security rule.",
-    "assumptions": "Eligible exact hosts are treated as independent; related subdomains and campaigns may remain dependent. Results describe a curated benchmark, and multiple exploratory questions raise false-discovery risk."
+    "assumptions": "Eligible exact hosts are treated as independent; related subdomains and campaigns may remain dependent. Results describe a curated benchmark, and multiple exploratory questions raise false-discovery risk.",
+    "comparison": [
+      {
+        "Question": 10,
+        "Feature": "Crypto",
+        "Scope": "One URL per eligible hostname",
+        "Test": "Chi-square independence",
+        "Statistic": 1992.6790310747297,
+        "PValue": 0.0,
+        "Estimate": -3.034389443569469,
+        "EstimateUnits": "presence percentage points: phishing minus legitimate",
+        "Decision": "Reject H0",
+        "DegreesOfFreedom": 1,
+        "alpha": 0.05,
+        "PValueDisplay": "3.525738e-435",
+        "Log10PValue": -434.45274998619607,
+        "PValueCalculation": "Right chi-square tail, integrated after scaling the density to avoid float underflow",
+        "FloatUnderflow": true,
+        "Verdict": "p ≈ 3.525738e-435 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for an association between the Crypto keyword and recorded class, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.",
+        "Analysis": "Original notebook",
+        "N": 220023
+      },
+      {
+        "Question": 10,
+        "Feature": "Crypto",
+        "Test": "Chi-square independence",
+        "EstimateUnits": "presence percentage points: phishing minus legitimate",
+        "Analysis": "Random sample",
+        "Scope": "Shared simple random sample of eligible hosts",
+        "alpha": 0.05,
+        "N": 10000,
+        "PhishingHosts": 3885,
+        "LegitimateHosts": 6115,
+        "MinimumExpectedCount": 97.902,
+        "StandardizedEffect": 0.10328475862234382,
+        "StandardizedEffectName": "Cramer V",
+        "Observed": [
+          [
+            3866,
+            19
+          ],
+          [
+            5882,
+            233
+          ]
+        ],
+        "Statistic": 106.67741363675827,
+        "PValue": 5.238632661250088e-25,
+        "DegreesOfFreedom": 1.0,
+        "Estimate": -3.3212420456901244,
+        "PValueDisplay": "5.238633e-25",
+        "Log10PValue": -24.280782053696598,
+        "PValueCalculation": "SciPy probability from the original test",
+        "FloatUnderflow": false,
+        "Decision": "Reject H0",
+        "Verdict": "p ≈ 5.238633e-25 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for an association between the Crypto keyword and recorded class, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.",
+        "AssumptionNote": "No expected-count failure detected where applicable.",
+        "PracticalInterpretation": "Observed effect = -3.3212 presence percentage points: phishing minus legitimate. Consider this magnitude and the overlapping observations before recommending any rule.",
+        "DecisionMatchesReference": true,
+        "EstimateDifference": -0.2868526021206552
+      }
+    ]
   },
   {
     "number": 11,
@@ -9333,9 +9965,9 @@
     "original_markdown": "### Q11. Does the recorded phishing fraction vary across common TLD groups?\n\nTop-Level Domains (.com, .org, country codes, modern TLDs) give domain context across web categories.\n\n**H0:** TLD group and recorded class are independent.\n\n**H1:** They are associated.\n\n- For this we use, Chi-square independence. Both variables are categorical.",
     "null": "**H0:** TLD group and recorded class are independent.",
     "alternative": "**H1:** They are associated.",
-    "original_interpretation": "**What we understand from this graph**\n\n- The bars show wide variations in phishing proportions across different top-level domains, with some modern TLDs carrying much higher phishing rates than established ones.\n\n- The test shows a massive statistical association ($\\chi^2 \\approx 30,468$,  \\approx 0.000$), rejecting independence between TLD group and site legitimacy.\n\n- We see that common domains like .com and .org carry different risk profiles compared to cheap or promotional domain extensions.\n\n- Thus we can conclude that TLD category is a useful contextual feature for machine learning models, but no single TLD can be blocked entirely without collateral damage.",
+    "original_interpretation": "**What we understand from this graph**\n\nThe original analysis observes Cramer V = 0.3721 across the fixed TLD groups.\n\np ≈ 1.969476e-6601 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for an association between the fixed TLD groups and recorded class, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.\n\nThe later sample comparison gives p ≈ 1.426156e-295 and the decision **Reject H0**. Association strength Cramer V = 0.3747; the chi-square statistic depends strongly on sample size. No individual TLD pair is tested.\n\nThe sample is nested in the benchmark. Agreement checks sensitivity within this collection; it does not establish independent replication, causality or guaranteed performance on new URLs.",
     "code": "common_tlds = host_sample[\"TLD\"].value_counts().head(10).index\nhost_sample[\"TLDGroup\"] = host_sample[\"TLD\"].where(host_sample[\"TLD\"].isin(common_tlds), \"Other\")\n\ntld_counts = pd.crosstab(host_sample[\"TLDGroup\"], host_sample[\"label\"])\ntld_counts = tld_counts.reindex(columns=[0, 1], fill_value=0)\nchi_square, p_value, degrees_of_freedom, expected = stats.chi2_contingency(tld_counts, correction=False)\n\n# Chi-square needs adequate expected counts, even when an observed cell is zero.\nif expected.min() < 5:\n    raise ValueError(\"The grouped TLD table needs larger expected counts.\")\n\ntld_summary = pd.DataFrame({\n    \"TLD\": tld_counts.index,\n    \"Hosts\": tld_counts.sum(axis=1).values,\n    \"Phishing\": tld_counts[0].values,\n})\ntld_summary[\"PhishingRate\"] = tld_summary[\"Phishing\"] / tld_summary[\"Hosts\"]\n\ndisplay(tld_summary)\nprint(f\"Smallest expected count: {expected.min():.2f}; degrees of freedom: {degrees_of_freedom}\")\n\nrecord_result(11, \"TLDGroup\", \"Chi-square independence\", chi_square, p_value,\n              chi_square, \"chi-square statistic; no single mean difference\")\n\nplt.bar(tld_summary[\"TLD\"], 100 * tld_summary[\"PhishingRate\"], color=\"#364C70\")\nplt.title(\"Q11: Recorded phishing fraction within each TLD group\")\nplt.xlabel(\"TLD group\")\nplt.ylabel(\"Phishing hosts in this group (%)\")\nplt.xticks(rotation=45)\nshow_plot(\"q11_tld_groups\")\n\nif p_value <= alpha:\n    print(\"The class distribution is associated with TLD group in this benchmark.\")\nelse:\n    print(\"This comparison does not establish an association between TLD group and class.\")\nprint(\"Use these groups for context. An unfamiliar TLD is not enough to label a new URL as phishing.\")",
-    "saved_output": "Smallest expected count: 870.39; degrees of freedom: 10\nTest: Chi-square independence\nStatistic = 30468.0676, p-value = below numerical precision\nAt alpha = 0.05: Reject H0.\n\nThe class distribution is associated with TLD group in this benchmark.\nUse these groups for context. An unfamiliar TLD is not enough to label a new URL as phishing.\n",
+    "saved_output": "Smallest expected count: 870.39; degrees of freedom: 10\nTest: Chi-square independence\nStatistic = 30468.0676, p-value = 1.969476e-6601\np ≈ 1.969476e-6601 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for an association between the fixed TLD groups and recorded class, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.\nThe ordinary float underflows to zero. The displayed approximation uses the same test distribution on a scaled log scale.\n\nThe class distribution is associated with TLD group in this benchmark.\nUse these groups for context. An unfamiliar TLD is not enough to label a new URL as phishing.\n",
     "original_figures": [
       "original/analysis/cell_052_02.png"
     ],
@@ -9346,12 +9978,16 @@
       "Test": "Chi-square independence",
       "Statistic": 30468.06757884282,
       "PValue": 0.0,
-      "PValueDisplay": "below numerical precision",
       "Estimate": 30468.06757884282,
       "EstimateUnits": "chi-square statistic; no single mean difference",
       "Decision": "Reject H0",
-      "alpha": 0.05,
       "DegreesOfFreedom": 10,
+      "alpha": 0.05,
+      "PValueDisplay": "1.969476e-6601",
+      "Log10PValue": -6600.705649416803,
+      "PValueCalculation": "Right chi-square tail, integrated after scaling the density to avoid float underflow",
+      "FloatUnderflow": true,
+      "Verdict": "p ≈ 1.969476e-6601 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for an association between the fixed TLD groups and recorded class, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.",
       "MinimumExpectedCount": 870.386591401808
     },
     "figure": {
@@ -10337,7 +10973,106 @@
     ],
     "method": "Chi-square independence for the ten most common TLDs by host count, with all remaining categories pooled as Other.",
     "interpretation": "Recorded class composition varies across these TLD groups. The omnibus test does not establish every pairwise difference, domain prices or universal risk for an unfamiliar TLD.",
-    "assumptions": "Eligible exact hosts are treated as independent; related subdomains and campaigns may remain dependent. Results describe a curated benchmark, and multiple exploratory questions raise false-discovery risk."
+    "assumptions": "Eligible exact hosts are treated as independent; related subdomains and campaigns may remain dependent. Results describe a curated benchmark, and multiple exploratory questions raise false-discovery risk.",
+    "comparison": [
+      {
+        "Question": 11,
+        "Feature": "TLDGroup",
+        "Scope": "One URL per eligible hostname",
+        "Test": "Chi-square independence",
+        "Statistic": 30468.06757884282,
+        "PValue": 0.0,
+        "Estimate": 30468.06757884282,
+        "EstimateUnits": "chi-square statistic; no single mean difference",
+        "Decision": "Reject H0",
+        "DegreesOfFreedom": 10,
+        "alpha": 0.05,
+        "PValueDisplay": "1.969476e-6601",
+        "Log10PValue": -6600.705649416803,
+        "PValueCalculation": "Right chi-square tail, integrated after scaling the density to avoid float underflow",
+        "FloatUnderflow": true,
+        "Verdict": "p ≈ 1.969476e-6601 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for an association between the fixed TLD groups and recorded class, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.",
+        "Analysis": "Original notebook",
+        "N": 220023,
+        "StandardizedEffect": 0.3721246285236017,
+        "StandardizedEffectName": "Cramer V"
+      },
+      {
+        "Question": 11,
+        "Feature": "TLDGroup",
+        "Test": "Chi-square independence",
+        "EstimateUnits": "chi-square statistic; no single mean difference",
+        "Analysis": "Random sample",
+        "Scope": "Shared simple random sample of eligible hosts",
+        "alpha": 0.05,
+        "N": 10000,
+        "PhishingHosts": 3885,
+        "LegitimateHosts": 6115,
+        "MinimumExpectedCount": 44.6775,
+        "StandardizedEffect": 0.3746867291551464,
+        "StandardizedEffectName": "Cramer V",
+        "Observed": [
+          [
+            1196,
+            1474
+          ],
+          [
+            300,
+            6
+          ],
+          [
+            11,
+            109
+          ],
+          [
+            197,
+            17
+          ],
+          [
+            1723,
+            3077
+          ],
+          [
+            30,
+            141
+          ],
+          [
+            88,
+            27
+          ],
+          [
+            129,
+            203
+          ],
+          [
+            98,
+            747
+          ],
+          [
+            102,
+            32
+          ],
+          [
+            11,
+            282
+          ]
+        ],
+        "Statistic": 1403.9014500498201,
+        "PValue": 1.4261563110239937e-295,
+        "DegreesOfFreedom": 10.0,
+        "Estimate": 1403.9014500498201,
+        "PValueDisplay": "1.426156e-295",
+        "Log10PValue": -294.8458328718931,
+        "PValueCalculation": "SciPy probability from the original test",
+        "FloatUnderflow": false,
+        "Decision": "Reject H0",
+        "Verdict": "p ≈ 1.426156e-295 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for an association between the fixed TLD groups and recorded class, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.",
+        "AssumptionNote": "No expected-count failure detected where applicable.",
+        "PracticalInterpretation": "Association strength Cramer V = 0.3747; the chi-square statistic depends strongly on sample size. No individual TLD pair is tested.",
+        "DecisionMatchesReference": true,
+        "EstimateDifference": -29064.166128793
+      }
+    ]
   },
   {
     "number": 12,
@@ -10347,9 +11082,9 @@
     "original_markdown": "### Q12. On the same phishing hosts, do the two title-match scores differ on average?\n\nURL-title and domain-title similarity scores both describe matching on a 0 to 100 scale on the exact same host.\n\n**H0:** The mean paired difference between URL-title and domain-title scores is zero.\n\n**H1:** The mean paired difference is not zero.\n\n- For this we use, Paired t-test. Both scores are measured on the same host.",
     "null": "**H0:** The mean paired difference between URL-title and domain-title scores is zero.",
     "alternative": "**H1:** The mean paired difference is not zero.",
-    "original_interpretation": "**What we understand from this graph**\n\n- The boxplot of paired differences on the same phishing hosts shows that URL-title scores average 21.64 points, while domain-title scores average 19.01 points.\n\n- The paired t-test shows a significant average difference of 2.63 score points ( = 48.24$,  \\approx 0.000$) between the two similarity measures.\n\n- We see that because the two scores are calculated on the exact same pages, pairing preserves their direct relationship without confounding from external site differences.\n\n- Thus we can conclude that URL-title and domain-title similarity metrics capture slightly different aspects of title matching and should not be treated as purely interchangeable.\n\n### The permutation samples for Q13 and Q14\n\nImage and script counts have long tails. We compare medians by repeatedly\nshuffling the labels, following L12 and L13. To keep execution easy to inspect,\nwe select 1,500 different hosts per class once, then use those same sampled\nhosts in both questions. Their p-values apply to these subsamples.\n\nThe null is that the feature distributions are the same and labels are\nexchangeable. We use the median gap to detect a difference in typical counts.\nThis assumption is stronger than merely saying that the population medians\nare equal. We use 1,999 shuffles and include the observed arrangement in the\nMonte Carlo p-value, so a simulation never reports an estimated probability of zero.",
+    "original_interpretation": "**What we understand from this graph**\n\nThe original analysis observes 2.62821 score points: URL-title minus domain-title.\n\np ≈ 5.044222e-501 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for a nonzero mean paired title-score difference on phishing hosts, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.\n\nThe later sample comparison gives p ≈ 1.626465e-21 and the decision **Reject H0**. Observed effect = 2.2956 score points: URL-title minus domain-title. Consider this magnitude and the overlapping observations before recommending any rule.\n\nThe sample is nested in the benchmark. Agreement checks sensitivity within this collection; it does not establish independent replication, causality or guaranteed performance on new URLs.\n\n### The permutation samples for Q13 and Q14\n\nImage and script counts have long tails. We compare medians by repeatedly\nshuffling the labels, following L12 and L13. To keep execution easy to inspect,\nwe select 1,500 different hosts per class once, then use those same sampled\nhosts in both questions. Their p-values apply to these subsamples.\n\nThe null is that the feature distributions are the same and labels are\nexchangeable. We use the median gap to detect a difference in typical counts.\nThis assumption is stronger than merely saying that the population medians\nare equal. We use 1,999 shuffles and include the observed arrangement in the\nMonte Carlo p-value, so a simulation never reports an estimated probability of zero.",
     "code": "phishing_hosts = host_sample.loc[host_sample[\"label\"] == 0]\nurl_scores = phishing_hosts[\"URLTitleMatchScore\"]\ndomain_scores = phishing_hosts[\"DomainTitleMatchScore\"]\nscore_differences = url_scores - domain_scores\n\ntest = stats.ttest_rel(url_scores, domain_scores)\n\nprint(f\"Paired hosts: {len(score_differences):,}\")\nprint(f\"Mean URL-title score: {url_scores.mean():.2f}\")\nprint(f\"Mean domain-title score: {domain_scores.mean():.2f}\")\nprint(f\"Average paired gap: {score_differences.mean():.2f} score points\")\n\nrecord_result(12, \"URL-title versus domain-title score\", \"Paired t-test\",\n              test.statistic, test.pvalue, score_differences.mean(),\n              \"score points: URL-title minus domain-title\", \"Two scores on each phishing host\")\n\nplt.hist(score_differences, bins=40, color=\"#364C70\")\nplt.axvline(0, color=\"black\", linestyle=\"--\", label=\"No difference\")\nplt.axvline(score_differences.mean(), color=\"#C44E52\", label=\"Mean paired difference\")\nplt.title(\"Q12: Two title-match scores on the same phishing hosts\")\nplt.xlabel(\"URL-title score minus domain-title score\")\nplt.ylabel(\"Hosts\")\nplt.legend()\nshow_plot(\"q12_paired_title_scores\")\n\nif test.pvalue <= alpha:\n    higher_score = \"URL-title\" if score_differences.mean() > 0 else \"domain-title\"\n    print(f\"There is a mean paired difference; {higher_score} scores are higher on average here.\")\nelse:\n    print(\"The paired test does not provide enough evidence of a mean score difference.\")\nprint(\"The scores come from the same pages. This result describes score construction, not a treatment effect.\")\n\nhosts_per_class = 1500\npermutation_phishing = host_sample.loc[host_sample[\"label\"] == 0].sample(\n    n=hosts_per_class, random_state=random_seed\n)\npermutation_legitimate = host_sample.loc[host_sample[\"label\"] == 1].sample(\n    n=hosts_per_class, random_state=random_seed + 1\n)\n\nprint(f\"Permutation comparisons use {hosts_per_class:,} different hosts per class.\")",
-    "saved_output": "Paired hosts: 85,227\nMean URL-title score: 21.64\nMean domain-title score: 19.01\nAverage paired gap: 2.63 score points\nTest: Paired t-test\nStatistic = 48.2387, p-value = below numerical precision\nAt alpha = 0.05: Reject H0.\n\nThere is a mean paired difference; URL-title scores are higher on average here.\nThe scores come from the same pages. This result describes score construction, not a treatment effect.\n\nPermutation comparisons use 1,500 different hosts per class.\n",
+    "saved_output": "Paired hosts: 85,227\nMean URL-title score: 21.64\nMean domain-title score: 19.01\nAverage paired gap: 2.63 score points\nTest: Paired t-test\nStatistic = 48.2387, p-value = 5.044222e-501\np ≈ 5.044222e-501 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for a nonzero mean paired title-score difference on phishing hosts, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.\nThe ordinary float underflows to zero. The displayed approximation uses the same test distribution on a scaled log scale.\n\nThere is a mean paired difference; URL-title scores are higher on average here.\nThe scores come from the same pages. This result describes score construction, not a treatment effect.\n\nPermutation comparisons use 1,500 different hosts per class.\n",
     "original_figures": [
       "original/analysis/cell_055_01.png"
     ],
@@ -10360,12 +11095,16 @@
       "Test": "Paired t-test",
       "Statistic": 48.238746960017544,
       "PValue": 0.0,
-      "PValueDisplay": "below numerical precision",
       "Estimate": 2.6282058489140416,
       "EstimateUnits": "score points: URL-title minus domain-title",
       "Decision": "Reject H0",
+      "DegreesOfFreedom": 85226.0,
       "alpha": 0.05,
-      "DegreesOfFreedom": 85226.0
+      "PValueDisplay": "5.044222e-501",
+      "Log10PValue": -500.29720579482904,
+      "PValueCalculation": "Two-sided t tail, integrated after scaling the density to avoid float underflow",
+      "FloatUnderflow": true,
+      "Verdict": "p ≈ 5.044222e-501 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for a nonzero mean paired title-score difference on phishing hosts, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters."
     },
     "figure": {
       "data": [
@@ -11536,7 +12275,58 @@
     ],
     "method": "Paired t-test on two 0–100 scores for each phishing host. Each host contributes one difference; these are not before/after treatment measurements.",
     "interpretation": "The URL-title score is higher by 2.63 points on average. This describes two supplied feature definitions, not the effect of an intervention. Their construction needs an independent provenance audit.",
-    "assumptions": "Eligible exact hosts are treated as independent; related subdomains and campaigns may remain dependent. Results describe a curated benchmark, and multiple exploratory questions raise false-discovery risk."
+    "assumptions": "Eligible exact hosts are treated as independent; related subdomains and campaigns may remain dependent. Results describe a curated benchmark, and multiple exploratory questions raise false-discovery risk.",
+    "comparison": [
+      {
+        "Question": 12,
+        "Feature": "URL-title versus domain-title score",
+        "Scope": "Two scores on each phishing host",
+        "Test": "Paired t-test",
+        "Statistic": 48.238746960017544,
+        "PValue": 0.0,
+        "Estimate": 2.6282058489140416,
+        "EstimateUnits": "score points: URL-title minus domain-title",
+        "Decision": "Reject H0",
+        "DegreesOfFreedom": 85226.0,
+        "alpha": 0.05,
+        "PValueDisplay": "5.044222e-501",
+        "Log10PValue": -500.29720579482904,
+        "PValueCalculation": "Two-sided t tail, integrated after scaling the density to avoid float underflow",
+        "FloatUnderflow": true,
+        "Verdict": "p ≈ 5.044222e-501 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for a nonzero mean paired title-score difference on phishing hosts, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.",
+        "Analysis": "Original notebook",
+        "N": 85227
+      },
+      {
+        "Question": 12,
+        "Feature": "URL-title versus domain-title score",
+        "Test": "Paired t-test",
+        "EstimateUnits": "score points: URL-title minus domain-title",
+        "Analysis": "Random sample",
+        "Scope": "Phishing hosts within the shared sample, preserving both scores per host",
+        "alpha": 0.05,
+        "N": 3885,
+        "PhishingHosts": 3885,
+        "LegitimateHosts": 0,
+        "MinimumExpectedCount": null,
+        "StandardizedEffect": 0.15374777059517897,
+        "StandardizedEffectName": "Mean paired gap / SD of paired gaps (descriptive dz)",
+        "Statistic": 9.583062897696514,
+        "PValue": 1.6264650438170671e-21,
+        "DegreesOfFreedom": 3884.0,
+        "Estimate": 2.2956305883027026,
+        "PValueDisplay": "1.626465e-21",
+        "Log10PValue": -20.78875526619122,
+        "PValueCalculation": "SciPy probability from the original test",
+        "FloatUnderflow": false,
+        "Decision": "Reject H0",
+        "Verdict": "p ≈ 1.626465e-21 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for a nonzero mean paired title-score difference on phishing hosts, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.",
+        "AssumptionNote": "No expected-count failure detected where applicable.",
+        "PracticalInterpretation": "Observed effect = 2.2956 score points: URL-title minus domain-title. Consider this magnitude and the overlapping observations before recommending any rule.",
+        "DecisionMatchesReference": true,
+        "EstimateDifference": -0.332575260611339
+      }
+    ]
   },
   {
     "number": 13,
@@ -11546,9 +12336,9 @@
     "original_markdown": "### Q13. Do image counts differ between the two recorded classes?\n\nImage count describes page richness and visual completeness without assuming normal distributions.\n\n**H0:** The image count distributions are identical under random label exchange.\n\n**H1:** They differ, measured by the absolute median gap.\n\n- For this we use, Permutation test. Group labels are randomly shuffled to build a null distribution.",
     "null": "**H0:** The image count distributions are identical under random label exchange.",
     "alternative": "**H1:** They differ, measured by the absolute median gap.",
-    "original_interpretation": "**What we understand from this graph**\n\n- The permutation test histogram shows that the actual observed median difference in image counts is -25.0 images (legitimate pages have a median of 25 images versus 0 for phishing).\n\n- Under 2,000 random shuffles of class labels, an observed gap of 25 images never occurred by chance ( = 0.0005$).\n\n- We see that legitimate websites invest heavily in visual assets and media, whereas phishing landing pages are notoriously minimal and media-poor.\n\n- Thus we can conclude that webpage image count is a powerful discriminator of site legitimacy, directly confirming why tree models assign it top feature importance.",
+    "original_interpretation": "**What we understand from this graph**\n\nThe original analysis observes -25 median count: phishing minus legitimate.\n\np ≈ 5.000000e-4 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for a distribution difference detected by the image-count median gap under exchangeable labels, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.\n\nThe later sample comparison gives p ≈ 5.000000e-4 and the decision **Reject H0**. Observed effect = -26.0000 median count: phishing minus legitimate. Consider this magnitude and the overlapping observations before recommending any rule.\n\nThe sample is nested in the benchmark. Agreement checks sensitivity within this collection; it does not establish independent replication, causality or guaranteed performance on new URLs.",
     "code": "phishing_counts = permutation_phishing[\"NoOfImage\"].to_numpy()\nlegitimate_counts = permutation_legitimate[\"NoOfImage\"].to_numpy()\n\nobserved_gap = np.median(phishing_counts) - np.median(legitimate_counts)\npooled_counts = np.concatenate([phishing_counts, legitimate_counts])\nrandom_numbers = np.random.default_rng(random_seed + 13)\nshuffled_gaps = np.empty(1999)\n\nfor repetition in range(len(shuffled_gaps)):\n    shuffled = random_numbers.permutation(pooled_counts)\n    first_group = shuffled[:hosts_per_class]\n    second_group = shuffled[hosts_per_class:]\n    shuffled_gaps[repetition] = np.median(first_group) - np.median(second_group)\n\nextreme_results = np.sum(np.abs(shuffled_gaps) >= abs(observed_gap))\np_value = (extreme_results + 1) / (len(shuffled_gaps) + 1)\n\nprint(f\"Sample medians: phishing {np.median(phishing_counts):.1f}, legitimate {np.median(legitimate_counts):.1f}.\")\nprint(f\"Observed median gap: {observed_gap:.1f}; smallest possible simulated p-value: {1 / 2000:.4f}.\")\n\nrecord_result(13, \"NoOfImage\", \"Permutation test\", observed_gap, p_value,\n              observed_gap, \"median count: phishing minus legitimate\",\n              \"1,500 randomly sampled hosts per recorded class\")\n\nplt.hist(shuffled_gaps, bins=35, color=\"#364C70\", alpha=0.8)\nplt.axvline(observed_gap, color=\"#C44E52\", label=\"Observed median gap\")\nplt.axvline(-observed_gap, color=\"#C44E52\", linestyle=\"--\", label=\"Equally extreme opposite gap\")\nplt.title(\"Q13: Permutation distribution for image count\")\nplt.xlabel(\"Median count difference after shuffling: phishing minus legitimate\")\nplt.ylabel(\"Shuffles\")\nplt.legend()\nshow_plot(\"q13_permutation_noofimage\")\n\nif p_value <= alpha:\n    print(\"The observed median gap is unusual under exchangeable class labels in this subsample.\")\nelse:\n    print(\"This median-based permutation test does not give enough evidence against exchangeability.\")\nprint(\"This describes the selected hosts. It does not establish that changing page content changes phishing status.\")",
-    "saved_output": "Sample medians: phishing 0.0, legitimate 25.0.\nObserved median gap: -25.0; smallest possible simulated p-value: 0.0005.\nTest: Permutation test\nStatistic = -25.0000, p-value = 0.0005\nAt alpha = 0.05: Reject H0.\n\nThe observed median gap is unusual under exchangeable class labels in this subsample.\nThis describes the selected hosts. It does not establish that changing page content changes phishing status.\n",
+    "saved_output": "Sample medians: phishing 0.0, legitimate 25.0.\nObserved median gap: -25.0; smallest possible simulated p-value: 0.0005.\nTest: Permutation test\nStatistic = -25.0000, p-value = 5.000000e-4\np ≈ 5.000000e-4 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for a distribution difference detected by the image-count median gap under exchangeable labels, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.\n\nThe observed median gap is unusual under exchangeable class labels in this subsample.\nThis describes the selected hosts. It does not establish that changing page content changes phishing status.\n",
     "original_figures": [
       "original/analysis/cell_060_01.png"
     ],
@@ -11559,12 +12349,16 @@
       "Test": "Permutation test",
       "Statistic": -25.0,
       "PValue": 0.0005,
-      "PValueDisplay": "0.0005",
       "Estimate": -25.0,
       "EstimateUnits": "median count: phishing minus legitimate",
       "Decision": "Reject H0",
+      "DegreesOfFreedom": null,
       "alpha": 0.05,
-      "DegreesOfFreedom": null
+      "PValueDisplay": "5.000000e-4",
+      "Log10PValue": -3.301029995663981,
+      "PValueCalculation": "SciPy probability from the original test",
+      "FloatUnderflow": false,
+      "Verdict": "p ≈ 5.000000e-4 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for a distribution difference detected by the image-count median gap under exchangeable labels, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters."
     },
     "figure": {
       "data": [
@@ -12714,10 +13508,65 @@
       "Host"
     ],
     "method": "Permutation test of the absolute median gap, using 1,500 hosts per class and 1,999 shuffles with the notebook's random seeds. p = (extreme + 1) / 2,000.",
-    "interpretation": "The observed median gap is -25.0; its Monte Carlo p-value is 0.0005. This is the simulation's resolution limit, not proof that chance is impossible. The result concerns the sampled hosts and says nothing about engineering effort or attacker intent.",
+    "interpretation": "The observed median gap is -25.0; its Monte Carlo p-value is 5.000000e-4. This is the simulation's resolution limit, not proof that chance is impossible. The result concerns the sampled hosts and says nothing about engineering effort or attacker intent.",
     "shuffles": 1999,
     "extreme_shuffles": 0,
-    "assumptions": "Eligible exact hosts are treated as independent; related subdomains and campaigns may remain dependent. Results describe a curated benchmark, and multiple exploratory questions raise false-discovery risk. Labels must be exchangeable under the distributional null; equal medians alone do not guarantee this."
+    "assumptions": "Eligible exact hosts are treated as independent; related subdomains and campaigns may remain dependent. Results describe a curated benchmark, and multiple exploratory questions raise false-discovery risk. Labels must be exchangeable under the distributional null; equal medians alone do not guarantee this.",
+    "comparison": [
+      {
+        "Question": 13,
+        "Feature": "NoOfImage",
+        "Scope": "1,500 randomly sampled hosts per recorded class",
+        "Test": "Permutation test",
+        "Statistic": -25.0,
+        "PValue": 0.0005,
+        "Estimate": -25.0,
+        "EstimateUnits": "median count: phishing minus legitimate",
+        "Decision": "Reject H0",
+        "DegreesOfFreedom": null,
+        "alpha": 0.05,
+        "PValueDisplay": "5.000000e-4",
+        "Log10PValue": -3.301029995663981,
+        "PValueCalculation": "SciPy probability from the original test",
+        "FloatUnderflow": false,
+        "Verdict": "p ≈ 5.000000e-4 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for a distribution difference detected by the image-count median gap under exchangeable labels, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.",
+        "Analysis": "Original notebook",
+        "N": 3000
+      },
+      {
+        "Question": 13,
+        "Feature": "NoOfImage",
+        "Test": "Permutation test",
+        "EstimateUnits": "median count: phishing minus legitimate",
+        "Analysis": "Random sample",
+        "Scope": "Shared simple random sample of eligible hosts",
+        "alpha": 0.05,
+        "N": 10000,
+        "PhishingHosts": 3885,
+        "LegitimateHosts": 6115,
+        "MinimumExpectedCount": null,
+        "StandardizedEffect": null,
+        "StandardizedEffectName": null,
+        "Shuffles": 1999,
+        "ExtremeShuffles": 0,
+        "PhishingMedian": 0.0,
+        "LegitimateMedian": 26.0,
+        "Statistic": -26.0,
+        "PValue": 0.0005,
+        "DegreesOfFreedom": null,
+        "Estimate": -26.0,
+        "PValueDisplay": "5.000000e-4",
+        "Log10PValue": -3.301029995663981,
+        "PValueCalculation": "SciPy probability from the original test",
+        "FloatUnderflow": false,
+        "Decision": "Reject H0",
+        "Verdict": "p ≈ 5.000000e-4 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for a distribution difference detected by the image-count median gap under exchangeable labels, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.",
+        "AssumptionNote": "No expected-count failure detected where applicable.",
+        "PracticalInterpretation": "Observed effect = -26.0000 median count: phishing minus legitimate. Consider this magnitude and the overlapping observations before recommending any rule.",
+        "DecisionMatchesReference": true,
+        "EstimateDifference": -1.0
+      }
+    ]
   },
   {
     "number": 14,
@@ -12727,9 +13576,9 @@
     "original_markdown": "### Q14. Do JavaScript counts differ between the two recorded classes?\n\nJavaScript script tags indicate interactive page complexity without requiring normality assumptions.\n\n**H0:** The JavaScript count distributions are identical under random label exchange.\n\n**H1:** They differ, measured by the absolute median gap.\n\n- For this we use, Permutation test. Group labels are randomly shuffled to build a null distribution.",
     "null": "**H0:** The JavaScript count distributions are identical under random label exchange.",
     "alternative": "**H1:** They differ, measured by the absolute median gap.",
-    "original_interpretation": "**What we understand from this graph**\n\n- The permutation test distribution shows an observed median gap of -13.5 JavaScript tags (legitimate sites have a median of 13.5 scripts versus 0 for phishing).\n\n- The simulated permutation p-value is at the minimum possible value ( = 0.0005$), proving this script count difference did not happen by random chance.\n\n- We see that authentic web applications run dozens of client-side scripts for analytics and functionality, while phishing pages contain almost no external scripts.\n\n- Thus we can conclude that script tag count is an excellent non-parametric indicator of a site real-world infrastructure and engineering effort.",
+    "original_interpretation": "**What we understand from this graph**\n\nThe original analysis observes -13.5 median count: phishing minus legitimate.\n\np ≈ 5.000000e-4 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for a distribution difference detected by the JavaScript-count median gap under exchangeable labels, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.\n\nThe later sample comparison gives p ≈ 5.000000e-4 and the decision **Reject H0**. Observed effect = -14.0000 median count: phishing minus legitimate. Consider this magnitude and the overlapping observations before recommending any rule.\n\nThe sample is nested in the benchmark. Agreement checks sensitivity within this collection; it does not establish independent replication, causality or guaranteed performance on new URLs.",
     "code": "phishing_counts = permutation_phishing[\"NoOfJS\"].to_numpy()\nlegitimate_counts = permutation_legitimate[\"NoOfJS\"].to_numpy()\n\nobserved_gap = np.median(phishing_counts) - np.median(legitimate_counts)\npooled_counts = np.concatenate([phishing_counts, legitimate_counts])\nrandom_numbers = np.random.default_rng(random_seed + 14)\nshuffled_gaps = np.empty(1999)\n\nfor repetition in range(len(shuffled_gaps)):\n    shuffled = random_numbers.permutation(pooled_counts)\n    first_group = shuffled[:hosts_per_class]\n    second_group = shuffled[hosts_per_class:]\n    shuffled_gaps[repetition] = np.median(first_group) - np.median(second_group)\n\nextreme_results = np.sum(np.abs(shuffled_gaps) >= abs(observed_gap))\np_value = (extreme_results + 1) / (len(shuffled_gaps) + 1)\n\nprint(f\"Sample medians: phishing {np.median(phishing_counts):.1f}, legitimate {np.median(legitimate_counts):.1f}.\")\nprint(f\"Observed median gap: {observed_gap:.1f}; smallest possible simulated p-value: {1 / 2000:.4f}.\")\n\nrecord_result(14, \"NoOfJS\", \"Permutation test\", observed_gap, p_value,\n              observed_gap, \"median count: phishing minus legitimate\",\n              \"1,500 randomly sampled hosts per recorded class\")\n\nplt.hist(shuffled_gaps, bins=35, color=\"#364C70\", alpha=0.8)\nplt.axvline(observed_gap, color=\"#C44E52\", label=\"Observed median gap\")\nplt.axvline(-observed_gap, color=\"#C44E52\", linestyle=\"--\", label=\"Equally extreme opposite gap\")\nplt.title(\"Q14: Permutation distribution for javascript count\")\nplt.xlabel(\"Median count difference after shuffling: phishing minus legitimate\")\nplt.ylabel(\"Shuffles\")\nplt.legend()\nshow_plot(\"q14_permutation_noofjs\")\n\nif p_value <= alpha:\n    print(\"The observed median gap is unusual under exchangeable class labels in this subsample.\")\nelse:\n    print(\"This median-based permutation test does not give enough evidence against exchangeability.\")\nprint(\"This describes the selected hosts. It does not establish that changing page content changes phishing status.\")",
-    "saved_output": "Sample medians: phishing 0.0, legitimate 13.5.\nObserved median gap: -13.5; smallest possible simulated p-value: 0.0005.\nTest: Permutation test\nStatistic = -13.5000, p-value = 0.0005\nAt alpha = 0.05: Reject H0.\n\nThe observed median gap is unusual under exchangeable class labels in this subsample.\nThis describes the selected hosts. It does not establish that changing page content changes phishing status.\n",
+    "saved_output": "Sample medians: phishing 0.0, legitimate 13.5.\nObserved median gap: -13.5; smallest possible simulated p-value: 0.0005.\nTest: Permutation test\nStatistic = -13.5000, p-value = 5.000000e-4\np ≈ 5.000000e-4 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for a distribution difference detected by the JavaScript-count median gap under exchangeable labels, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.\n\nThe observed median gap is unusual under exchangeable class labels in this subsample.\nThis describes the selected hosts. It does not establish that changing page content changes phishing status.\n",
     "original_figures": [
       "original/analysis/cell_063_01.png"
     ],
@@ -12740,12 +13589,16 @@
       "Test": "Permutation test",
       "Statistic": -13.5,
       "PValue": 0.0005,
-      "PValueDisplay": "0.0005",
       "Estimate": -13.5,
       "EstimateUnits": "median count: phishing minus legitimate",
       "Decision": "Reject H0",
+      "DegreesOfFreedom": null,
       "alpha": 0.05,
-      "DegreesOfFreedom": null
+      "PValueDisplay": "5.000000e-4",
+      "Log10PValue": -3.301029995663981,
+      "PValueCalculation": "SciPy probability from the original test",
+      "FloatUnderflow": false,
+      "Verdict": "p ≈ 5.000000e-4 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for a distribution difference detected by the JavaScript-count median gap under exchangeable labels, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters."
     },
     "figure": {
       "data": [
@@ -13895,10 +14748,65 @@
       "Host"
     ],
     "method": "Permutation test of the absolute median gap, using 1,500 hosts per class and 1,999 shuffles with the notebook's random seeds. p = (extreme + 1) / 2,000.",
-    "interpretation": "The observed median gap is -13.5; its Monte Carlo p-value is 0.0005. This is the simulation's resolution limit, not proof that chance is impossible. The result concerns the sampled hosts and says nothing about engineering effort or attacker intent.",
+    "interpretation": "The observed median gap is -13.5; its Monte Carlo p-value is 5.000000e-4. This is the simulation's resolution limit, not proof that chance is impossible. The result concerns the sampled hosts and says nothing about engineering effort or attacker intent.",
     "shuffles": 1999,
     "extreme_shuffles": 0,
-    "assumptions": "Eligible exact hosts are treated as independent; related subdomains and campaigns may remain dependent. Results describe a curated benchmark, and multiple exploratory questions raise false-discovery risk. Labels must be exchangeable under the distributional null; equal medians alone do not guarantee this."
+    "assumptions": "Eligible exact hosts are treated as independent; related subdomains and campaigns may remain dependent. Results describe a curated benchmark, and multiple exploratory questions raise false-discovery risk. Labels must be exchangeable under the distributional null; equal medians alone do not guarantee this.",
+    "comparison": [
+      {
+        "Question": 14,
+        "Feature": "NoOfJS",
+        "Scope": "1,500 randomly sampled hosts per recorded class",
+        "Test": "Permutation test",
+        "Statistic": -13.5,
+        "PValue": 0.0005,
+        "Estimate": -13.5,
+        "EstimateUnits": "median count: phishing minus legitimate",
+        "Decision": "Reject H0",
+        "DegreesOfFreedom": null,
+        "alpha": 0.05,
+        "PValueDisplay": "5.000000e-4",
+        "Log10PValue": -3.301029995663981,
+        "PValueCalculation": "SciPy probability from the original test",
+        "FloatUnderflow": false,
+        "Verdict": "p ≈ 5.000000e-4 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for a distribution difference detected by the JavaScript-count median gap under exchangeable labels, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.",
+        "Analysis": "Original notebook",
+        "N": 3000
+      },
+      {
+        "Question": 14,
+        "Feature": "NoOfJS",
+        "Test": "Permutation test",
+        "EstimateUnits": "median count: phishing minus legitimate",
+        "Analysis": "Random sample",
+        "Scope": "Shared simple random sample of eligible hosts",
+        "alpha": 0.05,
+        "N": 10000,
+        "PhishingHosts": 3885,
+        "LegitimateHosts": 6115,
+        "MinimumExpectedCount": null,
+        "StandardizedEffect": null,
+        "StandardizedEffectName": null,
+        "Shuffles": 1999,
+        "ExtremeShuffles": 0,
+        "PhishingMedian": 0.0,
+        "LegitimateMedian": 14.0,
+        "Statistic": -14.0,
+        "PValue": 0.0005,
+        "DegreesOfFreedom": null,
+        "Estimate": -14.0,
+        "PValueDisplay": "5.000000e-4",
+        "Log10PValue": -3.301029995663981,
+        "PValueCalculation": "SciPy probability from the original test",
+        "FloatUnderflow": false,
+        "Decision": "Reject H0",
+        "Verdict": "p ≈ 5.000000e-4 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for a distribution difference detected by the JavaScript-count median gap under exchangeable labels, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.",
+        "AssumptionNote": "No expected-count failure detected where applicable.",
+        "PracticalInterpretation": "Observed effect = -14.0000 median count: phishing minus legitimate. Consider this magnitude and the overlapping observations before recommending any rule.",
+        "DecisionMatchesReference": true,
+        "EstimateDifference": -0.5
+      }
+    ]
   },
   {
     "number": 15,
@@ -13908,9 +14816,9 @@
     "original_markdown": "### Q15. Do two review rules differ in average correctness on the same hosts?\n\nWe compare a simple rule (Rule A: flag when HTTPS is absent) against a composite rule (Rule B: flag when both HTTPS and social links are absent).\n\n**H0:** The mean paired correctness difference between Rule B and Rule A is zero.\n\n**H1:** The mean paired correctness difference is not zero.\n\n- For this we use, Paired t-test. Both rules are evaluated on the exact same hosts.",
     "null": "**H0:** The mean paired correctness difference between Rule B and Rule A is zero.",
     "alternative": "**H1:** The mean paired correctness difference is not zero.",
-    "original_interpretation": "We also compare missed phishing cases and false alerts before choosing a rule.\n\n**What we understand from this graph**\n\n- The paired t-test compares Rule A (flag if no HTTPS) against Rule B (flag only if both HTTPS and social links are missing) on the exact same websites.\n\n- The test is highly significant ( = -12.61$,  = 1.82 \\times 10^{-36}$), proving that adding a second feature creates a measurable change in decision accuracy.\n\n- We see that Rule B significantly reduces false alarms on legitimate HTTP pages, but also misses some phishing sites that include fake links.\n\n- Thus we can conclude that multi-feature security rules create tangible performance trade-offs, demonstrating why balanced evaluation matters more than single-feature heuristics.",
+    "original_interpretation": "We also compare missed phishing cases and false alerts before choosing a rule.\n\n**What we understand from this graph**\n\nThe original analysis observes -0.0722652 accuracy percentage points: B minus A.\n\np ≈ 1.818941e-36 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for a nonzero mean correctness difference between Rule B and Rule A, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.\n\nThe later sample comparison gives p ≈ 2.695808e-3 and the decision **Reject H0**. B changes accuracy by -0.0900 percentage points, misses 9 additional phishing hosts and avoids 0 false alerts in these selected hosts.\n\nThe sample is nested in the benchmark. Agreement checks sensitivity within this collection; it does not establish independent replication, causality or guaranteed performance on new URLs.",
     "code": "actual_phishing = host_sample[\"IsPhishing\"].to_numpy()\nrule_a_flags = host_sample[\"IsHTTPS\"].eq(0).to_numpy()\nrule_b_flags = (host_sample[\"IsHTTPS\"].eq(0) & host_sample[\"HasSocialNet\"].eq(0)).to_numpy()\n\nrule_a_correct = (rule_a_flags == actual_phishing).astype(int)\nrule_b_correct = (rule_b_flags == actual_phishing).astype(int)\ncorrectness_change = rule_b_correct - rule_a_correct\n\ntest = stats.ttest_rel(rule_b_correct, rule_a_correct)\naccuracy_change = 100 * correctness_change.mean()\n\nrecord_result(15, \"Rule B versus Rule A\", \"Paired t-test\", test.statistic, test.pvalue,\n              accuracy_change, \"accuracy percentage points: B minus A\",\n              \"Both rules applied to the same eligible hosts\")\n\nrule_rows = []\nfor rule_name, flags in [(\"A: No HTTPS\", rule_a_flags), (\"B: No HTTPS and no social links\", rule_b_flags)]:\n    caught_phishing = int((flags & (actual_phishing == 1)).sum())\n    flagged_legitimate = int((flags & (actual_phishing == 0)).sum())\n    phishing_total = int((actual_phishing == 1).sum())\n    legitimate_total = int((actual_phishing == 0).sum())\n\n    rule_rows.append({\n        \"Rule\": rule_name,\n        \"CaughtPhishing\": caught_phishing,\n        \"FlaggedLegitimate\": flagged_legitimate,\n        \"MissedPhishing\": phishing_total - caught_phishing,\n        \"Recall\": caught_phishing / phishing_total,\n        \"FalsePositiveRate\": flagged_legitimate / legitimate_total,\n        \"Accuracy\": (caught_phishing + legitimate_total - flagged_legitimate) / len(host_sample),\n    })\n\nrule_summary = pd.DataFrame(rule_rows)\ndisplay(rule_summary.round(4))\n\nonly_a_correct = int(((rule_a_correct == 1) & (rule_b_correct == 0)).sum())\nonly_b_correct = int(((rule_b_correct == 1) & (rule_a_correct == 0)).sum())\n\nfigure, axes = plt.subplots(1, 2, figsize=(13, 4.5))\nrule_summary.set_index(\"Rule\")[[\"Recall\", \"FalsePositiveRate\"]].mul(100).plot(\n    kind=\"bar\", ax=axes[0], color=[\"#16877C\", \"#C44E52\"], rot=0\n)\naxes[0].set_xticklabels([\"Rule A\", \"Rule B\"])\naxes[0].set_title(\"Q15: Detection coverage and false alerts\")\naxes[0].set_xlabel(\"Offline rule\")\naxes[0].set_ylabel(\"Hosts within each true class (%)\")\naxes[0].set_ylim(0, 100)\naxes[0].legend([\"Recall\", \"False-positive rate\"])\n\naxes[1].bar([\"Only A correct\", \"Only B correct\"], [only_a_correct, only_b_correct], color=class_colors)\naxes[1].set_title(\"Q15: Hosts where correctness differs\")\naxes[1].set_xlabel(\"Paired outcome\")\naxes[1].set_ylabel(\"Hosts\")\nshow_plot(\"q15_paired_rules\")\n\nextra_missed = int(rule_summary.iloc[1][\"MissedPhishing\"] - rule_summary.iloc[0][\"MissedPhishing\"])\navoided_alerts = int(rule_summary.iloc[0][\"FlaggedLegitimate\"] - rule_summary.iloc[1][\"FlaggedLegitimate\"])\nprint(f\"Accuracy change, B minus A: {accuracy_change:.3f} percentage points.\")\nprint(f\"Rule B misses {extra_missed:,} additional phishing hosts and avoids {avoided_alerts:,} false alerts here.\")\n\nif test.pvalue <= alpha:\n    print(\n        \"The paired test finds a difference in average correctness. \"\n        \"Check its size and error trade-off before choosing a rule.\"\n    )\nelse:\n    print(\"The paired test does not establish an average correctness difference.\")\nprint(\"Zero observed false alerts cannot guarantee zero risk on future websites.\")",
-    "saved_output": "Test: Paired t-test\nStatistic = -12.6141, p-value = 1.82e-36\nAt alpha = 0.05: Reject H0.\n\nAccuracy change, B minus A: -0.072 percentage points.\nRule B misses 159 additional phishing hosts and avoids 0 false alerts here.\nThe paired test finds a difference in average correctness. Check its size and error trade-off before choosing a rule.\nZero observed false alerts cannot guarantee zero risk on future websites.\n",
+    "saved_output": "Test: Paired t-test\nStatistic = -12.6141, p-value = 1.818941e-36\np ≈ 1.818941e-36 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for a nonzero mean correctness difference between Rule B and Rule A, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.\n\nAccuracy change, B minus A: -0.072 percentage points.\nRule B misses 159 additional phishing hosts and avoids 0 false alerts here.\nThe paired test finds a difference in average correctness. Check its size and error trade-off before choosing a rule.\nZero observed false alerts cannot guarantee zero risk on future websites.\n",
     "original_figures": [
       "original/analysis/cell_068_01.png"
     ],
@@ -13921,12 +14829,16 @@
       "Test": "Paired t-test",
       "Statistic": -12.614050164142352,
       "PValue": 1.8189407243195056e-36,
-      "PValueDisplay": "1.82e-36",
       "Estimate": -0.07226517227744372,
       "EstimateUnits": "accuracy percentage points: B minus A",
       "Decision": "Reject H0",
+      "DegreesOfFreedom": 220022.0,
       "alpha": 0.05,
-      "DegreesOfFreedom": 220022.0
+      "PValueDisplay": "1.818941e-36",
+      "Log10PValue": -35.74018145350408,
+      "PValueCalculation": "SciPy probability from the original test",
+      "FloatUnderflow": false,
+      "Verdict": "p ≈ 1.818941e-36 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for a nonzero mean correctness difference between Rule B and Rule A, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters."
     },
     "figure": {
       "data": [
@@ -14792,6 +15704,61 @@
     ],
     "method": "Paired t-test on 0/1 correctness for the same hosts. This uses a large-sample t approximation for discrete differences; it is not a randomized user A/B experiment.",
     "interpretation": "B changes accuracy by -0.072 percentage points. It misses 159 additional phishing hosts and avoids 0 false alerts in this dataset. These observed errors do not certify safety for future data.",
-    "assumptions": "Eligible exact hosts are treated as independent; related subdomains and campaigns may remain dependent. Results describe a curated benchmark, and multiple exploratory questions raise false-discovery risk."
+    "assumptions": "Eligible exact hosts are treated as independent; related subdomains and campaigns may remain dependent. Results describe a curated benchmark, and multiple exploratory questions raise false-discovery risk.",
+    "comparison": [
+      {
+        "Question": 15,
+        "Feature": "Rule B versus Rule A",
+        "Scope": "Both rules applied to the same eligible hosts",
+        "Test": "Paired t-test",
+        "Statistic": -12.614050164142352,
+        "PValue": 1.8189407243195056e-36,
+        "Estimate": -0.07226517227744372,
+        "EstimateUnits": "accuracy percentage points: B minus A",
+        "Decision": "Reject H0",
+        "DegreesOfFreedom": 220022.0,
+        "alpha": 0.05,
+        "PValueDisplay": "1.818941e-36",
+        "Log10PValue": -35.74018145350408,
+        "PValueCalculation": "SciPy probability from the original test",
+        "FloatUnderflow": false,
+        "Verdict": "p ≈ 1.818941e-36 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for a nonzero mean correctness difference between Rule B and Rule A, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.",
+        "Analysis": "Original notebook",
+        "N": 220023
+      },
+      {
+        "Question": 15,
+        "Feature": "Rule B versus Rule A",
+        "Test": "Paired t-test",
+        "EstimateUnits": "accuracy percentage points: B minus A",
+        "Analysis": "Random sample",
+        "Scope": "Shared simple random sample of eligible hosts",
+        "alpha": 0.05,
+        "N": 10000,
+        "PhishingHosts": 3885,
+        "LegitimateHosts": 6115,
+        "MinimumExpectedCount": null,
+        "StandardizedEffect": -0.030012008406365035,
+        "StandardizedEffectName": "Mean paired gap / SD of paired gaps (descriptive dz)",
+        "OnlyACorrect": 9,
+        "OnlyBCorrect": 0,
+        "ExtraMissedPhishing": 9,
+        "AvoidedFalseAlerts": 0,
+        "Statistic": -3.0012008406365034,
+        "PValue": 0.0026958076330349215,
+        "DegreesOfFreedom": 9999.0,
+        "Estimate": -0.09,
+        "PValueDisplay": "2.695808e-3",
+        "Log10PValue": -2.5693111013400256,
+        "PValueCalculation": "SciPy probability from the original test",
+        "FloatUnderflow": false,
+        "Decision": "Reject H0",
+        "Verdict": "p ≈ 2.695808e-3 ≤ α = 0.05. Reject H0: this analysis provides sufficient evidence for a nonzero mean correctness difference between Rule B and Rule A, subject to the test assumptions. If H0 and the assumptions held, a test statistic at least this extreme would be unusual. The p-value is not the probability that H0 is true. Check the effect size before deciding whether the finding matters.",
+        "AssumptionNote": "No expected-count failure detected where applicable.",
+        "PracticalInterpretation": "B changes accuracy by -0.0900 percentage points, misses 9 additional phishing hosts and avoids 0 false alerts in these selected hosts.",
+        "DecisionMatchesReference": true,
+        "EstimateDifference": -0.017734827722556273
+      }
+    ]
   }
 ]

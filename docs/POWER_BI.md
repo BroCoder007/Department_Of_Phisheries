@@ -64,6 +64,13 @@ source. Configure an appropriate gateway or hosted API and its credentials.
 Embedding and Power BI Desktop rendering require your external configuration;
 they are not claimed as locally verified features.
 
+The sampling revision adds two tested exports: `/data/sampling_comparison.csv`
+and `/data/sampling_membership.csv`, with design/results at `/api/sampling`.
+Import the comparison as an additional Web/CSV query when extending the external
+report. Keep PValueDisplay as text to preserve exponents below float precision;
+use Log10PValue as the numeric plotting field. These additions do not claim a
+new rendered Power BI page or externally published report.
+
 Official format/integration references:
 
 - [Power BI Desktop projects](https://learn.microsoft.com/en-us/power-bi/developer/projects/projects-overview)

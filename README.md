@@ -2,7 +2,9 @@
 
 A Streamlit application built around the three supplied PhiUSIIL notebooks.
 The statistical case study leads the presentation; machine learning supports it.
-Original notebooks are preserved byte for byte.
+The analysis notebook includes the requested 10,000-host sampling comparison.
+Its previous version is retained in artifacts/reference_before_sampling. Original
+questions and reference calculations are preserved; companion notebooks are unchanged.
 
 ## Quick start
 
@@ -39,6 +41,28 @@ python -m case_study.prepare
 Preparation reproduces the notebook computations and checks them against their
 saved outputs. It refuses to substitute different evaluation scores when a
 comparison fails. It never edits the original notebooks.
+
+## Sampling comparison added on 20 October 2026
+
+Section 9 of Department_Of_Phisheries.ipynb repeats all 15 questions on one
+10,000-host simple random sample, without replacement, seed 42. It retains the
+original question-specific results beside the new results. The sample has 3,885
+phishing and 6,115 legitimate hosts: 4.544979% of the 220,023-host eligible frame.
+Q12 uses its phishing subset; Q13–Q14 retain their original 3,000-host reference.
+
+The notebook contains 15 executed comparison figures. Dashboards 3 and 4 show
+both scopes, effect sizes, scientific p-values and explained verdicts. Dashboards
+1 and 4 explain the sample and cite the syllabus slides. All 15 sample decisions
+agree with the reference at alpha = 0.05. This is a sensitivity check within the
+benchmark, not independent replication or proof of internet-wide validity.
+
+See [sampling design and limitations](docs/SAMPLING_COMPARISON.md).
+To execute notebook outputs before rebuilding app artifacts:
+
+```powershell
+python scripts/execute_analysis_notebook.py
+python -m case_study.prepare
+```
 
 ## Exactly six dashboards
 
@@ -111,6 +135,8 @@ case_study/
   config.py                 Project paths and model identities
   sources.py                Read-only notebook parsing and correction notes
   prepare.py                Exact source execution, verification and artifacts
+  sampling.py               One shared random sample and all fifteen repeated tests
+  statistics.py             Tiny p-value display and explained hypothesis verdicts
   charts.py                 Interactive versions of notebook plot recipes
   service.py                Results, pagination, schema validation and inference
   team.py                   Four SQLite team profiles and image validation
@@ -146,12 +172,13 @@ because it supplies the genuine external Power BI/API connection.
 python backend/server.py
 ```
 
-API: **http://127.0.0.1:8765/health**. The service exposes 14 verified CSV tables,
+API: **http://127.0.0.1:8765/health**. The service exposes 16 verified CSV tables,
 question/EDA/model JSON, feature schemas, Random Fill and actual prediction.
 
 ```text
 GET  /api/summary
 GET  /api/evidence
+GET  /api/sampling
 GET  /api/questions
 GET  /api/questions/1
 GET  /api/eda
@@ -161,6 +188,8 @@ GET  /api/random-fill?model=logistic_regression
 POST /api/predict
 GET  /data/statistical_evidence.csv
 GET  /data/model_summary.csv
+GET  /data/sampling_comparison.csv
+GET  /data/sampling_membership.csv
 ```
 
 Prediction JSON has exactly `model_id` and `features`, where features contains

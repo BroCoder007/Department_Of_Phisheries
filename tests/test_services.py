@@ -56,7 +56,7 @@ class VerifiedNotebookTests(unittest.TestCase):
         actual = self.service.raw.label.value_counts()
         self.assertEqual(actual[0], self.service.study["raw_class_counts"]["Phishing"])
         self.assertEqual(actual[1], self.service.study["raw_class_counts"]["Legitimate"])
-        frame = pd.read_csv(ARTIFACTS / "bi/statistical_evidence.csv")
+        frame = pd.read_csv(ARTIFACTS / "bi/statistical_evidence.csv", dtype={"PValueDisplay": str})
         for q in self.service.questions:
             row = frame.loc[frame.Question == q["number"]].iloc[0]
             self.assertAlmostEqual(row.Statistic, q["test"]["Statistic"], places=9)
@@ -163,9 +163,11 @@ class BackendIntegrationTests(unittest.TestCase):
     def test_bi_exports_and_notebook_endpoints(self):
         self.assertEqual(self.get("/health")["status"], "ready")
         self.assertEqual(len(self.get("/api/evidence")), 15)
+        self.assertIsInstance(self.get("/api/evidence")[0]["PValueDisplay"], str)
         self.assertEqual(len(self.get("/api/questions")), 15)
         self.assertEqual(len(self.get("/api/eda")), 12)
         self.assertEqual(len(self.get("/api/models")["models"]), 4)
+        self.assertEqual(len(self.get("/api/sampling")["rows"]), 30)
         for endpoint, path in self.api.csv_paths.items():
             with urlopen(self.base + endpoint, timeout=20) as response:
                 self.assertEqual(response.read(), path.read_bytes())

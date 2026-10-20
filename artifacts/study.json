@@ -643,14 +643,14 @@
     {
       "id": "sample_grains",
       "source": "Department_Of_Phisheries.ipynb, conclusion cell 78",
-      "issue": "The conclusion calls 220,023 the retained unique-URL count and describes all 15 tests as full-host comparisons.",
-      "correction": "235,370 unique URLs are retained; 220,023 consistently labeled exact hosts form the main test sample. Q13–Q14 use 1,500 hosts per class. Exact hostname grouping does not guarantee independent campaigns."
+      "issue": "The earlier conclusion confused URL counts with host counts and described every test as a full-host comparison.",
+      "correction": "The revised notebook distinguishes 235,370 eligible URLs, the 220,023-host frame, the original Q13–Q14 subsamples, and the new shared 10,000-host sample. Exact hostname grouping does not guarantee independent campaigns."
     },
     {
       "id": "rule_tradeoff",
       "source": "Department_Of_Phisheries.ipynb, cells 69 and 78",
-      "issue": "The narrative says Rule B reduces false alarms.",
-      "correction": "Both rules produce zero false alerts in this sample. B misses 159 additional phishing hosts and avoids zero false alerts. The app uses the computed table, not the contradictory sentence."
+      "issue": "The earlier narrative said Rule B reduces false alarms.",
+      "correction": "Both original rules produce zero false alerts. B misses 159 additional phishing hosts and avoids zero false alerts. This is corrected in the amended conclusion and app."
     },
     {
       "id": "statistical_language",
@@ -679,8 +679,8 @@
     {
       "id": "analysis_export",
       "source": "Department_Of_Phisheries.ipynb, cell 74",
-      "issue": "The export-preparation cell still references model_summary and confusion after model training moved to Model_Evaluation.ipynb.",
-      "correction": "The adapter executes every preprocessing and question/test cell, then exports available statistical tables directly. All model exports come from Model_Evaluation.ipynb. Original notebooks are unchanged."
+      "issue": "The earlier export cell referenced model_summary and confusion after model training moved to Model_Evaluation.ipynb.",
+      "correction": "The amended notebook removes those stale model references and runs independently. Model exports still come from Model_Evaluation.ipynb. A pre-change notebook and original statistical outputs are retained in artifacts/reference_before_sampling."
     },
     {
       "id": "eda_grain",
@@ -707,113 +707,166 @@
       "Question": 1,
       "SavedStatistic": 79.0995,
       "ReproducedStatistic": 79.09953462920966,
-      "SavedPValueDisplay": "below numerical precision",
+      "SavedPValueDisplay": "2.201928e-1314",
       "Status": "Matches notebook rounding"
     },
     {
       "Question": 2,
       "SavedStatistic": 137.34,
       "ReproducedStatistic": 137.33999788571913,
-      "SavedPValueDisplay": "below numerical precision",
+      "SavedPValueDisplay": "1.214745e-3764",
       "Status": "Matches notebook rounding"
     },
     {
       "Question": 3,
       "SavedStatistic": 21.48,
       "ReproducedStatistic": 21.480034470783227,
-      "SavedPValueDisplay": "3.78e-102",
+      "SavedPValueDisplay": "3.784781e-102",
       "Status": "Matches notebook rounding"
     },
     {
       "Question": 4,
       "SavedStatistic": 95027.6023,
       "ReproducedStatistic": 95027.60233041267,
-      "SavedPValueDisplay": "below numerical precision",
+      "SavedPValueDisplay": "2.699916e-20638",
       "Status": "Matches notebook rounding"
     },
     {
       "Question": 5,
       "SavedStatistic": 53167.2376,
       "ReproducedStatistic": 53167.237563959774,
-      "SavedPValueDisplay": "below numerical precision",
+      "SavedPValueDisplay": "2.631260e-11548",
       "Status": "Matches notebook rounding"
     },
     {
       "Question": 6,
       "SavedStatistic": 130270.4893,
       "ReproducedStatistic": 130270.48925671139,
-      "SavedPValueDisplay": "below numerical precision",
+      "SavedPValueDisplay": "2.932204e-28291",
       "Status": "Matches notebook rounding"
     },
     {
       "Question": 7,
       "SavedStatistic": 5913.741,
       "ReproducedStatistic": 5913.7410292595305,
-      "SavedPValueDisplay": "below numerical precision",
+      "SavedPValueDisplay": "7.301083e-1287",
       "Status": "Matches notebook rounding"
     },
     {
       "Question": 8,
       "SavedStatistic": 7702.6657,
       "ReproducedStatistic": 7702.665744513961,
-      "SavedPValueDisplay": "below numerical precision",
+      "SavedPValueDisplay": "2.217935e-1675",
       "Status": "Matches notebook rounding"
     },
     {
       "Question": 9,
       "SavedStatistic": 27797.0608,
       "ReproducedStatistic": 27797.060768017112,
-      "SavedPValueDisplay": "below numerical precision",
+      "SavedPValueDisplay": "4.215729e-6039",
       "Status": "Matches notebook rounding"
     },
     {
       "Question": 10,
       "SavedStatistic": 1992.679,
       "ReproducedStatistic": 1992.6790310747297,
-      "SavedPValueDisplay": "below numerical precision",
+      "SavedPValueDisplay": "3.525738e-435",
       "Status": "Matches notebook rounding"
     },
     {
       "Question": 11,
       "SavedStatistic": 30468.0676,
       "ReproducedStatistic": 30468.06757884282,
-      "SavedPValueDisplay": "below numerical precision",
+      "SavedPValueDisplay": "1.969476e-6601",
       "Status": "Matches notebook rounding"
     },
     {
       "Question": 12,
       "SavedStatistic": 48.2387,
       "ReproducedStatistic": 48.238746960017544,
-      "SavedPValueDisplay": "below numerical precision",
+      "SavedPValueDisplay": "5.044222e-501",
       "Status": "Matches notebook rounding"
     },
     {
       "Question": 13,
       "SavedStatistic": -25.0,
       "ReproducedStatistic": -25.0,
-      "SavedPValueDisplay": "0.0005",
+      "SavedPValueDisplay": "5.000000e-4",
       "Status": "Matches notebook rounding"
     },
     {
       "Question": 14,
       "SavedStatistic": -13.5,
       "ReproducedStatistic": -13.5,
-      "SavedPValueDisplay": "0.0005",
+      "SavedPValueDisplay": "5.000000e-4",
       "Status": "Matches notebook rounding"
     },
     {
       "Question": 15,
       "SavedStatistic": -12.6141,
       "ReproducedStatistic": -12.614050164142352,
-      "SavedPValueDisplay": "1.82e-36",
+      "SavedPValueDisplay": "1.818941e-36",
       "Status": "Matches notebook rounding"
     }
   ],
+  "sampling_design": {
+    "method": "Simple random sampling without replacement",
+    "seed": 42,
+    "sample_size": 10000,
+    "population_hosts": 220023,
+    "sampling_fraction": 0.04544979388518473,
+    "host_membership_sha256": "d020e461d593295603b3536432bdab67bbcf9b8f0878af84dc2483fbdf5af371",
+    "composition": [
+      {
+        "Class": "Phishing",
+        "EligibleHosts": 85227,
+        "SampledHosts": 3885,
+        "EligibleShare": 0.3873549583452639,
+        "SampleShare": 0.3885
+      },
+      {
+        "Class": "Legitimate",
+        "EligibleHosts": 134796,
+        "SampledHosts": 6115,
+        "EligibleShare": 0.6126450416547361,
+        "SampleShare": 0.6115
+      }
+    ],
+    "course_references": [
+      {
+        "file": "L11-Sampling and Emprical distribution.pptx",
+        "slides": "21–23, 25, 34–38",
+        "use": "Simple random sampling without replacement, selection mechanism, sample size and sampling variability."
+      },
+      {
+        "file": "L12-Hypothesis testing and Error probabilities.pptx",
+        "slides": "20–22, 39, 42, 47–54",
+        "use": "P-value meaning, alpha decision, failure to reject and permutation comparisons."
+      },
+      {
+        "file": "L13-Statistical Testing and comparing model.pptx",
+        "slides": "20–24, 30–31, 40–41, 44, 50–55",
+        "use": "Chi-square independence, Welch and paired t tests, assumptions and practical significance."
+      },
+      {
+        "file": "L14-Causation and Experiment.pptx",
+        "slides": "25",
+        "use": "A p-value alone does not prove causality. Randomly sampling hosts is not randomly assigning a treatment."
+      }
+    ],
+    "reason": "10,000 hosts give several thousand observations per recorded class while using under 5% of the eligible host frame. This provides a manageable common sample for all questions. The size was fixed before comparing p-values; it is a teaching sensitivity analysis, not a formal power calculation or an optimal size prescribed by the slides.",
+    "selection": "pandas sample(n=10000, replace=False, random_state=42), applied once to the existing one-URL-per-consistent-host frame. Every host has inclusion probability 10000/N. Selection does not balance classes or depend on feature values or p-values.",
+    "scope": "The population frame is the 220,023 eligible exact hosts in this benchmark. It is not all websites on the internet. The original frame covers every eligible host, with one randomly selected URL per host; it is not a random subset of those hosts.",
+    "limitations": "The sample is nested in the reference frame, so agreement is a sensitivity check, not independent replication. Sampling cannot repair source collection bias, campaign dependence or multiple exploratory testing. Reference p-values are retained as the original superpopulation-model calculations; finite benchmark population differences can instead be described directly. Conventional tests are repeated without a finite-population correction to preserve the original methods; the sample fraction is below 5%.",
+    "pairing": "Q12 uses only phishing hosts within the common sample and keeps the two scores paired. Q15 keeps both rule outcomes per selected host. Q11 fixes the original ten TLD groups plus Other. Q13–Q14 keep their original 3,000-host reference and repeat the same 1,999-shuffle tests using the class counts observed in the shared 10,000-host sample.",
+    "p_values": "Scientific-notation tail probabilities are numerical approximations. Underflowed t/chi-square tails are computed on a scaled log scale, preserving the same statistic and distribution. Permutation p-values remain (extreme + 1)/2000, with minimum 0.0005; this resolution is not improved by scientific notation.",
+    "agreement_count": 15
+  },
   "notebook_inspection": {
     "analysis": {
-      "cells": 79,
-      "saved_figures": 18,
-      "code_cells": 31
+      "cells": 83,
+      "saved_figures": 33,
+      "code_cells": 34
     },
     "eda": {
       "cells": 79,
